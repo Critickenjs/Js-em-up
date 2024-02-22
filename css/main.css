@@ -101,3 +101,20 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #34495e;
 }
+
+.gameOver {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+.gameOver.active {
+    display: flex;
+}

@@ -72,7 +72,6 @@ setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
 const homePage = new HomePage();
-console.log('HOMEPAGEName:' + homePage.username);
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
