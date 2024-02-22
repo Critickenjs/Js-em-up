@@ -9,7 +9,8 @@
 			"type": "chrome",
 			"request": "launch",
 			"url": "http://localhost:8000",
-			"webRoot": "${workspaceFolder}"
+			"webRoot": "${workspaceFolder}",
+			"runtimeExecutable": "/bin/chromium"
 		},
 		{
 			"name": "Chromium Debug",
