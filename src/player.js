@@ -40,8 +40,9 @@ export class Player extends Entity {
 			context.beginPath();
 			context.strokeStyle = 'blue';
 			context.rect(this.posX, this.posY, this.width, this.width);
-			//context.font = '48px serif';
-			context.fillText(this.pseudo, this.posX + 10, this.posY);
+			context.font = '16px Minecraft Regular';
+			context.imageSmoothingEnabled = false;
+			context.fillText(this.pseudo, this.posX, this.posY - 10);
 			context.stroke();
 		}
 	}
