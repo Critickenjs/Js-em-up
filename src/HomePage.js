@@ -20,5 +20,7 @@ export default class HomePage {
 		document
 			.querySelector('.gameCanvas')
 			.setAttribute('style', 'display : block;');
+
+		document.querySelector('.score').setAttribute('style', 'display : block;');
 	}
 }
