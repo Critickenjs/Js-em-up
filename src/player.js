@@ -12,7 +12,7 @@ export class Player extends Entity {
 		this.alive = true;
 		this.score = 0;
 		this.shots = [];
-		this.pseudo = localStorage.getItem('username');
+		this.pseudo = 'nomVide';
 		this.lifes = Player.maxLifes;
 
 		this.timerBeforeRespawn = 100;
@@ -22,6 +22,7 @@ export class Player extends Entity {
 		this.alive = false;
 		this.timerBeforeRespawn = 200 + Player.maxLifes * 10 - this.lifes * 10;
 		this.lifes--;
+		console.log('Player ' + this.pseudo + ' died!');
 	}
 
 	respawn(canvas) {
@@ -39,8 +40,8 @@ export class Player extends Entity {
 			context.beginPath();
 			context.strokeStyle = 'blue';
 			context.rect(this.posX, this.posY, this.width, this.width);
-			context.font = '48px serif';
-			context.strokeText(this.pseudo, this.posX + 10, this.posY);
+			//context.font = '48px serif';
+			context.fillText(this.pseudo, this.posX + 10, this.posY);
 			context.stroke();
 		}
 	}

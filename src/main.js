@@ -63,11 +63,10 @@ setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
 const homePage = new HomePage();
-if (homePage.username != '') {
+console.log('HOMEPAGEName:' + homePage.username);
+
+document.querySelector('.HomePage').addEventListener('submit', event => {
+	event.preventDefault();
 	homePage.Play();
 	player.pseudo = homePage.username;
-} else {
-	homePage.show();
-}
-
-player.pseudo = homePage.username;
+});
