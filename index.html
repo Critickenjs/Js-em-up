@@ -1,28 +1,33 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<title>JSAÉ</title>
+		<meta name="title" content="Shoot em up">
+    	<meta name="description" content="Portfolio">
 
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-	<title>JSAÉ - TP Canvas</title>
-
-	<link rel="stylesheet" href="css/main.css" />
-	<style>
-		canvas {
-			border: 3px dashed #777;
-			width: 90%;
-			height: 80%;
-			top: 0;
-			left: 0;
-			background-color: white;
-			border: 3px dashed #777;
-		}
-	</style>
-	<script src="build/main.bundle.js" defer></script>
-</head>
-<body>
-	<canvas class="gameCanvas"></canvas>
-	<h1><em>JSAÉ</em> / TP1 - Canvas</h1>
-</body>
+		<link rel="stylesheet" href="css/main.css" />
+		<style>
+			canvas {
+				border: 3px dashed #777;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				border: none;
+				background-color: white;
+				border: 3px dashed #777;
+			}
+		</style>
+		<script src="build/main.bundle.js" defer></script>
+	</head>
+	<body>
+		<div id="root">
+			<canvas class="gameCanvas"></canvas>
+		</div>
+		
+	</body>
 </html>
