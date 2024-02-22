@@ -27,8 +27,6 @@ canvas.height = canvas.clientHeight;
 let player = new Player(100, canvas.height / 2);
 let ennemys = [];
 
-console.log('TestWidth' + canvas.width);
-console.log('TestHeight' + canvas.height);
 for (let i = 0; i < 5; i++) {
 	ennemys[i] = new Ennemy(
 		canvas.width + getRandomInt(canvas.width),
@@ -69,8 +67,11 @@ setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
 const homePage = new HomePage();
-if (sessionStorage.getItem('username')) {
+if (homePage.username != '') {
 	homePage.Play();
+	player.pseudo = homePage.username;
 } else {
 	homePage.show();
 }
+
+player.pseudo = homePage.username;

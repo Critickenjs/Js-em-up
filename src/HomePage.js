@@ -1,5 +1,8 @@
 export default class HomePage {
-	constructor() {}
+	username;
+	constructor() {
+		this.username = '';
+	}
 
 	show() {
 		document
@@ -12,8 +15,7 @@ export default class HomePage {
 	}
 
 	Play() {
-		const username = document.querySelector('input[type="text"]').value;
-		sessionStorage.setItem('username', username);
+		this.username = document.querySelector('input[type="text"]').value;
 		document.querySelector('.HomePage').classList.remove('active');
 		document
 			.querySelector('.gameCanvas')

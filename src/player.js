@@ -5,13 +5,14 @@ export class Player extends Entity {
 	static width = 50;
 	static height = 50;
 	static maxLifes = 3;
+
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
 		this.timerBeforeShots = 0;
 		this.alive = true;
 		this.score = 0;
 		this.shots = [];
-		this.pseudo = 'player';
+		this.pseudo = localStorage.getItem('username');
 		this.lifes = Player.maxLifes;
 
 		this.timerBeforeRespawn = 100;
@@ -38,6 +39,8 @@ export class Player extends Entity {
 			context.beginPath();
 			context.strokeStyle = 'blue';
 			context.rect(this.posX, this.posY, this.width, this.width);
+			context.font = '48px serif';
+			context.strokeText(this.pseudo, this.posX + 10, this.posY);
 			context.stroke();
 		}
 	}
