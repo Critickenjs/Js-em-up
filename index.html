@@ -6,28 +6,40 @@
 		
 		<title>JSAÉ</title>
 		<meta name="title" content="Shoot em up">
-    	<meta name="description" content="Portfolio">
+    	<meta name="JEU" content="Shot em up">
 
 		<link rel="stylesheet" href="css/main.css" />
 		<style>
 			canvas {
-				border: 3px dashed #777;
 				width: 100%;
 				height: 100%;
 				position: absolute;
 				top: 0;
 				left: 0;
 				border: none;
-				background-color: white;
 				border: 3px dashed #777;
 			}
+			
 		</style>
 		<script type="module" src="src/main.js" defer></script>
 	</head>
 	<body>
 		<div id="root">
+			<div class="HomePage active">
+				<div className="login-container">
+					<div className="login-image">
+						<h2>Connection</h2>
+					</div>
+					<div className="container">
+						<form>
+							<input type="text" placeholder="Username" />
+							<button type="submit">Jouer</button>
+						</form>
+					</div>
+				</div>
+			
+			</div>
 			<canvas class="gameCanvas"></canvas>
 		</div>
-		
 	</body>
 </html>

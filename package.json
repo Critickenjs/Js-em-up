@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
-    "start": "webpack serve --mode=development"
+    "start": "webpack serve --mode=development",
+    "scss": "node-sass --watch scss -o css"
   },
   "author": "Thomas Fritsch <thomas.fritsch@univ-lille.fr> (https://gitlab.univ-lille.fr/thomas.fritsch)",
   "homepage": "https://gitlab.univ-lille.fr/camille.fourmaintraux.etu/sae-2024-groupek-el-atifi-tas-fourmaintraux",

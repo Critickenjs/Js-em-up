@@ -3,6 +3,10 @@ import { Player } from './player.js';
 import { Shot } from './shot.js';
 import keysPressed from './keysListener.js';
 import { getRandomInt } from './utils.js';
+import HomePage from './HomePage.js';
+
+let isMouseDown = false;
+let isMouseMoving = false;
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -63,3 +67,10 @@ function update() {
 
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
+
+const homePage = new HomePage();
+if (sessionStorage.getItem('username')) {
+	homePage.Play();
+} else {
+	homePage.show();
+}
