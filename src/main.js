@@ -5,9 +5,6 @@ import keysPressed from './keysListener.js';
 import { getRandomInt } from './utils.js';
 import HomePage from './HomePage.js';
 
-let isMouseDown = false;
-let isMouseMoving = false;
-
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 
@@ -28,8 +25,6 @@ let player = new Player(100, canvas.height / 2);
 
 let ennemys = [];
 
-console.log('TestWidth' + canvas.width);
-console.log('TestHeight' + canvas.height);
 for (let i = 0; i < 5; i++) {
 	ennemys[i] = new Ennemy(
 		canvas.width + getRandomInt(canvas.width),
@@ -44,7 +39,6 @@ function render() {
 	for (let i = 0; i < ennemys.length; i++) {
 		ennemys[i].render(context);
 	}
-	context.fillText(player.alive, 0, 0);
 	requestAnimationFrame(render);
 }
 
@@ -53,7 +47,7 @@ function update() {
 	for (let a = 0; a < ennemys.length; a++) {
 		ennemys[a].update(canvas);
 		if (ennemys[a].isCollidingWith(player)) {
-			player.alive = false;
+			if (player.alive) player.die();
 		}
 		for (let s = 0; s < player.shots.length; s++) {
 			if (player.shots[s].isCollidingWith(ennemys[a])) {
@@ -78,8 +72,11 @@ setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
 const homePage = new HomePage();
-if (sessionStorage.getItem('username')) {
+if (homePage.username != '') {
 	homePage.Play();
+	player.pseudo = homePage.username;
 } else {
 	homePage.show();
 }
+
+player.pseudo = homePage.username;
