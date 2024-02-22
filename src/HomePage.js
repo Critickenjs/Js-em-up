@@ -5,9 +5,7 @@ export default class HomePage {
 		document
 			.querySelector('.gameCanvas')
 			.setAttribute('style', 'display : none;');
-		document
-			.querySelector('body')
-			.setAttribute('style', 'background-image: url("/images/fond.jpg");');
+
 		document.querySelector('.HomePage').addEventListener('submit', () => {
 			this.Play();
 		});
@@ -20,8 +18,5 @@ export default class HomePage {
 		document
 			.querySelector('.gameCanvas')
 			.setAttribute('style', 'display : block;');
-		document
-			.querySelector('body')
-			.setAttribute('style', 'background-image: none;');
 	}
 }
