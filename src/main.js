@@ -103,37 +103,3 @@ function update() {
 setInterval(update, 1000 / 60);
 
 requestAnimationFrame(render);
-
-window.addEventListener('keydown', function (event) {
-	switch (event.key) {
-		case 'ArrowDown':
-			speedY = 5;
-			break;
-		case 'ArrowUp':
-			speedY = -5;
-			break;
-		case 'ArrowLeft':
-			speedX = -5;
-			break;
-		case 'ArrowRight':
-			speedX = 5;
-			break;
-	}
-});
-
-window.addEventListener('keyup', function (event) {
-	switch (event.key) {
-		case 'ArrowDown':
-			speedY = 0;
-			break;
-		case 'ArrowUp':
-			speedY = 0;
-			break;
-		case 'ArrowLeft':
-			speedX = 0;
-			break;
-		case 'ArrowRight':
-			speedX = 0;
-			break;
-	}
-});
