@@ -6,6 +6,8 @@ export default class HomePage {
 			.querySelector('.gameCanvas')
 			.setAttribute('style', 'display : none;');
 
+		document.querySelector('.score').setAttribute('style', 'display : none;');
+
 		document.querySelector('.HomePage').addEventListener('submit', () => {
 			this.Play();
 		});
