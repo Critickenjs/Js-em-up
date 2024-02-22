@@ -5,6 +5,7 @@ export class Player extends Entity {
 	static width = 50;
 	static height = 50;
 	static maxLifes = 3;
+
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
 		this.timerBeforeShots = 0;
@@ -110,5 +111,9 @@ export class Player extends Entity {
 				this.respawn(canvas);
 			}
 		}
+	}
+
+	addScorePointOnEnemyKill() {
+		this.score += 10;
 	}
 }
