@@ -7,21 +7,27 @@ import { getRandomInt } from './utils.js';
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 
-let alive = true;
-
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
 
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
+	console.log('Witdh' + canvas.width);
+	console.log('height' + canvas.height);
 }
 
-let player = new Player(100, 0);
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
+
+let player = new Player(100, canvas.height / 2);
 let ennemys = [];
+
+console.log('TestWidth' + canvas.width);
+console.log('TestHeight' + canvas.height);
 for (let i = 0; i < 5; i++) {
 	ennemys[i] = new Ennemy(
-		canvas.width + getRandomInt(canvas.width * 2),
+		canvas.width + getRandomInt(canvas.width),
 		getRandomInt(canvas.height - Ennemy.height)
 	);
 	ennemys[i].index = i;
@@ -29,27 +35,27 @@ for (let i = 0; i < 5; i++) {
 
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	if (alive) {
-		player.render(context);
-	}
+	player.render(context);
 	for (let i = 0; i < ennemys.length; i++) {
 		ennemys[i].render(context);
 	}
-	Shot.renderAll(context);
+	context.fillText(player.alive, 0, 0);
 	requestAnimationFrame(render);
 }
 
 function update() {
-	if (alive) {
-		player.update(canvas, keysPressed);
-	}
-	Shot.update(canvas);
+	player.update(canvas, keysPressed);
 	for (let a = 0; a < ennemys.length; a++) {
 		ennemys[a].update(canvas);
-		for (let s = 0; s < Shot.shots.length; s++) {
-			if (Shot.shots[s].isCollidingWith(ennemys[a])) {
+		if (ennemys[a].isCollidingWith(player)) {
+			player.alive = false;
+		}
+		for (let s = 0; s < player.shots.length; s++) {
+			if (player.shots[s].isCollidingWith(ennemys[a])) {
 				//Shot.shots[s]=null;
 				ennemys[a].respawn(canvas);
+				player.score++;
+				console.log('Score of ' + player.pseudo + ':' + player.score);
 			}
 		}
 	}
