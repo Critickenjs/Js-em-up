@@ -5,9 +5,6 @@ import keysPressed from './keysListener.js';
 import { getRandomInt } from './utils.js';
 import HomePage from './HomePage.js';
 
-let isMouseDown = false;
-let isMouseMoving = false;
-
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 
@@ -41,7 +38,6 @@ function render() {
 	for (let i = 0; i < ennemys.length; i++) {
 		ennemys[i].render(context);
 	}
-	context.fillText(player.alive, 0, 0);
 	requestAnimationFrame(render);
 }
 
@@ -50,7 +46,7 @@ function update() {
 	for (let a = 0; a < ennemys.length; a++) {
 		ennemys[a].update(canvas);
 		if (ennemys[a].isCollidingWith(player)) {
-			player.alive = false;
+			if (player.alive) player.die();
 		}
 		for (let s = 0; s < player.shots.length; s++) {
 			if (player.shots[s].isCollidingWith(ennemys[a])) {
