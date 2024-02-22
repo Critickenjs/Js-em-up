@@ -116,4 +116,8 @@ export class Player extends Entity {
 			}
 		}
 	}
+
+	addScorePointOnEnemyKill() {
+		this.score += 10;
+	}
 }

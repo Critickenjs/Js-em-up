@@ -22,6 +22,7 @@ canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
 let player = new Player(100, canvas.height / 2);
+
 let ennemys = [];
 
 for (let i = 0; i < 5; i++) {
@@ -52,13 +53,21 @@ function update() {
 			if (player.shots[s].isCollidingWith(ennemys[a])) {
 				//Shot.shots[s]=null;
 				ennemys[a].respawn(canvas);
-				player.score++;
+				player.addScorePointOnEnemyKill();
+				document.querySelector('#scoreValue').innerHTML = player.score;
 				console.log('Score of ' + player.pseudo + ':' + player.score);
 			}
 		}
 	}
 }
 
+function addScorePointOverTime() {
+	player.score += 1;
+	document.querySelector('#scoreValue').innerHTML = player.score;
+}
+setInterval(addScorePointOverTime, 1500);
+
+setInterval(player.addScorePointOverTime, 1000);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
