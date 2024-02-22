@@ -11,10 +11,6 @@ export default class HomePage {
 			.setAttribute('style', 'display : none;');
 
 		document.querySelector('.score').setAttribute('style', 'display : none;');
-
-		document.querySelector('.HomePage').addEventListener('submit', () => {
-			this.Play();
-		});
 	}
 
 	Play() {
