@@ -1,4 +1,4 @@
-console.log('Salut, can vas ? 🫠');
+import HomePage from './HomePage.js';
 
 let isMouseDown = false;
 let isMouseMoving = false;
@@ -137,3 +137,10 @@ window.addEventListener('keyup', function (event) {
 			break;
 	}
 });
+
+const homePage = new HomePage();
+if (sessionStorage.getItem('username')) {
+	homePage.Play();
+} else {
+	homePage.show();
+}

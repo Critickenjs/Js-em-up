@@ -26,9 +26,19 @@
 	</head>
 	<body>
 		<div id="root">
-			<div class ="HomePage">
-				<h1>Home Page</h1>
-				<p>Welcome to the home page!</p>
+			<div class="HomePage active">
+				<div className="login-container">
+					<div className="login-image">
+						<h2>Connection</h2>
+					</div>
+					<div className="container">
+						<form>
+							<input type="text" placeholder="Username" />
+							<button type="submit">Jouer</button>
+						</form>
+					</div>
+				</div>
+			
 			</div>
 			<canvas class="gameCanvas"></canvas>
 		</div>
