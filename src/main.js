@@ -22,7 +22,7 @@ let ennemys = [];
 for (let i = 0; i < 5; i++) {
 	ennemys[i] = new Ennemy(
 		canvas.width + getRandomInt(canvas.width * 2),
-		getRandomInt(canvas.height - Asteroid.height)
+		getRandomInt(canvas.height - Ennemy.height)
 	);
 	ennemys[i].index = i;
 }

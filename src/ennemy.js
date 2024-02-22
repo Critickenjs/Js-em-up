@@ -4,7 +4,7 @@ export class Ennemy extends Entity {
 	static width = 30;
 	static height = 30;
 	constructor(posX, posY) {
-		super(posX, posY, Asteroid.width, Asteroid.height);
+		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.speedX = -3;
 		this.speedY = 0;
 		this.index = -1;
