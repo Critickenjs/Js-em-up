@@ -66,6 +66,7 @@ export class Player extends Entity {
 	}
 
 	update(canvas, keysPressed) {
+		super.update();
 		this.updateShots(canvas);
 		if (this.alive) {
 			this.timerBeforeShots--;
