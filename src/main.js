@@ -4,6 +4,7 @@ import { Shot } from './shot.js';
 import keysPressed from './keysListener.js';
 import { getRandomInt } from './utils.js';
 import HomePage from './HomePage.js';
+import GameOver from './gameOver.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -22,6 +23,8 @@ canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
 let player = new Player(100, canvas.height / 2);
+let game = false;
+const gameOver = new GameOver(player);
 
 let ennemys = [];
 
@@ -43,19 +46,29 @@ function render() {
 }
 
 function update() {
-	player.update(canvas, keysPressed);
-	for (let a = 0; a < ennemys.length; a++) {
-		ennemys[a].update(canvas);
-		if (ennemys[a].isCollidingWith(player)) {
-			if (player.alive) player.die();
-		}
-		for (let s = 0; s < player.shots.length; s++) {
-			if (player.shots[s].isCollidingWith(ennemys[a])) {
-				//Shot.shots[s]=null;
-				ennemys[a].respawn(canvas);
-				player.addScorePointOnEnemyKill();
-				document.querySelector('#scoreValue').innerHTML = player.score;
-				console.log('Score of ' + player.pseudo + ':' + player.score);
+	if (game) {
+		player.update(canvas, keysPressed);
+		for (let a = 0; a < ennemys.length; a++) {
+			ennemys[a].update(canvas);
+			if (ennemys[a].isCollidingWith(player)) {
+				if (player.alive) player.die();
+			}
+			for (let s = 0; s < player.shots.length; s++) {
+				if (player.shots[s].isCollidingWith(ennemys[a])) {
+					//Shot.shots[s]=null;
+					ennemys[a].respawn(canvas);
+					player.addScorePointOnEnemyKill();
+					document.querySelector('#scoreValue').innerHTML = player.score;
+					console.log('Score of ' + player.pseudo + ':' + player.score);
+				}
+			}
+			console.log(player.alive, player.lifes, player.score);
+			if (!player.alive && player.lifes <= 0) {
+				gameOver.show();
+				document.querySelector('.gameOver #scoreValue').innerHTML =
+					player.score;
+				game = false;
+				return;
 			}
 		}
 	}
@@ -77,4 +90,9 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	homePage.Play();
 	player.pseudo = homePage.username;
+	game = true;
+});
+
+document.querySelector('.restartButton').addEventListener('click', () => {
+	game = true;
 });
