@@ -13,7 +13,7 @@ export class Player extends Entity {
 		this.score = 0;
 		this.shots = [];
 		this.pseudo = 'nomVide';
-		this.lifes = Player.maxLifes;
+		this.lifes = maxLifes;
 
 		this.timerBeforeRespawn = 100;
 	}
@@ -120,5 +120,11 @@ export class Player extends Entity {
 
 	addScorePointOnEnemyKill() {
 		this.score += 10;
+	}
+	restart() {
+		this.alive = true;
+		this.lifes = 3;
+		this.posX = 100;
+		this.posY = 100;
 	}
 }
