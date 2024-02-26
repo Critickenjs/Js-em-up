@@ -102,19 +102,40 @@ button[type="submit"]:hover {
     background-color: #34495e;
 }
 
+
 .gameOver {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(250, 0, 0, 0.585);
     z-index: 100;
+    display: flex; /* Utilisation de flexbox */
     align-items: center;
     justify-content: center;
+    text-align: center;
+    flex-direction: column; /* Les éléments sont empilés verticalement */
 }
 
-.gameOver.active {
-    display: flex;
+.gameOver :active {
+    display: block;
+}
+
+.restartButton {
+    height: 40px;
+    width: 405px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    background: url(../images/btn1.png) no-repeat;
+    line-height: 26px;
+    padding-top: 6px;
+    margin-top: 20px; /* Ajout d'une marge en haut pour l'espace */
+}
+
+.restartButton:hover {
+    background: url(../images/btn2.png) no-repeat;
 }
