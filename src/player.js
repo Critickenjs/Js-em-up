@@ -13,7 +13,7 @@ export class Player extends Entity {
 		this.score = 0;
 		this.shots = [];
 		this.pseudo = 'nomVide';
-		this.lifes = maxLifes;
+		this.lifes = Player.maxLifes;
 
 		this.timerBeforeRespawn = 100;
 	}
