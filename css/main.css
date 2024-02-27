@@ -139,3 +139,40 @@ button[type="submit"]:hover {
 .restartButton:hover {
     background: url(../images/btn2.png) no-repeat;
 }
+
+.scoreboard {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: rgba(44,62,80, 0.585);
+    z-index: 100;
+    display: flex; /* Utilisation de flexbox */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column; /* Les éléments sont empilés verticalement */
+}
+
+.scoreboard :active {
+    display: block;
+}
+
+.scoreboardButton {
+    height: 40px;
+    width: 405px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    background: url(../images/btn1.png) no-repeat;
+    line-height: 26px;
+    padding-top: 6px;
+    margin-top: 20px; /* Ajout d'une marge en haut pour l'espace */
+}
+
+.scoreboardButton:hover {
+    background: url(../images/btn2.png) no-repeat;
+}
