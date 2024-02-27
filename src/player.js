@@ -124,6 +124,7 @@ export class Player extends Entity {
 	restart() {
 		this.alive = true;
 		this.lifes = 3;
+		this.score = 0;
 		this.posX = 100;
 		this.posY = 100;
 	}
