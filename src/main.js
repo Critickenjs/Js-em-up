@@ -26,12 +26,12 @@ canvas.height = canvas.clientHeight;
 let player = new Player(100, canvas.height / 2);
 let game = false;
 const gameOver = new GameOver(player);
+const scoreBoard = new ScoreBoard();
 
 document
 	.querySelector('.scoreboardButton')
 	.addEventListener('click', async () => {
 		gameOver.hide();
-		const scoreBoard = new ScoreBoard();
 		scoreBoard.show();
 		const data = await scoreBoard.getData();
 		scoreBoard.updateScore(data);
@@ -104,6 +104,8 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	game = true;
 });
 
-document.querySelector('.restartButton').addEventListener('click', () => {
+document.querySelector('#restartButton2').addEventListener('click', () => {
+	scoreBoard.hide();
+	gameOver.restartGame();
 	game = true;
 });

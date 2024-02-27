@@ -15,4 +15,13 @@ export default class csvData {
 			throw error;
 		}
 	}
+
+	parseCSV(csvText) {
+		const lines = csvText.split('\n');
+		lines.forEach(line => {
+			const [playerName, score] = line.split(',');
+			this.data[playerName] = parseInt(score);
+		});
+		console.log(this.data);
+	}
 }
