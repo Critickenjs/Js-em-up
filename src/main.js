@@ -5,6 +5,7 @@ import keysPressed from './keysListener.js';
 import { getRandomInt } from './utils.js';
 import HomePage from './HomePage.js';
 import GameOver from './gameOver.js';
+import ScoreBoard from './scoreBoard.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -25,6 +26,16 @@ canvas.height = canvas.clientHeight;
 let player = new Player(100, canvas.height / 2);
 let game = false;
 const gameOver = new GameOver(player);
+
+document
+	.querySelector('.scoreboardButton')
+	.addEventListener('click', async () => {
+		gameOver.hide();
+		const scoreBoard = new ScoreBoard();
+		scoreBoard.show();
+		const data = await scoreBoard.getData();
+		scoreBoard.updateScore(data);
+	});
 
 let ennemys = [];
 
