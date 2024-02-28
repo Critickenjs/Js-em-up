@@ -49,7 +49,9 @@ export class Player extends Entity {
 
 	renderShots(context) {
 		for (let i = 0; i < this.shots.length; i++) {
-			this.shots[i].render(context);
+			if(this.shots[i].active){
+				this.shots[i].render(context);
+			}
 		}
 	}
 

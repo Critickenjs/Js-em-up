@@ -6,6 +6,7 @@ export class Shot extends Entity {
 		super(posX, posY, Shot.width, Shot.height);
 		this.speedX = 8;
 		this.speedY = 0;
+		this.active=true;
 	}
 	render(context) {
 		context.beginPath();
