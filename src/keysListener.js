@@ -7,16 +7,16 @@ const keysPressed = {
 };
 
 window.addEventListener('keydown', event => {
-	if (event.key == 'ArrowDown') {
+	if (event.key == 'ArrowDown' || event.key == 's') {
 		keysPressed.ArrowDown = true;
 	}
-	if (event.key == 'ArrowUp') {
+	if (event.key == 'ArrowUp' || event.key == 'z') {
 		keysPressed.ArrowUp = true;
 	}
-	if (event.key == 'ArrowLeft') {
+	if (event.key == 'ArrowLeft' || event.key == 'q') {
 		keysPressed.ArrowLeft = true;
 	}
-	if (event.key == 'ArrowRight') {
+	if (event.key == 'ArrowRight' || event.key == 'd') {
 		keysPressed.ArrowRight = true;
 	}
 	if (event.key == ' ') {
@@ -25,22 +25,20 @@ window.addEventListener('keydown', event => {
 });
 
 window.addEventListener('keyup', event => {
-	switch (event.key) {
-		case 'ArrowDown':
-			keysPressed.ArrowDown = false;
-			break;
-		case 'ArrowUp':
-			keysPressed.ArrowUp = false;
-			break;
-		case 'ArrowLeft':
-			keysPressed.ArrowLeft = false;
-			break;
-		case 'ArrowRight':
-			keysPressed.ArrowRight = false;
-			break;
-		case ' ':
-			keysPressed.Space = false;
-			break;
+	if (event.key == 'ArrowDown' || event.key == 's') {
+		keysPressed.ArrowDown = false;
+	}
+	if (event.key == 'ArrowUp' || event.key == 'z') {
+		keysPressed.ArrowUp = false;
+	}
+	if (event.key == 'ArrowLeft' || event.key == 'q') {
+		keysPressed.ArrowLeft = false
+	}
+	if (event.key == 'ArrowRight' || event.key == 'd') {
+		keysPressed.ArrowRight = false;
+	}
+	if (event.key == ' ') {
+		keysPressed.Space = false;
 	}
 });
 
