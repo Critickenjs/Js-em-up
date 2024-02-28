@@ -95,6 +95,7 @@ function firstWave(){
 		ennemys[i] = new Ennemy(
 			canvas.width + getRandomInt(canvas.width), 
 			getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset)+Ennemy.spawnOffset
+			,'red'
 		);
 		ennemys[i].index = i;
 		Ennemy.waveNumberOfEnnemysSpawned++;
