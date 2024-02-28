@@ -4,6 +4,7 @@ const keysPressed = {
 	ArrowLeft: false,
 	ArrowRight: false,
 	Space: false,
+	a: false,
 };
 
 window.addEventListener('keydown', event => {
@@ -22,6 +23,9 @@ window.addEventListener('keydown', event => {
 	if (event.key == ' ') {
 		keysPressed.Space = true;
 	}
+	if (event.key == 'a') {
+		keysPressed.a = true;
+	}
 });
 
 window.addEventListener('keyup', event => {
@@ -39,6 +43,9 @@ window.addEventListener('keyup', event => {
 	}
 	if (event.key == ' ') {
 		keysPressed.Space = false;
+	}
+	if (event.key == 'a') {
+		keysPressed.a = false;
 	}
 });
 

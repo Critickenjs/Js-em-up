@@ -15,7 +15,6 @@ export default class HomePage {
 
 	Play() {
 		this.username = document.querySelector('input[type="text"]').value;
-		console.log('Pseudo:' + this.username);
 		document.querySelector('.HomePage').classList.remove('active');
 		document
 			.querySelector('.gameCanvas')

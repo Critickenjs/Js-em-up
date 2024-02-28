@@ -22,7 +22,6 @@ export class Player extends Entity {
 		this.alive = false;
 		this.timerBeforeRespawn = 200 + Player.maxLifes * 10 - this.lifes * 10;
 		this.lifes--;
-		console.log('Player ' + this.pseudo + ' died!');
 	}
 
 	respawn(canvas) {
