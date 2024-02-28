@@ -5,6 +5,7 @@ export class Player extends Entity {
 	static width = 50;
 	static height = 50;
 	static maxLifes = 3;
+	static bulletSpeed = 8;
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -37,12 +38,12 @@ export class Player extends Entity {
 		this.renderShots(context);
 		if (this.alive) {
 			context.beginPath();
-			context.strokeStyle = 'blue';
-			context.rect(this.posX, this.posY, this.width, this.width);
+			context.fillStyle = 'blue';
+			context.fillRect(this.posX, this.posY, this.width, this.width);
 			context.font = '16px Minecraft Regular';
 			context.imageSmoothingEnabled = false;
+			context.fillStyle = 'black';
 			context.fillText(this.pseudo, this.posX, this.posY - 10);
-			context.stroke();
 		}
 	}
 
@@ -67,7 +68,9 @@ export class Player extends Entity {
 
 	shoot() {
 		this.shots.push(
-			new Shot(this.posX + this.width, this.posY + this.height / 3)
+			new Shot(this.posX + this.width,
+				this.posY + this.height / 3 ,
+				Player.bulletSpeed, true)
 		);
 	}
 

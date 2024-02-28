@@ -1,4 +1,5 @@
 import { Entity } from './entity.js';
+import { Shot } from './shot.js';
 import { getRandomInt, getRandomIntWithMin } from './utils.js';
 export class Ennemy extends Entity {
 	static width = 30;
@@ -9,18 +10,42 @@ export class Ennemy extends Entity {
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 	static waveMultiplier=1.2;
 	static types = ['red','purple','orange'];
-	constructor(posX, posY, type) {
+	static bulletSpeed = 8;
+	static shootTimer=100;
+	constructor(posX, posY) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.index = -1;
 		this.isDead = false;
-		this.type = type;
+		this.type = 'red';
 		this.applyType();
+		this.timeBeforeNextShoot=Ennemy.shootTimer;
+		this.shots = [];
 	}
+
+	renderShots(context) {
+		for (let i = 0; i < this.shots.length; i++) {
+			if(this.shots[i].active){
+				this.shots[i].render(context);
+			}
+		}
+	}
+
+	updateShots() {
+		for (let i = 0; i < this.shots.length; i++) {
+			this.shots[i].posX += this.shots[i].speedX;
+			this.shots[i].posY += this.shots[i].speedY;
+			this.shots[i].update();
+			if (this.shots[i].posX < 0) {
+				this.shots.shift();
+			}
+		}
+	}
+
 	render(context) {
 		context.beginPath();
 		context.fillStyle=this.type;
-		context.fillRect(this.posX, this.posY, this.width, this.width);
-		
+		context.fillRect(this.posX, this.posY,
+					this.width, this.width);
 	}
 
 	update(canvas) {
@@ -35,6 +60,13 @@ export class Ennemy extends Entity {
 			this.speedY=Math.abs(this.speedY);
 		}else if(this.posY>canvas.height-Ennemy.height){
 			this.speedY=-this.speedY;
+		}
+		if(this.type=='orange' && this.posX<canvas.width*1.2){
+			this.timeBeforeNextShoot--;
+			if(this.timeBeforeNextShoot<=0){
+				this.shoot();
+				this.timeBeforeNextShoot=Ennemy.shootTimer;
+			}
 		}
 	}
 
@@ -62,7 +94,7 @@ export class Ennemy extends Entity {
 	applyType(){
 		switch(this.type){
 			case'red':
-				this.speedX = -getRandomIntWithMin(2,3);
+				this.speedX = -getRandomIntWithMin(1,2);
 				this.speedY = 0;
 			break;
 			case'purple':
@@ -74,5 +106,13 @@ export class Ennemy extends Entity {
 				this.speedY = getRandomIntWithMin(-1,1);
 			break;
 		}
+	}
+
+	shoot() {
+		this.shots.push(
+			new Shot(this.posX,
+				this.posY + this.height / 3 ,
+				-Ennemy.bulletSpeed, false)
+		);
 	}
 }
