@@ -41,8 +41,8 @@ let ennemys = [];
 
 for (let i = 0; i < 5; i++) {
 	ennemys[i] = new Ennemy(
-		canvas.width + getRandomInt(canvas.width),
-		getRandomInt(canvas.height - Ennemy.height)
+		canvas.width + getRandomInt(canvas.width), 
+		getRandomInt(canvas.height - Ennemy.height - 45)+45 //45=> pour éviter que lex ennemis spawnenet aux bords.
 	);
 	ennemys[i].index = i;
 }
@@ -65,14 +65,17 @@ function update() {
 				if (player.alive) player.die();
 			}
 			for (let s = 0; s < player.shots.length; s++) {
-				if (player.shots[s].isCollidingWith(ennemys[a])) {
-					//Shot.shots[s]=null;
-					ennemys[a].respawn(canvas);
-					player.addScorePointOnEnemyKill();
-					document.querySelector('#scoreValue').innerHTML = player.score;
-					console.log('Score of ' + player.pseudo + ':' + player.score);
+				if(player.shots[s].active){
+					if (player.shots[s].isCollidingWith(ennemys[a])) {
+						player.shots[s].active=false;
+						ennemys[a].respawn(canvas);
+						player.addScorePointOnEnemyKill();
+						document.querySelector('#scoreValue').innerHTML = player.score;
+						console.log('Score of ' + player.pseudo + ':' + player.score);
+					}
 				}
 			}
+			///!\\\
 			console.log(player.alive, player.lifes, player.score);
 			if (!player.alive && player.lifes <= 0) {
 				gameOver.show();
@@ -89,8 +92,8 @@ function addScorePointOverTime() {
 	player.score += 1;
 	document.querySelector('#scoreValue').innerHTML = player.score;
 }
-setInterval(addScorePointOverTime, 1500);
 
+setInterval(addScorePointOverTime, 1500);
 setInterval(player.addScorePointOverTime, 1000);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
@@ -109,3 +112,4 @@ document.querySelector('#restartButton2').addEventListener('click', () => {
 	gameOver.restartGame();
 	game = true;
 });
+
