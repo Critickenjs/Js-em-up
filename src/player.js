@@ -4,10 +4,11 @@ import { Shot } from './shot.js';
 export class Player extends Entity {
 	static width = 50;
 	static height = 50;
-	static maxLifes = 1;
+	static teamLifes = 3; //vies de départ : default 3
 	static playerSpeed = 5;
 	static bulletSpeed = 8;
 	static maxTimeBeforeShooting = 10;
+	static players=[];
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -16,15 +17,15 @@ export class Player extends Entity {
 		this.score = 0;
 		this.shots = [];
 		this.pseudo = 'player';
-		this.lifes = Player.maxLifes;
-
-		this.timerBeforeRespawn = 100;
+		this.maxTimeBeforeRespawn = 50;
+		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 	}
 
 	die() {
 		this.alive = false;
-		this.timerBeforeRespawn = 200 + Player.maxLifes * 10 - this.lifes * 10;
-		this.lifes--;
+		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn*1.2 | 0);
+		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+		Player.teamLifes--;
 	}
 
 	respawn(canvas) {
@@ -78,6 +79,7 @@ export class Player extends Entity {
 
 	update(canvas, keysPressed) {
 		super.update();
+		console.log(Player.teamLifes);
 		this.updateShots(canvas);
 		if (this.alive) {
 			this.timerBeforeShots--;
@@ -129,7 +131,7 @@ export class Player extends Entity {
 	}
 
 	restart(canvas) {
-		this.lifes = this.maxLifes;
+		Player.teamLifes=1;
 		this.score = 0;
 		this.respawn(canvas);
 	}

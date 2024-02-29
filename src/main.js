@@ -20,7 +20,11 @@ function resampleCanvas() {
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
+Player.players.push(new Player(100, canvas.height / 2));
+
+
 let player = new Player(100, canvas.height / 2);
+
 let isInGame = false;
 const gameOver = new GameOver(player);
 const scoreBoard = new ScoreBoard();
@@ -60,7 +64,7 @@ function update() {
 			nextWave();
 		}
 
-		if (!player.alive && player.lifes <= 0) {
+		if (!player.alive && Player.teamLifes <= 0) {
 			gameOver.show();
 			document.querySelector('.gameOver #scoreValue').innerHTML =
 			player.score;
