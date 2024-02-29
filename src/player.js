@@ -5,7 +5,7 @@ export class Player extends Entity {
 	//Les constantes
 	static width = 50;
 	static height = 50;
-	static defaultNumberOfLife=3;
+	static defaultNumberOfLife = 3;
 	static playerSpeed = 5;
 	static bulletSpeed = 8;
 	static maxTimeBeforeShooting = 10;
@@ -13,13 +13,13 @@ export class Player extends Entity {
 
 	//Les déclarations
 	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
-	static players=[];
+	static players = [];
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
 		this.timerBeforeShots = 0;
 		this.alive = true;
-		this.invincible=true;
+		this.invincible = true;
 		this.score = 0;
 		this.shots = [];
 		this.pseudo = 'player';
@@ -30,7 +30,7 @@ export class Player extends Entity {
 
 	die() {
 		this.alive = false;
-		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn*1.2 | 0); //Le respawn devient de plus en plus long plus on meurt.
+		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * 1.2) | 0; //Le respawn devient de plus en plus long plus on meurt.
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 		Player.teamLifes--;
 	}
@@ -52,10 +52,15 @@ export class Player extends Entity {
 			context.beginPath();
 			context.fillStyle = 'blue';
 			context.fillRect(this.posX, this.posY, this.width, this.height);
-			if(this.invincible){
+			if (this.invincible) {
 				context.lineWidth = 5;
 				context.strokeStyle = 'purple';
-				context.rect(this.posX-1, this.posY-1, this.width+1, this.height+1);
+				context.rect(
+					this.posX - 1,
+					this.posY - 1,
+					this.width + 1,
+					this.height + 1
+				);
 				context.stroke();
 			}
 			context.lineWidth = 1;
@@ -100,10 +105,10 @@ export class Player extends Entity {
 		super.update();
 		this.updateShots(canvas);
 		if (this.alive) {
-			if(this.invincible){
+			if (this.invincible) {
 				this.timerBeforeLosingInvincibility--;
-				if(this.timerBeforeLosingInvincibility<0){
-					this.invincible=false;
+				if (this.timerBeforeLosingInvincibility < 0) {
+					this.invincible = false;
 				}
 			}
 			this.timerBeforeShots--;
@@ -155,7 +160,7 @@ export class Player extends Entity {
 	}
 
 	restart(canvas) {
-		Player.teamLifes=Player.defaultNumberOfLife;
+		Player.teamLifes = Player.defaultNumberOfLife;
 		this.score = 0;
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn(canvas);

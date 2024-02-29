@@ -5,9 +5,12 @@ import { getRandomInt } from './utils.js';
 import HomePage from './HomePage.js';
 import GameOver from './gameOver.js';
 import ScoreBoard from './scoreBoard.js';
+import preloadAssets from './preLoadAsset.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
+
+const assets = ['../images/monster.png'];
 
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
@@ -17,11 +20,14 @@ function resampleCanvas() {
 	canvas.height = canvas.clientHeight;
 }
 
+preloadAssets(assets).then(() => {
+	console.log('Assets loaded');
+});
+
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
 Player.players.push(new Player(100, canvas.height / 2));
-
 
 let player = new Player(100, canvas.height / 2);
 
@@ -74,7 +80,7 @@ function update() {
 }
 
 function collisionWithEnnemyShots(ennemy) {
-	if(!player.invincible){
+	if (!player.invincible) {
 		for (let s = 0; s < ennemy.shots.length; s++) {
 			if (ennemy.shots[s].active) {
 				if (ennemy.shots[s].isCollidingWith(player)) {
@@ -84,7 +90,6 @@ function collisionWithEnnemyShots(ennemy) {
 			}
 		}
 	}
-	
 }
 
 function collisionWithPlayerShots(ennemy) {
@@ -111,7 +116,7 @@ function wavesUpdates() {
 		if (!ennemys[a].isDead) {
 			allDead = false;
 			ennemys[a].update(canvas);
-			if(player.alive && !player.invincible){
+			if (player.alive && !player.invincible) {
 				if (ennemys[a].isCollidingWith(player)) {
 					player.die();
 				}
@@ -165,11 +170,10 @@ function nextWave() {
 }
 
 function addScorePointOverTime() {
-	if(isInGame){
+	if (isInGame) {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;
 	}
-	
 }
 
 setInterval(addScorePointOverTime, 1500);
@@ -194,7 +198,7 @@ document.querySelector('#restartButton').addEventListener('click', () => {
 	restartGame();
 });
 
-function restartGame(){
+function restartGame() {
 	gameOver.restartGame(canvas);
 	isInGame = true;
 	firstWave();
