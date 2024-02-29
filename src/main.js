@@ -21,7 +21,7 @@ canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
 let player = new Player(100, canvas.height / 2);
-let game = false;
+let isInGame = false;
 const gameOver = new GameOver(player);
 const scoreBoard = new ScoreBoard();
 
@@ -52,7 +52,7 @@ function render() {
 }
 
 function update() {
-	if (game) {
+	if (isInGame) {
 		player.update(canvas, keysPressed);
 		
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
@@ -64,7 +64,7 @@ function update() {
 			gameOver.show();
 			document.querySelector('.gameOver #scoreValue').innerHTML =
 			player.score;
-			game = false;
+			isInGame = false;
 			return;
 		}
 	}
@@ -139,12 +139,14 @@ function nextWave(){
 }
 
 function addScorePointOverTime() {
-	player.score += 1;
-	document.querySelector('#scoreValue').innerHTML = player.score;
+	if(isInGame){
+		player.score += 1;
+		document.querySelector('#scoreValue').innerHTML = player.score;
+	}
 }
 
 setInterval(addScorePointOverTime, 1500);
-setInterval(player.addScorePointOverTime, 1000);
+//setInterval(player.addScorePointOverTime, 1000);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
@@ -154,11 +156,12 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	homePage.Play();
 	player.pseudo = homePage.username;
-	game = true;
+	isInGame = true;
 });
 
-document.querySelector('#restartButton2').addEventListener('click', () => {
+document.querySelector('.restartButton').addEventListener('click', () => {
+	console.log("RESTART");
 	scoreBoard.hide();
-	gameOver.restartGame();
-	game = true;
+	isInGame = true;
+	gameOver.restartGame(canvas);
 });

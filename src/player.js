@@ -4,8 +4,10 @@ import { Shot } from './shot.js';
 export class Player extends Entity {
 	static width = 50;
 	static height = 50;
-	static maxLifes = 3;
+	static maxLifes = 1;
+	static playerSpeed = 5;
 	static bulletSpeed = 8;
+	static maxTimeBeforeShooting = 10;
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -13,7 +15,7 @@ export class Player extends Entity {
 		this.alive = true;
 		this.score = 0;
 		this.shots = [];
-		this.pseudo = 'nomVide';
+		this.pseudo = 'player';
 		this.lifes = Player.maxLifes;
 
 		this.timerBeforeRespawn = 100;
@@ -85,21 +87,21 @@ export class Player extends Entity {
 			this.speedY = 0;
 			this.speedX = 0;
 			if (keysPressed.ArrowDown) {
-				this.speedY = 5;
+				this.speedY = Player.playerSpeed;
 			}
 			if (keysPressed.ArrowUp) {
-				this.speedY = -5;
+				this.speedY = -Player.playerSpeed;
 			}
 			if (keysPressed.ArrowLeft) {
-				this.speedX = -5;
+				this.speedX = -Player.playerSpeed;
 			}
 			if (keysPressed.ArrowRight) {
-				this.speedX = 5;
+				this.speedX = Player.playerSpeed;
 			}
 			if (keysPressed.Space) {
 				if (this.timerBeforeShots <= 0) {
 					this.shoot();
-					this.timerBeforeShots = 10;
+					this.timerBeforeShots = Player.maxTimeBeforeShooting;
 				}
 			}
 			this.posX += this.speedX;
@@ -125,11 +127,10 @@ export class Player extends Entity {
 	addScorePointOnEnemyKill() {
 		this.score += 10;
 	}
-	restart() {
-		this.alive = true;
-		this.lifes = 3;
+
+	restart(canvas) {
+		this.lifes = this.maxLifes;
 		this.score = 0;
-		this.posX = 100;
-		this.posY = 100;
+		this.respawn(canvas);
 	}
 }
