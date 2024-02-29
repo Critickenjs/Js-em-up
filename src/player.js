@@ -2,7 +2,7 @@ import { Entity } from './entity.js';
 import { Shot } from './shot.js';
 
 export class Player extends Entity {
-	//Les constantes
+	//Les variables de gameplay
 	static width = 50;
 	static height = 50;
 	static defaultNumberOfLife = 3;
@@ -10,6 +10,9 @@ export class Player extends Entity {
 	static bulletSpeed = 8;
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibilty = 100;
+
+	//Paramétrage technique
+	static animationSpeed=1; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 
 	//Les déclarations
 	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
@@ -26,6 +29,7 @@ export class Player extends Entity {
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
+		this.invincibleAnimation = (20/Player.animationSpeed) | 0;
 	}
 
 	die() {
@@ -50,18 +54,28 @@ export class Player extends Entity {
 		this.renderShots(context);
 		if (this.alive) {
 			context.beginPath();
-			context.fillStyle = 'blue';
-			context.fillRect(this.posX, this.posY, this.width, this.height);
+			
 			if (this.invincible) {
-				context.lineWidth = 5;
+				this.invincibleAnimation--;
+				if(this.invincibleAnimation<(10/Player.animationSpeed) | 0){
+					context.fillStyle = 'blue';
+					context.fillRect(this.posX, this.posY, this.width, this.height);
+					if(this.invincibleAnimation<0){
+						this.invincibleAnimation=(20/Player.animationSpeed) | 0;
+					}
+				}			
+				context.lineWidth = 3;
 				context.strokeStyle = 'purple';
 				context.rect(
-					this.posX - 1,
-					this.posY - 1,
-					this.width + 1,
-					this.height + 1
+					this.posX,
+					this.posY,
+					this.width,
+					this.height
 				);
 				context.stroke();
+			}else{
+				context.fillStyle = 'blue';
+				context.fillRect(this.posX, this.posY, this.width, this.height);
 			}
 			context.lineWidth = 1;
 			context.font = '16px Minecraft Regular';
