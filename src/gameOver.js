@@ -4,7 +4,6 @@ export default class GameOver {
 		this.player = player;
 		this.scoreElement = document.querySelector('#scoreValue');
 		this.restartButton = document.querySelector('#restartButton');
-		this.restartButton.addEventListener('click', this.restartGame.bind(this));
 		this.element = document.querySelector('.gameOver');
 	}
 	show() {
