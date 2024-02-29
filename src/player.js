@@ -4,7 +4,8 @@ import { Shot } from './shot.js';
 export class Player extends Entity {
 	static width = 50;
 	static height = 50;
-	static teamLifes = 3; //vies de départ : default 3
+	static defaultNumberOfLife=3;
+	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
 	static playerSpeed = 5;
 	static bulletSpeed = 8;
 	static maxTimeBeforeShooting = 10;
@@ -52,7 +53,7 @@ export class Player extends Entity {
 
 	renderShots(context) {
 		for (let i = 0; i < this.shots.length; i++) {
-			if(this.shots[i].active){
+			if (this.shots[i].active) {
 				this.shots[i].render(context);
 			}
 		}
@@ -71,15 +72,18 @@ export class Player extends Entity {
 
 	shoot() {
 		this.shots.push(
-			new Shot(this.posX + this.width,
-				this.posY + this.height / 3 ,
-				Player.bulletSpeed, true)
+			new Shot(
+				this.posX + this.width,
+				this.posY + this.height / 3,
+				Player.bulletSpeed,
+				true
+			)
 		);
 	}
 
 	update(canvas, keysPressed) {
 		super.update();
-		console.log(Player.teamLifes);
+		console.log("Vies de l'équipe restantes : "+Player.teamLifes);
 		this.updateShots(canvas);
 		if (this.alive) {
 			this.timerBeforeShots--;
@@ -89,21 +93,21 @@ export class Player extends Entity {
 			this.speedY = 0;
 			this.speedX = 0;
 			if (keysPressed.ArrowDown) {
-				this.speedY = Player.playerSpeed;
+				this.speedY = 5;
 			}
 			if (keysPressed.ArrowUp) {
-				this.speedY = -Player.playerSpeed;
+				this.speedY = -5;
 			}
 			if (keysPressed.ArrowLeft) {
-				this.speedX = -Player.playerSpeed;
+				this.speedX = -5;
 			}
 			if (keysPressed.ArrowRight) {
-				this.speedX = Player.playerSpeed;
+				this.speedX = 5;
 			}
 			if (keysPressed.Space) {
 				if (this.timerBeforeShots <= 0) {
 					this.shoot();
-					this.timerBeforeShots = Player.maxTimeBeforeShooting;
+					this.timerBeforeShots = 10;
 				}
 			}
 			this.posX += this.speedX;
@@ -131,7 +135,7 @@ export class Player extends Entity {
 	}
 
 	restart(canvas) {
-		Player.teamLifes=1;
+		Player.teamLifes=Player.defaultNumberOfLife;
 		this.score = 0;
 		this.respawn(canvas);
 	}

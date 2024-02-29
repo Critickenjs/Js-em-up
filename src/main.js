@@ -42,13 +42,12 @@ const ennemyBuffer = 10; // Nombre max d'ennemis pouvant apparaitre à l'écran.
 let ennemys = [];
 firstWave();
 
-
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	player.render(context);
 	for (let i = 0; i < ennemys.length; i++) {
 		ennemys[i].renderShots(context);
-		if(!ennemys[i].isDead){
+		if (!ennemys[i].isDead) {
 			ennemys[i].render(context);
 		}
 	}
@@ -58,38 +57,39 @@ function render() {
 function update() {
 	if (isInGame) {
 		player.update(canvas, keysPressed);
-		
+
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
-		if(wavesUpdates()){ //Si la vague est finie, on passe à la prochaine.
+		if (wavesUpdates()) {
+			//Si la vague est finie, on passe à la prochaine.
 			nextWave();
 		}
 
 		if (!player.alive && Player.teamLifes <= 0) {
 			gameOver.show();
-			document.querySelector('.gameOver #scoreValue').innerHTML =
-			player.score;
+			document.querySelector('.gameOver #scoreValue').innerHTML = player.score;
 			isInGame = false;
 			return;
 		}
 	}
 }
 
-function collisionWithEnnemyShots(ennemy){
+function collisionWithEnnemyShots(ennemy) {
 	for (let s = 0; s < ennemy.shots.length; s++) {
-		if(ennemy.shots[s].active){
+		if (ennemy.shots[s].active) {
 			if (ennemy.shots[s].isCollidingWith(player)) {
-				ennemy.shots[s].active=false;
+				ennemy.shots[s].active = false;
+				console.log("isAlive : "+player.alive);
 				if (player.alive) player.die();
 			}
 		}
 	}
 }
 
-function collisionWithPlayerShots(ennemy){
+function collisionWithPlayerShots(ennemy) {
 	for (let s = 0; s < player.shots.length; s++) {
-		if(player.shots[s].active){
+		if (player.shots[s].active) {
 			if (player.shots[s].isCollidingWith(ennemy)) {
-				player.shots[s].active=false;
+				player.shots[s].active = false;
 				ennemy.fate(canvas);
 				player.addScorePointOnEnemyKill();
 				document.querySelector('#scoreValue').innerHTML = player.score;
@@ -100,13 +100,14 @@ function collisionWithPlayerShots(ennemy){
 	}
 }
 
-function wavesUpdates(){ //Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
-	let allDead=true;
+function wavesUpdates() {
+	//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
+	let allDead = true;
 	for (let a = 0; a < ennemys.length; a++) {
 		ennemys[a].updateShots();
 		collisionWithEnnemyShots(ennemys[a]);
-		if(!ennemys[a].isDead){
-			allDead=false;
+		if (!ennemys[a].isDead) {
+			allDead = false;
 			ennemys[a].update(canvas);
 			if (ennemys[a].isCollidingWith(player)) {
 				if (player.alive) player.die();
@@ -117,29 +118,46 @@ function wavesUpdates(){ //Renvoie un boolean en fonction de si la vague est fin
 	return allDead;
 }
 
-function firstWave(){
+function firstWave() {
+	Ennemy.waveNumber = 1;
+	Ennemy.waveMaxNumberOfEnnemys = 5;
+	Ennemy.waveNumberOfEnnemysSpawned = 0;
 	for (let i = 0; i < ennemyBuffer; i++) {
 		ennemys[i] = new Ennemy(
-			canvas.width + getRandomInt(canvas.width), 
-			getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset)+Ennemy.spawnOffset
+			canvas.width + getRandomInt(canvas.width),
+			getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset) +
+				Ennemy.spawnOffset
 		);
 		ennemys[i].index = i;
 		Ennemy.waveNumberOfEnnemysSpawned++;
-		if(Ennemy.waveNumberOfEnnemysSpawned>Ennemy.waveMaxNumberOfEnnemys){
+		if (Ennemy.waveNumberOfEnnemysSpawned > Ennemy.waveMaxNumberOfEnnemys) {
 			ennemys[i].die();
 		}
 	}
-	console.log("Vague n°"+Ennemy.waveNumber+" : "+Ennemy.waveMaxNumberOfEnnemys+" ennemies.");
-} 
+	console.log(
+		'Vague n°' +
+			Ennemy.waveNumber +
+			' : ' +
+			Ennemy.waveMaxNumberOfEnnemys +
+			' ennemies.'
+	);
+}
 
-function nextWave(){
+function nextWave() {
 	Ennemy.waveNumber++;
-	Ennemy.waveNumberOfEnnemysSpawned=0;
-	console.log("Vague n°"+Ennemy.waveNumber+" : "+Ennemy.waveMaxNumberOfEnnemys+" ennemies.");
-	Ennemy.waveMaxNumberOfEnnemys=(Ennemy.waveMaxNumberOfEnnemys*Ennemy.waveMultiplier | 0); // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
+	Ennemy.waveNumberOfEnnemysSpawned = 0;
+	console.log(
+		'Vague n°' +
+			Ennemy.waveNumber +
+			' : ' +
+			Ennemy.waveMaxNumberOfEnnemys +
+			' ennemies.'
+	);
+	Ennemy.waveMaxNumberOfEnnemys =
+		(Ennemy.waveMaxNumberOfEnnemys * Ennemy.waveMultiplier) | 0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
 	for (let a = 0; a < ennemys.length; a++) {
 		ennemys[a].fate(canvas);
-		}
+	}
 }
 
 function addScorePointOverTime() {
@@ -147,10 +165,10 @@ function addScorePointOverTime() {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;
 	}
+	
 }
 
 setInterval(addScorePointOverTime, 1500);
-//setInterval(player.addScorePointOverTime, 1000);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
@@ -163,9 +181,17 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	isInGame = true;
 });
 
-document.querySelector('.restartButton').addEventListener('click', () => {
-	console.log("RESTART");
+document.querySelector('#restartButton2').addEventListener('click', () => {
 	scoreBoard.hide();
-	isInGame = true;
-	gameOver.restartGame(canvas);
+	restartGame();
 });
+
+document.querySelector('#restartButton').addEventListener('click', () => {
+	restartGame();
+});
+
+function restartGame(){
+	gameOver.restartGame(canvas);
+	isInGame = true;
+	firstWave();
+}
