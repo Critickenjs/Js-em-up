@@ -17,5 +17,6 @@ export default class GameOver {
 	restartGame(canvas) {
 		this.hide();
 		this.player.restart(canvas);
+		document.querySelector('#scoreValue').innerHTML = this.player.score;
 	}
 }
