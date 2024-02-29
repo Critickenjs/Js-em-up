@@ -74,15 +74,17 @@ function update() {
 }
 
 function collisionWithEnnemyShots(ennemy) {
-	for (let s = 0; s < ennemy.shots.length; s++) {
-		if (ennemy.shots[s].active) {
-			if (ennemy.shots[s].isCollidingWith(player)) {
-				ennemy.shots[s].active = false;
-				console.log("isAlive : "+player.alive);
-				if (player.alive) player.die();
+	if(!player.invincible){
+		for (let s = 0; s < ennemy.shots.length; s++) {
+			if (ennemy.shots[s].active) {
+				if (ennemy.shots[s].isCollidingWith(player)) {
+					ennemy.shots[s].active = false;
+					if (player.alive) player.die();
+				}
 			}
 		}
 	}
+	
 }
 
 function collisionWithPlayerShots(ennemy) {
@@ -109,8 +111,10 @@ function wavesUpdates() {
 		if (!ennemys[a].isDead) {
 			allDead = false;
 			ennemys[a].update(canvas);
-			if (ennemys[a].isCollidingWith(player)) {
-				if (player.alive) player.die();
+			if(player.alive && !player.invincible){
+				if (ennemys[a].isCollidingWith(player)) {
+					player.die();
+				}
 			}
 			collisionWithPlayerShots(ennemys[a]);
 		}
