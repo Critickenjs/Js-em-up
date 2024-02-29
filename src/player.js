@@ -4,7 +4,7 @@ import { Shot } from './shot.js';
 export class Player extends Entity {
 	static width = 50;
 	static height = 50;
-	static maxLifes = 3;
+	static maxLifes = 1;
 	static bulletSpeed = 8;
 
 	constructor(posX, posY) {
@@ -13,7 +13,7 @@ export class Player extends Entity {
 		this.alive = true;
 		this.score = 0;
 		this.shots = [];
-		this.pseudo = 'nomVide';
+		this.pseudo = 'Player';
 		this.lifes = Player.maxLifes;
 
 		this.timerBeforeRespawn = 100;
@@ -49,7 +49,7 @@ export class Player extends Entity {
 
 	renderShots(context) {
 		for (let i = 0; i < this.shots.length; i++) {
-			if(this.shots[i].active){
+			if (this.shots[i].active) {
 				this.shots[i].render(context);
 			}
 		}
@@ -68,9 +68,12 @@ export class Player extends Entity {
 
 	shoot() {
 		this.shots.push(
-			new Shot(this.posX + this.width,
-				this.posY + this.height / 3 ,
-				Player.bulletSpeed, true)
+			new Shot(
+				this.posX + this.width,
+				this.posY + this.height / 3,
+				Player.bulletSpeed,
+				true
+			)
 		);
 	}
 
@@ -127,7 +130,7 @@ export class Player extends Entity {
 	}
 	restart() {
 		this.alive = true;
-		this.lifes = 3;
+		this.lifes = Player.maxLifes;
 		this.score = 0;
 		this.posX = 100;
 		this.posY = 100;

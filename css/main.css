@@ -1,7 +1,7 @@
 
 @font-face {
     font-family: 'Minecraft regular';
-    src: url('../css/Minecraft.ttf') format('truetype');
+    src: url('../fonts/Minecraft.ttf') format('truetype');
 }
 * {
 	box-sizing: border-box;
@@ -17,7 +17,7 @@ body {
 	/*background: rgba(14, 16, 20, 1);
 	background: #d6d6d6;*/
 	color: #acb2b8;
-	color: #777;
+	color: #000000;
 	font-family: "Minecraft regular", sans-serif;
 	display: flex;
 	flex-direction: column;
@@ -87,19 +87,32 @@ input[type="text"], input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 3px;
 }
-
-button[type="submit"] {
+/*button[type="submit"] {
     background-color: #2c3e50;
     color: #fff;
     padding: 8px 16px;
-    border: none;
+    height:31px;
     border-radius: 3px;
     cursor: pointer;
     width: 100%;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+}*/
+
+button[type="submit"] {
+    cursor: pointer;
+    height:29px;
+    width: 100%;
+    color: #fff;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
 }
 
 button[type="submit"]:hover {
+    height:29px;
     background-color: #34495e;
+    background: url(../images/btn2.png) no-repeat;
+    background-size: contain;
 }
 
 
@@ -124,6 +137,7 @@ button[type="submit"]:hover {
     display: block;
 }
 
+/*
 .restartButton {
     height: 40px;
     width: 405px;
@@ -131,13 +145,26 @@ button[type="submit"]:hover {
     color: white;
     cursor: pointer;
     background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
     line-height: 26px;
     padding-top: 6px;
-    margin-top: 20px; /* Ajout d'une marge en haut pour l'espace */
+    margin-top: 20px;
+}*/
+
+.restartButton {
+    cursor: pointer;
+    height:29px;
+    width: 250px;
+    margin: 5px;
+    color: #fff;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
 }
 
 .restartButton:hover {
+    background-color: #34495e;
     background: url(../images/btn2.png) no-repeat;
+    background-size: contain;
 }
 
 .scoreboard {
@@ -161,18 +188,31 @@ button[type="submit"]:hover {
     display: block;
 }
 
-.scoreboardButton {
+/*.scoreboardButton {
     height: 40px;
     width: 405px;
     text-align: center;
     color: white;
     cursor: pointer;
     background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
     line-height: 26px;
     padding-top: 6px;
-    margin-top: 20px; /* Ajout d'une marge en haut pour l'espace */
-}
+    margin-top: 20px;}*/
+
+.scoreboardButton {
+    cursor: pointer;
+    height:29px;
+    width: 250px;
+    margin: 5px;
+    color: #fff;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+    }
 
 .scoreboardButton:hover {
+    height:29px;
+    background-color: #34495e;
     background: url(../images/btn2.png) no-repeat;
+    background-size: contain;
 }
