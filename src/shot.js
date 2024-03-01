@@ -11,14 +11,17 @@ export class Shot extends Entity {
 	}
 	
 	render(context) {
-		context.beginPath();
-		if(this.isFromPlayer){
-			context.strokeStyle = 'green';
-		}else{
-			context.strokeStyle = 'red';
+		if (this.active) {
+			context.beginPath();
+        	context.lineWidth = 2;
+			if(this.isFromPlayer){
+				context.strokeStyle = 'green';
+			}else{
+				context.strokeStyle = 'red';
+			}
+			context.rect(this.posX, this.posY, this.width, this.height);
+			context.stroke();
 		}
-		context.rect(this.posX, this.posY, this.width, this.height);
-		context.stroke();
 	}
 
 	update() {

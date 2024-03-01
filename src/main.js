@@ -7,6 +7,7 @@ import GameOver from './gameOver.js';
 import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
 import { Entity } from './entity.js';
+import { Power } from './power.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -25,6 +26,9 @@ function resampleCanvas() {
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
+const fps = 30;
+var frameCount = 0;
+
 //Chargement des assets
 preloadAssets(assets).then(() => {
 	console.log('Assets loaded');
@@ -35,6 +39,7 @@ preloadAssets(assets).then(() => {
 //Player.players.push(new Player(100, canvas.height / 2));
 
 let player = new Player(100, canvas.height / 2);
+let power = new Power(200, canvas.height/2);
 
 let isInGame = false;
 const gameOver = new GameOver(player);
@@ -57,6 +62,7 @@ firstWave();
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	player.render(context);
+	power.render(context);
 	for (let i = 0; i < ennemys.length; i++) {
 		ennemys[i].renderShots(context);
 		if (!ennemys[i].isDead) {
@@ -70,7 +76,7 @@ function render() {
 function update() {
 	if (isInGame) {
 		player.update(canvas, keysPressed);
-
+		power.update(canvas);
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
 		if (wavesUpdates()) {
 			//Si la vague est finie, on passe à la prochaine.

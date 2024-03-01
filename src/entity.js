@@ -15,6 +15,15 @@ export class Entity {
 		};
 	}
 
+	render(context){
+		context.beginPath();
+        context.lineWidth = 1;
+		context.strokeStyle='red';
+		context.rect(this.posX, this.posY,
+					this.width, this.width);
+		context.stroke();
+	}
+
 	update() {
 		this.posX+=this.speedX*Entity.speedMultiplier;
 		this.posY+=this.speedY*Entity.speedMultiplier;
