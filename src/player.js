@@ -100,8 +100,6 @@ export class Player extends Entity {
 	//met à jour les tirs causés par le joueur.
 	updateShots(canvas) {
 		for (let i = 0; i < this.shots.length; i++) {
-			this.shots[i].posX += this.shots[i].speedX;
-			this.shots[i].posY += this.shots[i].speedY;
 			this.shots[i].update();
 			if (this.shots[i].posX > canvas.width) {
 				this.shots.shift();
@@ -149,13 +147,11 @@ export class Player extends Entity {
 				}
 			}
 			//Collisions avec les bords du canvas
-			this.posX += this.speedX;
 			if (this.posX > canvas.width - this.width) {
 				this.posX = canvas.width - this.width;
 			} else if (this.posX < 0) {
 				this.posX = 0;
 			}
-			this.posY += this.speedY;
 			if (this.posY > canvas.height - this.width) {
 				this.posY = canvas.height - this.width;
 			} else if (this.posY < 0) {
@@ -193,6 +189,7 @@ export class Player extends Entity {
 	restart(canvas) {
 		Player.teamLifes = Player.defaultNumberOfLife;
 		this.score = 0;
+		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn(canvas);
 	}

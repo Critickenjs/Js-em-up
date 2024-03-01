@@ -1,4 +1,5 @@
 export class Entity {
+	static speedMultiplier=0.8;
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
 		this.posY = posY;
@@ -15,6 +16,8 @@ export class Entity {
 	}
 
 	update() {
+		this.posX+=this.speedX*Entity.speedMultiplier;
+		this.posY+=this.speedY*Entity.speedMultiplier;
 		this.collision = {
 			topLeft: [this.posX, this.posY],
 			topRight: [this.posX + this.width, this.posY],
@@ -47,5 +50,16 @@ export class Entity {
 			coordinate[1] > this.collision.topLeft[1] &&
 			coordinate[1] < this.collision.bottomRight[1]
 		);
+	}
+
+	static addToSpeed(modifyer){
+		Entity.speedMultiplier=Math.round((Entity.speedMultiplier+modifyer)*1000)/1000
+		if(Entity.speedMultiplier>2){
+			Entity.speedMultiplier=2;
+		}
+	}
+
+	static setSpeed(newSpeed){
+		Entity.speedMultiplier=Math.round((newSpeed)*1000)/1000
 	}
 }

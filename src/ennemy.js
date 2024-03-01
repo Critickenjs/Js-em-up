@@ -42,8 +42,6 @@ export class Ennemy extends Entity {
 	//Mettre à jour les tirs causés par l'ennemi.
 	updateShots() {
 		for (let i = 0; i < this.shots.length; i++) {
-			this.shots[i].posX += this.shots[i].speedX;
-			this.shots[i].posY += this.shots[i].speedY;
 			this.shots[i].update();
 			if (this.shots[i].posX < 0) {
 				this.shots.shift();
@@ -63,8 +61,6 @@ export class Ennemy extends Entity {
 	update(canvas) {
 		this.posX += this.speedX;
 		super.update();
-		this.posX += this.speedX;
-		this.posY += this.speedY;
 		if (this.posX < 0 - this.width) {
 			this.fate(canvas);
 		}

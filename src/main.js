@@ -6,6 +6,7 @@ import HomePage from './HomePage.js';
 import GameOver from './gameOver.js';
 import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
+import { Entity } from './entity.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -142,6 +143,7 @@ function firstWave() {
 	Ennemy.waveNumber = 1;
 	Ennemy.waveMaxNumberOfEnnemys = 5;
 	Ennemy.waveNumberOfEnnemysSpawned = 0;
+	Entity.speedMultiplier=0.8;
 	for (let i = 0; i < ennemyBuffer; i++) {
 		ennemys[i] = new Ennemy(
 			canvas.width + getRandomInt(canvas.width),
@@ -165,8 +167,11 @@ function firstWave() {
 
 //Appelle la vague suivante
 function nextWave() {
+	Entity.speedMultiplier
 	Ennemy.waveNumber++;
 	Ennemy.waveNumberOfEnnemysSpawned = 0;
+	//a vitesse du jeu augmente à chaque complétion d'une vague
+	Entity.addToSpeed(0.01);
 	console.log(
 		'Vague n°' +
 			Ennemy.waveNumber +
@@ -186,6 +191,11 @@ function addScorePointOverTime() {
 	if (isInGame) {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;
+		
+		//Vitesse du jeu augmente au fur et à mesure
+		Entity.addToSpeed(0.001);
+		console.log(Entity.speedMultiplier);
+		
 	}
 }
 
