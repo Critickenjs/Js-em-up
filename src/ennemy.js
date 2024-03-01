@@ -9,13 +9,15 @@ export class Ennemy extends Entity {
 	static waveNumber = 1;
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 	static waveMultiplier=1.2;
-	static types = ['red','purple','orange'];
+	//static types = ['red','purple','orange','darkred'];
+	static types = ['red','darkred'];
 	static bulletSpeed = 8;
 	static shootTimer=100;
 	constructor(posX, posY) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.index = -1;
 		this.isDead = false;
+		this.lifes=1;
 		this.type = 'red';
 		this.applyType();
 		this.timeBeforeNextShoot=Ennemy.shootTimer;
@@ -74,6 +76,20 @@ export class Ennemy extends Entity {
 		this.isDead=true;
 	}
 
+	getHurt(canvas){ //Retourne true si l'ennemi meurt et false sinon.'
+		this.lifes--;
+		if(this.lifes<=0){
+			this.fate(canvas);
+			return true;
+		}else if(this.type=='darkred'){
+			this.height = Ennemy.height*(this.lifes/1.3) | 0;
+			this.width = Ennemy.width*(this.lifes/1.3) | 0;
+			this.posX+=this.width/3;
+			this.posY+=this.height/3;
+		}
+		return false;
+	}
+
 	fate(canvas){
 		if(Ennemy.waveNumberOfEnnemysSpawned<Ennemy.waveMaxNumberOfEnnemys){
 			this.respawn(canvas);
@@ -87,23 +103,39 @@ export class Ennemy extends Entity {
 		this.type=Ennemy.types[getRandomInt(Ennemy.types.length)]
 		this.applyType();
 		this.posX = canvas.width + getRandomInt(canvas.width);
-		this.posY = getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset)+Ennemy.spawnOffset;
+		if(this.type=='darkred'){
+			this.posY = getRandomInt(canvas.height - Ennemy.height*this.lifes - Ennemy.spawnOffset)+Ennemy.spawnOffset;
+		}else{
+			this.posY = getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset)+Ennemy.spawnOffset;
+		}
 		Ennemy.waveNumberOfEnnemysSpawned++;
 	}
 
 	applyType(){
+		this.height = Ennemy.height;
+		this.width = Ennemy.width;
 		switch(this.type){
 			case'red':
+				this.lifes=1;
 				this.speedX = -getRandomIntWithMin(1,2);
 				this.speedY = 0;
 			break;
 			case'purple':
+				this.lifes=1;
 				this.speedX = -1
 				this.speedY = 5;
 			break;
 			case'orange':
+				this.lifes=1;
 				this.speedX = -1;
 				this.speedY = getRandomIntWithMin(-1,1);
+			break;
+			case'darkred':
+				this.lifes=3;
+				this.height = Ennemy.height*(this.lifes/1.3) | 0;
+				this.width = Ennemy.width*(this.lifes/1.3) | 0;
+				this.speedX = -1;
+				this.speedY = 0;
 			break;
 		}
 	}

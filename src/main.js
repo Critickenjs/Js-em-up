@@ -97,11 +97,10 @@ function collisionWithPlayerShots(ennemy) {
 		if (player.shots[s].active) {
 			if (player.shots[s].isCollidingWith(ennemy)) {
 				player.shots[s].active = false;
-				ennemy.fate(canvas);
-				player.addScorePointOnEnemyKill();
-				document.querySelector('#scoreValue').innerHTML = player.score;
-				//!\\
-				//console.log('Score of ' + player.pseudo + ':' + player.score);
+				if(ennemy.getHurt(canvas)){
+					player.addScorePointOnEnemyKill();
+					document.querySelector('#scoreValue').innerHTML = player.score;
+				}
 			}
 		}
 	}
