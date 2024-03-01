@@ -1,16 +1,16 @@
-import { Ennemy } from './ennemy.js';
 import { Player } from './player.js';
 import keysPressed from './keysListener.js';
-import { getRandomInt } from './utils.js';
-import HomePage from './HomePage.js';
+import HomePage from './homePage.js';
 import GameOver from './gameOver.js';
 import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
 import { Entity } from './entity.js';
 import { Power } from './power.js';
+import { WavesManager } from './wavesManager.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
+export default canvas;
 
 const assets = ['../images/monster.png'];
 
@@ -26,9 +26,6 @@ function resampleCanvas() {
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 
-const fps = 30;
-var frameCount = 0;
-
 //Chargement des assets
 preloadAssets(assets).then(() => {
 	console.log('Assets loaded');
@@ -42,7 +39,8 @@ let player = new Player(100, canvas.height / 2);
 let power = new Power(200, canvas.height/2);
 
 let isInGame = false;
-const gameOver = new GameOver(player);
+const homePage = new HomePage();
+const gameOver = new GameOver();
 const scoreBoard = new ScoreBoard();
 
 document
@@ -54,35 +52,31 @@ document
 		scoreBoard.updateScore(data);
 	});
 
-const ennemyBuffer = 10; // Nombre max d'ennemis pouvant apparaitre à l'écran. A ajuster en fonction des lags.
-let ennemys = [];
-firstWave();
+
+const wavesManager = new WavesManager();
+wavesManager.firstWave();
 
 //Gêre l'affichage du jeu
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	player.render(context);
-	power.render(context);
-	for (let i = 0; i < ennemys.length; i++) {
-		ennemys[i].renderShots(context);
-		if (!ennemys[i].isDead) {
-			ennemys[i].render(context);
-		}
-	}
+	player.render();
+	power.render();
+	wavesManager.wavesRender();
 	requestAnimationFrame(render);
 }
 
 //Gêre la mise à jour des éléments du jeu.
 function update() {
 	if (isInGame) {
-		player.update(canvas, keysPressed);
-		power.update(canvas);
+		player.update(keysPressed);
+		power.update();
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
-		if (wavesUpdates()) {
+		let allDead=wavesManager.wavesUpdates(player);
+		if (allDead) {
 			//Si la vague est finie, on passe à la prochaine.
-			nextWave();
+			wavesManager.nextWave();
 		}
-
+		//Vérifie si le joeuur est mort et qu'il n'a plus de vie pour déclencger le GameOver.
 		if (!player.alive && Player.teamLifes <= 0) {
 			gameOver.show();
 			document.querySelector('.gameOver #scoreValue').innerHTML = player.score;
@@ -93,123 +87,19 @@ function update() {
 }
 
 
-//Collisions du joueur contre les tirs ennemis
-function collisionWithEnnemyShots(ennemy) {
-	if (!player.invincible) {
-		for (let s = 0; s < ennemy.shots.length; s++) {
-			if (ennemy.shots[s].active) {
-				if (ennemy.shots[s].isCollidingWith(player)) {
-					ennemy.shots[s].active = false;
-					if (player.alive) player.die();
-				}
-			}
-		}
-	}
-}
-
-//Collisions des tirs du joueurs avec les ennemis
-function collisionWithPlayerShots(ennemy) {
-	for (let s = 0; s < player.shots.length; s++) {
-		if (player.shots[s].active) {
-			if (player.shots[s].isCollidingWith(ennemy)) {
-				player.shots[s].active = false;
-				if(ennemy.getHurt(canvas)){
-					player.addScorePointOnEnemyKill();
-					document.querySelector('#scoreValue').innerHTML = player.score;
-				}
-			}
-		}
-	}
-}
-
-//Gêre le mise à jour des vagues
-function wavesUpdates() {
-	//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
-	let allDead = true;
-	for (let a = 0; a < ennemys.length; a++) {
-		ennemys[a].updateShots();
-		collisionWithEnnemyShots(ennemys[a]);
-		if (!ennemys[a].isDead) {
-			allDead = false;
-			ennemys[a].update(canvas);
-			if (player.alive && !player.invincible) {
-				if (ennemys[a].isCollidingWith(player)) {
-					player.die();
-				}
-			}
-			collisionWithPlayerShots(ennemys[a]);
-		}
-	}
-	return allDead;
-}
-
-
-//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
-function firstWave() {
-	Ennemy.waveNumber = 1;
-	Ennemy.waveMaxNumberOfEnnemys = 5;
-	Ennemy.waveNumberOfEnnemysSpawned = 0;
-	Entity.speedMultiplier=0.8;
-	for (let i = 0; i < ennemyBuffer; i++) {
-		ennemys[i] = new Ennemy(
-			canvas.width + getRandomInt(canvas.width),
-			getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset) +
-				Ennemy.spawnOffset
-		);
-		ennemys[i].index = i;
-		Ennemy.waveNumberOfEnnemysSpawned++;
-		if (Ennemy.waveNumberOfEnnemysSpawned > Ennemy.waveMaxNumberOfEnnemys) {
-			ennemys[i].die();
-		}
-	}
-	console.log(
-		'Vague n°' +
-			Ennemy.waveNumber +
-			' : ' +
-			Ennemy.waveMaxNumberOfEnnemys +
-			' ennemies.'
-	);
-}
-
-//Appelle la vague suivante
-function nextWave() {
-	Entity.speedMultiplier
-	Ennemy.waveNumber++;
-	Ennemy.waveNumberOfEnnemysSpawned = 0;
-	//a vitesse du jeu augmente à chaque complétion d'une vague
-	Entity.addToSpeed(0.01);
-	console.log(
-		'Vague n°' +
-			Ennemy.waveNumber +
-			' : ' +
-			Ennemy.waveMaxNumberOfEnnemys +
-			' ennemies.'
-	);
-	Ennemy.waveMaxNumberOfEnnemys =
-		(Ennemy.waveMaxNumberOfEnnemys * Ennemy.waveMultiplier) | 0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
-	for (let a = 0; a < ennemys.length; a++) {
-		ennemys[a].fate(canvas);
-	}
-}
-
 //Ajoute des points au fur et à mesure aux joueurs
 function addScorePointOverTime() {
 	if (isInGame) {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;
-		
 		//Vitesse du jeu augmente au fur et à mesure
 		Entity.addToSpeed(0.001);
-		console.log(Entity.speedMultiplier);
-		
 	}
 }
 
 setInterval(addScorePointOverTime, 1500);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
-
-const homePage = new HomePage();
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
@@ -227,9 +117,10 @@ document.querySelector('#restartButton').addEventListener('click', () => {
 	restartGame();
 });
 
-//Pemret de réinitialiser le jeu pour pouvoir recommencer une autre partie.
+//Permet de réinitialiser le jeu pour pouvoir recommencer une autre partie.
 function restartGame() {
-	gameOver.restartGame(canvas);
+	gameOver.restartGame();
+	player.restart();
 	isInGame = true;
-	firstWave();
+	wavesManager.firstWave();
 }

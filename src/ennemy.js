@@ -1,6 +1,10 @@
 import { Entity } from './entity.js';
 import { Shot } from './shot.js';
 import { getRandomInt, getRandomIntWithMin } from './utils.js';
+import canvas from './main.js';
+import { WavesManager } from './wavesManager.js';
+
+
 export class Ennemy extends Entity {
 
 	//Les variables de gameplay
@@ -9,12 +13,6 @@ export class Ennemy extends Entity {
 	static types = ['red','purple','orange','darkred'];
 	static bulletSpeed = 8;
 	static shootTimer=100;
-	
-	//Waves
-	static waveMaxNumberOfEnnemys = 5;
-	static waveNumberOfEnnemysSpawned = 0;
-	static waveNumber = 1;
-	static waveMultiplier=1.2;
 
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
@@ -33,9 +31,7 @@ export class Ennemy extends Entity {
 	//Afficher les tirs causés par un ennemi.
 	renderShots(context) {
 		for (let i = 0; i < this.shots.length; i++) {
-			if(this.shots[i].active){
-				this.shots[i].render(context);
-			}
+			this.shots[i].render(context);
 		}
 	}
 
@@ -50,19 +46,23 @@ export class Ennemy extends Entity {
 	}
 
 	//Afficher l'ennemi
-	render(context) {
-		context.beginPath();
-		context.fillStyle=this.type;
-		context.fillRect(this.posX, this.posY,
+	render() {
+		const context = canvas.getContext('2d');
+		this.renderShots(context);
+		if (!this.isDead) {
+			context.beginPath();
+			context.fillStyle=this.type;
+			context.fillRect(this.posX, this.posY,
 					this.width, this.width);
+		}
 	}
 
 	//metre à jour l'ennemi
-	update(canvas) {
+	update() {
 		this.posX += this.speedX;
 		super.update();
 		if (this.posX < 0 - this.width) {
-			this.fate(canvas);
+			this.fate();
 		}
 		if(this.posY<0){
 			this.speedY=Math.abs(this.speedY);
@@ -84,10 +84,10 @@ export class Ennemy extends Entity {
 
 	// La fonction se lance en cas de contact avec une balle d'un joueur.
 	// Donne la possibilité aux ennemis d'avoirs plusieurs points de vie et de ne pas mourir instantanément.
-	getHurt(canvas){ //Retourne true si l'ennemi meurt et false sinon.'
+	getHurt(){ //Retourne true si l'ennemi meurt et false sinon.'
 		this.lifes--;
 		if(this.lifes<=0){
-			this.fate(canvas);
+			this.fate();
 			return true;
 		}else if(this.type=='darkred'){
 			this.height = Ennemy.height*(this.lifes/1.3) | 0;
@@ -100,15 +100,15 @@ export class Ennemy extends Entity {
 
 	// Détermine si l'ennemi meurt (se met en attentte de la prochaine manche)
 	// ou respawn (si la manche en cours n'est pas finie et qu'il reste des ennemies à faire apparaître).
-	fate(canvas){ 
-		if(Ennemy.waveNumberOfEnnemysSpawned<Ennemy.waveMaxNumberOfEnnemys){
-			this.respawn(canvas);
+	fate(){ 
+		if(WavesManager.waveNumberOfEnnemysSpawned<WavesManager.waveMaxNumberOfEnnemys){
+			this.respawn();
 		}else{
 			this.die();
 		}
 	}
 
-	respawn(canvas) {
+	respawn() {
 		this.isDead=false;
 		this.type=Ennemy.types[getRandomInt(Ennemy.types.length)]
 		this.applyType();
@@ -118,7 +118,7 @@ export class Ennemy extends Entity {
 		}else{
 			this.posY = getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset)+Ennemy.spawnOffset;
 		}
-		Ennemy.waveNumberOfEnnemysSpawned++;
+		WavesManager.waveNumberOfEnnemysSpawned++;
 	}
 
 	// Applique les particularités et différences entre chaque types d'ennemis.

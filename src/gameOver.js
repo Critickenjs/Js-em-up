@@ -1,7 +1,5 @@
-import { Player } from './player.js';
 export default class GameOver {
-	constructor(player) {
-		this.player = player;
+	constructor() {
 		this.scoreElement = document.querySelector('#scoreValue');
 		this.restartButton = document.querySelector('#restartButton');
 		this.element = document.querySelector('.gameOver');
@@ -14,9 +12,7 @@ export default class GameOver {
 		this.element.style.display = 'none';
 	}
 
-	restartGame(canvas) {
+	restartGame() {
 		this.hide();
-		this.player.restart(canvas);
-		document.querySelector('#scoreValue').innerHTML = this.player.score;
 	}
 }

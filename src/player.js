@@ -1,5 +1,6 @@
 import { Entity } from './entity.js';
 import { Shot } from './shot.js';
+import canvas from './main.js';
 
 export class Player extends Entity {
 	//Les variables de gameplay
@@ -40,7 +41,7 @@ export class Player extends Entity {
 	}
 
 	//Fais réapparaitre le jouer à ses coordonnées de départ et le rend invincible quelques instants
-	respawn(canvas) {
+	respawn() {
 		Player.teamLifes--;
 		this.alive = true;
 		this.invincible = true;
@@ -52,8 +53,27 @@ export class Player extends Entity {
 		this.timerBeforeShots = 0;
 	}
 
+
+	//Affiche les tirs causés par le joueur.
+	renderShots(context) {
+		for (let i = 0; i < this.shots.length; i++) {
+			this.shots[i].render(context);
+		}
+	}
+
+	//met à jour les tirs causés par le joueur.
+	updateShots() {
+		for (let i = 0; i < this.shots.length; i++) {
+			this.shots[i].update();
+			if (this.shots[i].posX > canvas.width) {
+				this.shots.shift();
+			}
+		}
+	}
+
 	//Affiche le joueur.
-	render(context) {
+	render() {
+		const context = canvas.getContext('2d');
 		this.renderShots(context);
 		if (this.alive) {
 			context.beginPath();
@@ -88,29 +108,11 @@ export class Player extends Entity {
 		}
 	}
 
-	//Affiche les tirs causés par le joueur.
-	renderShots(context) {
-		for (let i = 0; i < this.shots.length; i++) {
-			if (this.shots[i].active) {
-				this.shots[i].render(context);
-			}
-		}
-	}
-
-	//met à jour les tirs causés par le joueur.
-	updateShots(canvas) {
-		for (let i = 0; i < this.shots.length; i++) {
-			this.shots[i].update();
-			if (this.shots[i].posX > canvas.width) {
-				this.shots.shift();
-			}
-		}
-	}
 
 	//met à jour le joueur.
-	update(canvas, keysPressed) {
+	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
-		this.updateShots(canvas);
+		this.updateShots();
 		if (this.alive) {
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
@@ -163,7 +165,7 @@ export class Player extends Entity {
 			//et on le fais réapparaître si nécessaire.
 			this.timerBeforeRespawn--;
 			if (this.timerBeforeRespawn <= 0) {
-				this.respawn(canvas);
+				this.respawn();
 			}
 		}
 	}
@@ -186,11 +188,41 @@ export class Player extends Entity {
 	}
 
 	//Réinitialise le joueur pour le préparer à une nouvelle partie.
-	restart(canvas) {
+	restart() {
 		Player.teamLifes = Player.defaultNumberOfLife;
 		this.score = 0;
+		document.querySelector('#scoreValue').innerHTML = this.score;
 		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
-		this.respawn(canvas);
+		this.respawn();
 	}
+
+	//Collisions du joueur contre les tirs ennemis
+collisionWithEnnemyShots(ennemy) {
+	if (!this.invincible) {
+		for (let s = 0; s < ennemy.shots.length; s++) {
+			if (ennemy.shots[s].active) {
+				if (ennemy.shots[s].isCollidingWith(this)) {
+					ennemy.shots[s].active = false;
+					if (this.alive) this.die();
+				}
+			}
+		}
+	}
+}
+
+//Collisions des tirs du joueurs avec les ennemis
+collisionWithPlayerShots(ennemy) {
+	for (let s = 0; s < this.shots.length; s++) {
+		if (this.shots[s].active) {
+			if (this.shots[s].isCollidingWith(ennemy)) {
+				this.shots[s].active = false;
+				if(ennemy.getHurt()){
+					this.addScorePointOnEnemyKill();
+					document.querySelector('#scoreValue').innerHTML = this.score;
+				}
+			}
+		}
+	}
+}
 }
