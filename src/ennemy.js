@@ -2,17 +2,23 @@ import { Entity } from './entity.js';
 import { Shot } from './shot.js';
 import { getRandomInt, getRandomIntWithMin } from './utils.js';
 export class Ennemy extends Entity {
+
+	//Les variables de gameplay
 	static width = 30;
 	static height = 30;
+	static types = ['red','purple','orange','darkred'];
+	static bulletSpeed = 8;
+	static shootTimer=100;
+	
+	//Waves
 	static waveMaxNumberOfEnnemys = 5;
 	static waveNumberOfEnnemysSpawned = 0;
 	static waveNumber = 1;
-	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 	static waveMultiplier=1.2;
-	//static types = ['red','purple','orange','darkred'];
-	static types = ['red','darkred'];
-	static bulletSpeed = 8;
-	static shootTimer=100;
+
+	//Paramétrage technique
+	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
+	
 	constructor(posX, posY) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.index = -1;
@@ -24,6 +30,7 @@ export class Ennemy extends Entity {
 		this.shots = [];
 	}
 
+	//Afficher les tirs causés par un ennemi.
 	renderShots(context) {
 		for (let i = 0; i < this.shots.length; i++) {
 			if(this.shots[i].active){
@@ -32,6 +39,7 @@ export class Ennemy extends Entity {
 		}
 	}
 
+	//Mettre à jour les tirs causés par l'ennemi.
 	updateShots() {
 		for (let i = 0; i < this.shots.length; i++) {
 			this.shots[i].posX += this.shots[i].speedX;
@@ -43,6 +51,7 @@ export class Ennemy extends Entity {
 		}
 	}
 
+	//Afficher l'ennemi
 	render(context) {
 		context.beginPath();
 		context.fillStyle=this.type;
@@ -50,6 +59,7 @@ export class Ennemy extends Entity {
 					this.width, this.width);
 	}
 
+	//metre à jour l'ennemi
 	update(canvas) {
 		this.posX += this.speedX;
 		super.update();
@@ -76,6 +86,8 @@ export class Ennemy extends Entity {
 		this.isDead=true;
 	}
 
+	// La fonction se lance en cas de contact avec une balle d'un joueur.
+	// Donne la possibilité aux ennemis d'avoirs plusieurs points de vie et de ne pas mourir instantanément.
 	getHurt(canvas){ //Retourne true si l'ennemi meurt et false sinon.'
 		this.lifes--;
 		if(this.lifes<=0){
@@ -90,7 +102,9 @@ export class Ennemy extends Entity {
 		return false;
 	}
 
-	fate(canvas){
+	// Détermine si l'ennemi meurt (se met en attentte de la prochaine manche)
+	// ou respawn (si la manche en cours n'est pas finie et qu'il reste des ennemies à faire apparaître).
+	fate(canvas){ 
 		if(Ennemy.waveNumberOfEnnemysSpawned<Ennemy.waveMaxNumberOfEnnemys){
 			this.respawn(canvas);
 		}else{
@@ -111,6 +125,11 @@ export class Ennemy extends Entity {
 		Ennemy.waveNumberOfEnnemysSpawned++;
 	}
 
+	// Applique les particularités et différences entre chaque types d'ennemis.
+	// Les red vont tout droit à une vitesse variable, ce sont les plus rapides.
+	// Les purple se déplacent en diagonale, ce qui les rend plus difficile à viser.
+	// Les orange se déplacent aussi e ndiagonale mais plus lentement, par contre ils tirent des projectiles mortel pour le joueur.
+	// Les darkred vont lentement tout droits, ils sont plus gros que les red mais sont plus résistant.
 	applyType(){
 		this.height = Ennemy.height;
 		this.width = Ennemy.width;

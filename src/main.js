@@ -12,6 +12,7 @@ const context = canvas.getContext('2d');
 
 const assets = ['../images/monster.png'];
 
+//met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
 
@@ -20,14 +21,17 @@ function resampleCanvas() {
 	canvas.height = canvas.clientHeight;
 }
 
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
+
+//Chargement des assets
 preloadAssets(assets).then(() => {
 	console.log('Assets loaded');
 });
 
-canvas.width = canvas.clientWidth;
-canvas.height = canvas.clientHeight;
 
-Player.players.push(new Player(100, canvas.height / 2));
+//création du joueur
+//Player.players.push(new Player(100, canvas.height / 2));
 
 let player = new Player(100, canvas.height / 2);
 
@@ -48,6 +52,7 @@ const ennemyBuffer = 10; // Nombre max d'ennemis pouvant apparaitre à l'écran.
 let ennemys = [];
 firstWave();
 
+//Gêre l'affichage du jeu
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	player.render(context);
@@ -60,6 +65,7 @@ function render() {
 	requestAnimationFrame(render);
 }
 
+//Gêre la mise à jour des éléments du jeu.
 function update() {
 	if (isInGame) {
 		player.update(canvas, keysPressed);
@@ -79,6 +85,8 @@ function update() {
 	}
 }
 
+
+//Collisions du joueur contre les tirs ennemis
 function collisionWithEnnemyShots(ennemy) {
 	if (!player.invincible) {
 		for (let s = 0; s < ennemy.shots.length; s++) {
@@ -92,6 +100,7 @@ function collisionWithEnnemyShots(ennemy) {
 	}
 }
 
+//Collisions des tirs du joueurs avec les ennemis
 function collisionWithPlayerShots(ennemy) {
 	for (let s = 0; s < player.shots.length; s++) {
 		if (player.shots[s].active) {
@@ -106,6 +115,7 @@ function collisionWithPlayerShots(ennemy) {
 	}
 }
 
+//Gêre le mise à jour des vagues
 function wavesUpdates() {
 	//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
 	let allDead = true;
@@ -126,6 +136,8 @@ function wavesUpdates() {
 	return allDead;
 }
 
+
+//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
 function firstWave() {
 	Ennemy.waveNumber = 1;
 	Ennemy.waveMaxNumberOfEnnemys = 5;
@@ -151,6 +163,7 @@ function firstWave() {
 	);
 }
 
+//Appelle la vague suivante
 function nextWave() {
 	Ennemy.waveNumber++;
 	Ennemy.waveNumberOfEnnemysSpawned = 0;
@@ -168,6 +181,7 @@ function nextWave() {
 	}
 }
 
+//Ajoute des points au fur et à mesure aux joueurs
 function addScorePointOverTime() {
 	if (isInGame) {
 		player.score += 1;
@@ -197,6 +211,7 @@ document.querySelector('#restartButton').addEventListener('click', () => {
 	restartGame();
 });
 
+//Pemret de réinitialiser le jeu pour pouvoir recommencer une autre partie.
 function restartGame() {
 	gameOver.restartGame(canvas);
 	isInGame = true;

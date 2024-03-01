@@ -9,6 +9,7 @@ export class Shot extends Entity {
 		this.active = true;
 		this.isFromPlayer = isFromPlayer;
 	}
+	
 	render(context) {
 		context.beginPath();
 		if(this.isFromPlayer){

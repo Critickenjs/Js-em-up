@@ -32,14 +32,16 @@ export class Player extends Entity {
 		this.invincibleAnimation = (20/Player.animationSpeed) | 0;
 	}
 
+	//Tue le joueur, initialise le timer avant sa réapparition
 	die() {
 		this.alive = false;
 		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * 1.2) | 0; //Le respawn devient de plus en plus long plus on meurt.
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
-		Player.teamLifes--;
 	}
 
+	//Fais réapparaitre le jouer à ses coordonnées de départ et le rend invincible quelques instants
 	respawn(canvas) {
+		Player.teamLifes--;
 		this.alive = true;
 		this.invincible = true;
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
@@ -50,6 +52,7 @@ export class Player extends Entity {
 		this.timerBeforeShots = 0;
 	}
 
+	//Affiche le joueur.
 	render(context) {
 		this.renderShots(context);
 		if (this.alive) {
@@ -85,6 +88,7 @@ export class Player extends Entity {
 		}
 	}
 
+	//Affiche les tirs causés par le joueur.
 	renderShots(context) {
 		for (let i = 0; i < this.shots.length; i++) {
 			if (this.shots[i].active) {
@@ -93,6 +97,7 @@ export class Player extends Entity {
 		}
 	}
 
+	//met à jour les tirs causés par le joueur.
 	updateShots(canvas) {
 		for (let i = 0; i < this.shots.length; i++) {
 			this.shots[i].posX += this.shots[i].speedX;
@@ -104,31 +109,24 @@ export class Player extends Entity {
 		}
 	}
 
-	shoot() {
-		this.shots.push(
-			new Shot(
-				this.posX + this.width,
-				this.posY + this.height / 3,
-				Player.bulletSpeed,
-				true
-			)
-		);
-	}
-
+	//met à jour le joueur.
 	update(canvas, keysPressed) {
-		super.update();
+		super.update(); //Essentiel pour les collisions entre entités
 		this.updateShots(canvas);
 		if (this.alive) {
+			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
 				this.timerBeforeLosingInvincibility--;
 				if (this.timerBeforeLosingInvincibility < 0) {
 					this.invincible = false;
 				}
 			}
+			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;
 			if (this.timerBeforeShots < 0) {
 				this.timerBeforeShots = 0;
 			}
+			//On met à jour la position du joueur
 			this.speedY = 0;
 			this.speedX = 0;
 			if (keysPressed.ArrowDown) {
@@ -143,12 +141,14 @@ export class Player extends Entity {
 			if (keysPressed.ArrowRight) {
 				this.speedX = 5;
 			}
+			//Le joueur déclenche un tir et active le cooldown si il appuie sur espace
 			if (keysPressed.Space) {
 				if (this.timerBeforeShots <= 0) {
 					this.shoot();
 					this.timerBeforeShots = 10;
 				}
 			}
+			//Collisions avec les bords du canvas
 			this.posX += this.speedX;
 			if (this.posX > canvas.width - this.width) {
 				this.posX = canvas.width - this.width;
@@ -162,6 +162,9 @@ export class Player extends Entity {
 				this.posY = 0;
 			}
 		} else {
+			//Si le joueur n'est pas vivant,
+			//on vérifie le timer avant sa réapparition
+			//et on le fais réapparaître si nécessaire.
 			this.timerBeforeRespawn--;
 			if (this.timerBeforeRespawn <= 0) {
 				this.respawn(canvas);
@@ -169,10 +172,24 @@ export class Player extends Entity {
 		}
 	}
 
+	//Fais tirer au joueur un projectile.
+	shoot() {
+		this.shots.push(
+			new Shot(
+				this.posX + this.width,
+				this.posY + this.height / 3,
+				Player.bulletSpeed,
+				true
+			)
+		);
+	}
+
+	//Ajoute des points au joueur pour chaque kill d'ennemis
 	addScorePointOnEnemyKill() {
 		this.score += 10;
 	}
 
+	//Réinitialise le joueur pour le préparer à une nouvelle partie.
 	restart(canvas) {
 		Player.teamLifes = Player.defaultNumberOfLife;
 		this.score = 0;
