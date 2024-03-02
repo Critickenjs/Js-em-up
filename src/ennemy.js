@@ -169,7 +169,7 @@ export class Ennemy extends Entity {
 	if (!player.invincible) {
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
-				if (this.shots[s].isCollidingWith(this)) {
+				if (this.shots[s].isCollidingWith(player)) {
 					this.shots[s].active = false;
 					if (player.alive) player.die();
 				}

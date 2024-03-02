@@ -7,6 +7,7 @@ import preloadAssets from './preLoadAsset.js';
 import { Entity } from './entity.js';
 import { Power } from './power.js';
 import { WavesManager } from './wavesManager.js';
+import { getRandomInt } from './utils.js';
 
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -36,7 +37,6 @@ preloadAssets(assets).then(() => {
 //Player.players.push(new Player(100, canvas.height / 2));
 
 let player = new Player(100, canvas.height / 2);
-let power = new Power(200, canvas.height/2);
 
 let isInGame = false;
 const homePage = new HomePage();
@@ -60,7 +60,9 @@ wavesManager.firstWave();
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	player.render();
-	power.render();
+	for(let i=0 ; i<Power.powers.length ; i++){
+		Power.powers[i].render();
+	}
 	wavesManager.wavesRender();
 	requestAnimationFrame(render);
 }
@@ -69,12 +71,22 @@ function render() {
 function update() {
 	if (isInGame) {
 		player.update(keysPressed);
-		power.update();
+		for(let i=0 ; i<Power.powers.length ; i++){
+			Power.powers[i].powerCollideWithPlayer(player);
+            Power.powers[i].update();
+        }
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
 		let allDead=wavesManager.wavesUpdates(player);
 		if (allDead) {
 			//Si la vague est finie, on passe à la prochaine.
 			wavesManager.nextWave();
+			if(WavesManager.waveNumber%20==0){
+				Player.teamLifes++;
+				console.log("Vous gagnez une vie suplémentaire !");
+			}
+			if(WavesManager.waveNumber%5==0){
+				Power.powers.push(new Power(canvas.width, getRandomInt(canvas.height-Power.radius*2)+Power.radius));
+			}
 		}
 		//Vérifie si le joeuur est mort et qu'il n'a plus de vie pour déclencger le GameOver.
 		if (!player.alive && Player.teamLifes <= 0) {

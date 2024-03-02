@@ -12,9 +12,7 @@ export class Player extends Entity {
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibilty = 100;
 
-	//Paramétrage technique
-	static animationSpeed=1; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
-
+	
 	//Les déclarations
 	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
 	static players = [];
@@ -30,7 +28,9 @@ export class Player extends Entity {
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
-		this.invincibleAnimation = (20/Player.animationSpeed) | 0;
+		this.invincibleAnimation = (20/this.animationSpeed) | 0;
+		this.animationSpeed=0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
+	
 	}
 
 	//Tue le joueur, initialise le timer avant sa réapparition
@@ -44,13 +44,18 @@ export class Player extends Entity {
 	respawn() {
 		Player.teamLifes--;
 		this.alive = true;
-		this.invincible = true;
-		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
+		this.becomeInvincible(Player.maxTimeForInvincibilty);
 		this.posY = canvas.height / 2;
 		this.posX = 100;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.timerBeforeShots = 0;
+	}
+
+	becomeInvincible(duration){ //default 100 for respawn and 500 for power up
+		this.invincible = true;
+		this.timerBeforeLosingInvincibility = duration;
+		this.animationSpeed=0.6;
 	}
 
 
@@ -80,11 +85,11 @@ export class Player extends Entity {
 			
 			if (this.invincible) {
 				this.invincibleAnimation--;
-				if(this.invincibleAnimation<(10/Player.animationSpeed) | 0){
+				if(this.invincibleAnimation<(10/this.animationSpeed) | 0){
 					context.fillStyle = 'blue';
 					context.fillRect(this.posX, this.posY, this.width, this.height);
 					if(this.invincibleAnimation<0){
-						this.invincibleAnimation=(20/Player.animationSpeed) | 0;
+						this.invincibleAnimation=(20/this.animationSpeed) | 0;
 					}
 				}			
 				context.lineWidth = 3;
@@ -120,6 +125,9 @@ export class Player extends Entity {
 				if (this.timerBeforeLosingInvincibility < 0) {
 					this.invincible = false;
 				}
+				//Moins il reste de temps d'invincibilité, plus l'animation s'accélère
+				this.animationSpeed=Math.floor((this.animationSpeed+(0.005-this.timerBeforeLosingInvincibility/100000))*100000)/100000;
+				console.log(this.animationSpeed);
 			}
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;
