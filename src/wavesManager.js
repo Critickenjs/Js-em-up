@@ -21,6 +21,7 @@ export class WavesManager {
     //Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
     firstWave() {
         WavesManager.waveNumber = 1;
+		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
         WavesManager.waveMaxNumberOfEnnemys = 5;
         WavesManager.waveNumberOfEnnemysSpawned = 0;
         Entity.speedMultiplier=0.8;
@@ -49,6 +50,7 @@ export class WavesManager {
     nextWave() {
         Entity.speedMultiplier
         WavesManager.waveNumber++;
+		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
         WavesManager.waveNumberOfEnnemysSpawned = 0;
         //a vitesse du jeu augmente à chaque complétion d'une vague
         Entity.addToSpeed(0.01);

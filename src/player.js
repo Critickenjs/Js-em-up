@@ -43,6 +43,7 @@ export class Player extends Entity {
 	//Fais réapparaitre le jouer à ses coordonnées de départ et le rend invincible quelques instants
 	respawn() {
 		Player.teamLifes--;
+		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 		this.alive = true;
 		this.becomeInvincible(Player.maxTimeForInvincibilty);
 		this.posY = canvas.height / 2;
@@ -127,7 +128,6 @@ export class Player extends Entity {
 				}
 				//Moins il reste de temps d'invincibilité, plus l'animation s'accélère
 				this.animationSpeed=Math.floor((this.animationSpeed+(0.005-this.timerBeforeLosingInvincibility/100000))*100000)/100000;
-				console.log(this.animationSpeed);
 			}
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;

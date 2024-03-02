@@ -83,6 +83,7 @@ function update() {
 			if(WavesManager.waveNumber%20==0){
 				Player.teamLifes++;
 				console.log("Vous gagnez une vie suplémentaire !");
+				document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 			}
 			if(WavesManager.waveNumber%5==0){
 				Power.powers.push(new Power(canvas.width, getRandomInt(canvas.height-Power.radius*2)+Power.radius));
@@ -100,7 +101,7 @@ function update() {
 
 
 //Ajoute des points au fur et à mesure aux joueurs
-function addScorePointOverTime() {
+function addScorePointOverTime() { //A renommer updateHUD
 	if (isInGame) {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;
@@ -109,9 +110,12 @@ function addScorePointOverTime() {
 	}
 }
 
+
 setInterval(addScorePointOverTime, 1500);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
+
+document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
