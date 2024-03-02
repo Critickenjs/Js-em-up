@@ -63,9 +63,6 @@ export class WavesManager {
         for (let a = 0; a < this.ennemys.length; a++) {
             this.ennemys[a].fate();
         }
-        if(WavesManager.waveNumber<=1000){
-            this.nextWave();
-        }
     }
 
     //Gêre le mise à jour des vagues
@@ -74,7 +71,7 @@ export class WavesManager {
         let allDead = true;
         for (let a = 0; a < this.ennemys.length; a++) {
             this.ennemys[a].updateShots();
-            player.collisionWithEnnemyShots(this.ennemys[a]);
+            this.ennemys[a].ennemyShotsCollideWithPlayer(player);
             if (!this.ennemys[a].isDead) {
                 allDead = false;
                 this.ennemys[a].update();
@@ -83,7 +80,7 @@ export class WavesManager {
                         player.die();
                     }
                 }
-                player.collisionWithPlayerShots(this.ennemys[a]);
+                player.playerShotsCollideWithEnnemy(this.ennemys[a]);
             }
         }
         return allDead;

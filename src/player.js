@@ -197,22 +197,9 @@ export class Player extends Entity {
 		this.respawn();
 	}
 
-	//Collisions du joueur contre les tirs ennemis
-collisionWithEnnemyShots(ennemy) {
-	if (!this.invincible) {
-		for (let s = 0; s < ennemy.shots.length; s++) {
-			if (ennemy.shots[s].active) {
-				if (ennemy.shots[s].isCollidingWith(this)) {
-					ennemy.shots[s].active = false;
-					if (this.alive) this.die();
-				}
-			}
-		}
-	}
-}
 
 //Collisions des tirs du joueurs avec les ennemis
-collisionWithPlayerShots(ennemy) {
+playerShotsCollideWithEnnemy(ennemy) {
 	for (let s = 0; s < this.shots.length; s++) {
 		if (this.shots[s].active) {
 			if (this.shots[s].isCollidingWith(ennemy)) {

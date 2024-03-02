@@ -162,4 +162,19 @@ export class Ennemy extends Entity {
 				-Ennemy.bulletSpeed, false)
 		);
 	}
+
+
+	//Collisions du joueur contre les tirs ennemis
+	ennemyShotsCollideWithPlayer(player) {
+	if (!player.invincible) {
+		for (let s = 0; s < this.shots.length; s++) {
+			if (this.shots[s].active) {
+				if (this.shots[s].isCollidingWith(this)) {
+					this.shots[s].active = false;
+					if (player.alive) player.die();
+				}
+			}
+		}
+	}
+}
 }
