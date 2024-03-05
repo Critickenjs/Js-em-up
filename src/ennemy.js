@@ -4,27 +4,25 @@ import { getRandomInt, getRandomIntWithMin } from './utils.js';
 import canvas from './main.js';
 import { WavesManager } from './wavesManager.js';
 
-
 export class Ennemy extends Entity {
-
 	//Les variables de gameplay
 	static width = 30;
 	static height = 30;
-	static types = ['red','purple','orange','darkred'];
+	static types = ['red', 'purple', 'orange', 'darkred'];
 	static bulletSpeed = 8;
-	static shootTimer=100;
+	static shootTimer = 100;
 
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
-	
+
 	constructor(posX, posY) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.index = -1;
 		this.isDead = false;
-		this.lifes=1;
+		this.lifes = 1;
 		this.type = 'red';
 		this.applyType();
-		this.timeBeforeNextShoot=Ennemy.shootTimer;
+		this.timeBeforeNextShoot = Ennemy.shootTimer;
 		this.shots = [];
 	}
 
@@ -51,9 +49,8 @@ export class Ennemy extends Entity {
 		this.renderShots(context);
 		if (!this.isDead) {
 			context.beginPath();
-			context.fillStyle=this.type;
-			context.fillRect(this.posX, this.posY,
-					this.width, this.width);
+			context.fillStyle = this.type;
+			context.fillRect(this.posX, this.posY, this.width, this.width);
 		}
 	}
 
@@ -64,59 +61,71 @@ export class Ennemy extends Entity {
 		if (this.posX < 0 - this.width) {
 			this.fate();
 		}
-		if(this.posY<0){
-			this.speedY=Math.abs(this.speedY);
-		}else if(this.posY>canvas.height-Ennemy.height){
-			this.speedY=-this.speedY;
+		if (this.posY < 0) {
+			this.speedY = Math.abs(this.speedY);
+		} else if (this.posY > canvas.height - Ennemy.height) {
+			this.speedY = -this.speedY;
 		}
-		if(this.type=='orange' && this.posX<canvas.width*1.2){
+		if (this.type == 'orange' && this.posX < canvas.width * 1.2) {
 			this.timeBeforeNextShoot--;
-			if(this.timeBeforeNextShoot<=0){
+			if (this.timeBeforeNextShoot <= 0) {
 				this.shoot();
-				this.timeBeforeNextShoot=Ennemy.shootTimer;
+				this.timeBeforeNextShoot = Ennemy.shootTimer;
 			}
 		}
 	}
 
-	die(){
-		this.isDead=true;
+	die() {
+		this.isDead = true;
 	}
 
 	// La fonction se lance en cas de contact avec une balle d'un joueur.
 	// Donne la possibilité aux ennemis d'avoirs plusieurs points de vie et de ne pas mourir instantanément.
-	getHurt(){ //Retourne true si l'ennemi meurt et false sinon.'
+	getHurt() {
+		//Retourne true si l'ennemi meurt et false sinon.'
 		this.lifes--;
-		if(this.lifes<=0){
+		if (this.lifes <= 0) {
 			this.fate();
 			return true;
-		}else if(this.type=='darkred'){
-			this.height = Ennemy.height*(this.lifes/1.3) | 0;
-			this.width = Ennemy.width*(this.lifes/1.3) | 0;
-			this.posX+=this.width/3;
-			this.posY+=this.height/3;
+		} else if (this.type == 'darkred') {
+			this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
+			this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
+			this.posX += this.width / 3;
+			this.posY += this.height / 3;
 		}
 		return false;
 	}
 
 	// Détermine si l'ennemi meurt (se met en attentte de la prochaine manche)
 	// ou respawn (si la manche en cours n'est pas finie et qu'il reste des ennemies à faire apparaître).
-	fate(){ 
-		if(WavesManager.waveNumberOfEnnemysSpawned<WavesManager.waveMaxNumberOfEnnemys){
+	fate() {
+		if (
+			WavesManager.waveNumberOfEnnemysSpawned <
+			WavesManager.waveMaxNumberOfEnnemys
+		) {
 			this.respawn();
-		}else{
+		} else {
 			this.die();
 		}
 	}
 
 	respawn() {
-		this.isDead=false;
-		this.type=Ennemy.types[getRandomInt(Ennemy.types.length)]
+		this.isDead = false;
+		this.type = Ennemy.types[getRandomInt(Ennemy.types.length)];
 		this.applyType();
-		this.posX = canvas.width + getRandomInt(canvas.width);
-		if(this.type=='darkred'){
-			this.posY = getRandomInt(canvas.height - Ennemy.height*this.lifes - Ennemy.spawnOffset)+Ennemy.spawnOffset;
-		}else{
-			this.posY = getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset)+Ennemy.spawnOffset;
+		this.posX =
+			canvas.width +
+			getRandomInt(WavesManager.maxRandomSpawnDistance) +
+			WavesManager.spawnDistance;
+		if (this.type == 'darkred') {
+			this.posY =
+				getRandomInt(
+					canvas.height - Ennemy.height * this.lifes - Ennemy.spawnOffset
+				) + Ennemy.spawnOffset;
+		} else {
+			this.posY =
+				getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset) +
+				Ennemy.spawnOffset;
 		}
 		WavesManager.waveNumberOfEnnemysSpawned++;
 	}
@@ -126,55 +135,57 @@ export class Ennemy extends Entity {
 	// Les purple se déplacent en diagonale, ce qui les rend plus difficile à viser.
 	// Les orange se déplacent aussi e ndiagonale mais plus lentement, par contre ils tirent des projectiles mortel pour le joueur.
 	// Les darkred vont lentement tout droits, ils sont plus gros que les red mais sont plus résistant.
-	applyType(){
+	applyType() {
 		this.height = Ennemy.height;
 		this.width = Ennemy.width;
-		switch(this.type){
-			case'red':
-				this.lifes=1;
-				this.speedX = -getRandomIntWithMin(1,2);
+		switch (this.type) {
+			case 'red':
+				this.lifes = 1;
+				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = 0;
-			break;
-			case'purple':
-				this.lifes=1;
-				this.speedX = -1
+				break;
+			case 'purple':
+				this.lifes = 1;
+				this.speedX = -1;
 				this.speedY = 5;
-			break;
-			case'orange':
-				this.lifes=1;
+				break;
+			case 'orange':
+				this.lifes = 1;
 				this.speedX = -1;
-				this.speedY = getRandomIntWithMin(-1,1);
-			break;
-			case'darkred':
-				this.lifes=3;
-				this.height = Ennemy.height*(this.lifes/1.3) | 0;
-				this.width = Ennemy.width*(this.lifes/1.3) | 0;
+				this.speedY = getRandomIntWithMin(-1, 1);
+				break;
+			case 'darkred':
+				this.lifes = 3;
+				this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
+				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
 				this.speedX = -1;
 				this.speedY = 0;
-			break;
+				break;
 		}
 	}
 
 	shoot() {
 		this.shots.push(
-			new Shot(this.posX,
-				this.posY + this.height / 3 ,
-				-Ennemy.bulletSpeed, false)
+			new Shot(
+				this.posX,
+				this.posY + this.height / 3,
+				-Ennemy.bulletSpeed,
+				false
+			)
 		);
 	}
 
-
 	//Collisions du joueur contre les tirs ennemis
 	ennemyShotsCollideWithPlayer(player) {
-	if (!player.invincible) {
-		for (let s = 0; s < this.shots.length; s++) {
-			if (this.shots[s].active) {
-				if (this.shots[s].isCollidingWith(player)) {
-					this.shots[s].active = false;
-					if (player.alive) player.die();
+		if (!player.invincible) {
+			for (let s = 0; s < this.shots.length; s++) {
+				if (this.shots[s].active) {
+					if (this.shots[s].isCollidingWith(player)) {
+						this.shots[s].active = false;
+						if (player.alive) player.die();
+					}
 				}
 			}
 		}
 	}
-}
 }

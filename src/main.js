@@ -22,6 +22,8 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
+	console.log(canvas.width);
+	console.log(canvas.height);
 }
 
 canvas.width = canvas.clientWidth;
@@ -31,7 +33,6 @@ canvas.height = canvas.clientHeight;
 preloadAssets(assets).then(() => {
 	console.log('Assets loaded');
 });
-
 
 //création du joueur
 //Player.players.push(new Player(100, canvas.height / 2));
@@ -52,7 +53,6 @@ document
 		scoreBoard.updateScore(data);
 	});
 
-
 const wavesManager = new WavesManager();
 wavesManager.firstWave();
 
@@ -60,7 +60,7 @@ wavesManager.firstWave();
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	player.render();
-	for(let i=0 ; i<Power.powers.length ; i++){
+	for (let i = 0; i < Power.powers.length; i++) {
 		Power.powers[i].render();
 	}
 	wavesManager.wavesRender();
@@ -71,22 +71,27 @@ function render() {
 function update() {
 	if (isInGame) {
 		player.update(keysPressed);
-		for(let i=0 ; i<Power.powers.length ; i++){
+		for (let i = 0; i < Power.powers.length; i++) {
 			Power.powers[i].powerCollideWithPlayer(player);
-            Power.powers[i].update();
-        }
+			Power.powers[i].update();
+		}
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
-		let allDead=wavesManager.wavesUpdates(player);
+		let allDead = wavesManager.wavesUpdates(player);
 		if (allDead) {
 			//Si la vague est finie, on passe à la prochaine.
 			wavesManager.nextWave();
-			if(WavesManager.waveNumber%20==0){
+			if (WavesManager.waveNumber % 20 == 0) {
 				Player.teamLifes++;
-				console.log("Vous gagnez une vie suplémentaire !");
+				console.log('Vous gagnez une vie suplémentaire !');
 				document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 			}
-			if(WavesManager.waveNumber%5==0){
-				Power.powers.push(new Power(canvas.width, getRandomInt(canvas.height-Power.radius*2)+Power.radius));
+			if (WavesManager.waveNumber % 5 == 0) {
+				Power.powers.push(
+					new Power(
+						canvas.width,
+						getRandomInt(canvas.height - Power.radius * 2) + Power.radius
+					)
+				);
 			}
 		}
 		//Vérifie si le joeuur est mort et qu'il n'a plus de vie pour déclencger le GameOver.
@@ -99,9 +104,9 @@ function update() {
 	}
 }
 
-
 //Ajoute des points au fur et à mesure aux joueurs
-function addScorePointOverTime() { //A renommer updateHUD
+function addScorePointOverTime() {
+	//A renommer updateHUD
 	if (isInGame) {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;
@@ -109,7 +114,6 @@ function addScorePointOverTime() { //A renommer updateHUD
 		Entity.addToSpeed(0.001);
 	}
 }
-
 
 setInterval(addScorePointOverTime, 1500);
 setInterval(update, 1000 / 60);

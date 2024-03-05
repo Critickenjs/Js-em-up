@@ -101,7 +101,7 @@ input[type="text"], input[type="password"] {
 
 button[type="submit"] {
     cursor: pointer;
-    height:29px;
+    height:2em;
     width: 100%;
     color: #fff;
     background: url(../images/btn1.png) no-repeat;
@@ -109,7 +109,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    height:29px;
+    height:2em;
     background-color: #34495e;
     background: url(../images/btn2.png) no-repeat;
     background-size: contain;
