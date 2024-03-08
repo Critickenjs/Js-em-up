@@ -2,6 +2,7 @@ import { Entity } from './entity.js';
 export class Shot extends Entity {
 	static width = 20;
 	static height = 10;
+	static defaultSpeed = 12;
 	constructor(posX, posY, speed, isFromPlayer) {
 		super(posX, posY, Shot.width, Shot.height);
 		this.speedX = speed;
@@ -9,14 +10,14 @@ export class Shot extends Entity {
 		this.active = true;
 		this.isFromPlayer = isFromPlayer;
 	}
-	
+
 	render(context) {
 		if (this.active) {
 			context.beginPath();
-        	context.lineWidth = 2;
-			if(this.isFromPlayer){
+			context.lineWidth = 2;
+			if (this.isFromPlayer) {
 				context.strokeStyle = 'green';
-			}else{
+			} else {
 				context.strokeStyle = 'red';
 			}
 			context.rect(this.posX, this.posY, this.width, this.height);
