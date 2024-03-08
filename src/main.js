@@ -13,7 +13,7 @@ const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 export default canvas;
 
-const assets = ['../images/monster.png'];
+const assets = ['../images/monster.png', '../images/spaceship.png'];
 
 //met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());

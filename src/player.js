@@ -30,7 +30,8 @@ export class Player extends Entity {
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
 		this.invincibleAnimation = (20/this.animationSpeed) | 0;
 		this.animationSpeed=0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
-	
+		this.image = new Image();
+		this.image.src = '../images/monster.png';
 	}
 
 	//Tue le joueur, initialise le timer avant sa réapparition
@@ -82,13 +83,10 @@ export class Player extends Entity {
 		const context = canvas.getContext('2d');
 		this.renderShots(context);
 		if (this.alive) {
-			context.beginPath();
-			
 			if (this.invincible) {
 				this.invincibleAnimation--;
 				if(this.invincibleAnimation<(10/this.animationSpeed) | 0){
-					context.fillStyle = 'blue';
-					context.fillRect(this.posX, this.posY, this.width, this.height);
+					context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
 					if(this.invincibleAnimation<0){
 						this.invincibleAnimation=(20/this.animationSpeed) | 0;
 					}
@@ -103,8 +101,7 @@ export class Player extends Entity {
 				);
 				context.stroke();
 			}else{
-				context.fillStyle = 'blue';
-				context.fillRect(this.posX, this.posY, this.width, this.height);
+				context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
 			}
 			context.lineWidth = 1;
 			context.font = '16px Minecraft Regular';
