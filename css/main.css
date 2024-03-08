@@ -224,3 +224,20 @@ button[type="submit"]:hover {
     background: url(../images/btn2.png) no-repeat;
     background-size: contain;
 }
+
+.difficulty {
+    margin-top: 20px;
+}
+
+.difficulty label {
+    display: block;
+    font-weight: bold;
+}
+
+.difficulty select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}

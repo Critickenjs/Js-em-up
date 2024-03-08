@@ -13,7 +13,7 @@ const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 export default canvas;
 
-const assets = ['../images/monster.png', '../images/spaceship.png'];
+const assets = ['../images/monster.png', '../images/spaceship.png', '../images/btn1.png', '../images/btn2.png'];
 
 //met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
@@ -31,7 +31,8 @@ canvas.height = canvas.clientHeight;
 
 //Chargement des assets
 preloadAssets(assets).then(() => {
-	console.log('Assets loaded');
+	console.log('Assets are loaded');
+	
 });
 
 //création du joueur
