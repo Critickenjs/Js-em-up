@@ -7,12 +7,12 @@ export class Player extends Entity {
 	static width = 50;
 	static height = 50;
 	static defaultNumberOfLife = 3;
-	static playerSpeed = 5;
-	static bulletSpeed = 8;
+	static playerSpeed = 3;
+	static bulletSpeed = Shot.defaultSpeed;
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibilty = 100;
+	static accelerationMultiplier = 1.4;
 
-	
 	//Les déclarations
 	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
 	static players = [];
@@ -28,9 +28,10 @@ export class Player extends Entity {
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
-		this.invincibleAnimation = (20/this.animationSpeed) | 0;
-		this.animationSpeed=0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
-	
+		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
+		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
+		this.accelerationX = 0;
+		this.accelerationY = 0;
 	}
 
 	//Tue le joueur, initialise le timer avant sa réapparition
@@ -50,15 +51,17 @@ export class Player extends Entity {
 		this.posX = 100;
 		this.speedX = 0;
 		this.speedY = 0;
+		this.accelerationX = 0;
+		this.accelerationY = 0;
 		this.timerBeforeShots = 0;
 	}
 
-	becomeInvincible(duration){ //default 100 for respawn and 500 for power up
+	becomeInvincible(duration) {
+		//default 100 for respawn and 500 for power up
 		this.invincible = true;
 		this.timerBeforeLosingInvincibility = duration;
-		this.animationSpeed=0.6;
+		this.animationSpeed = 0.6;
 	}
-
 
 	//Affiche les tirs causés par le joueur.
 	renderShots(context) {
@@ -83,26 +86,21 @@ export class Player extends Entity {
 		this.renderShots(context);
 		if (this.alive) {
 			context.beginPath();
-			
+
 			if (this.invincible) {
 				this.invincibleAnimation--;
-				if(this.invincibleAnimation<(10/this.animationSpeed) | 0){
+				if ((this.invincibleAnimation < 10 / this.animationSpeed) | 0) {
 					context.fillStyle = 'blue';
 					context.fillRect(this.posX, this.posY, this.width, this.height);
-					if(this.invincibleAnimation<0){
-						this.invincibleAnimation=(20/this.animationSpeed) | 0;
+					if (this.invincibleAnimation < 0) {
+						this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 					}
-				}			
+				}
 				context.lineWidth = 3;
 				context.strokeStyle = 'purple';
-				context.rect(
-					this.posX,
-					this.posY,
-					this.width,
-					this.height
-				);
+				context.rect(this.posX, this.posY, this.width, this.height);
 				context.stroke();
-			}else{
+			} else {
 				context.fillStyle = 'blue';
 				context.fillRect(this.posX, this.posY, this.width, this.height);
 			}
@@ -113,7 +111,6 @@ export class Player extends Entity {
 			context.fillText(this.pseudo, this.posX, this.posY - 10);
 		}
 	}
-
 
 	//met à jour le joueur.
 	update(keysPressed) {
@@ -127,7 +124,12 @@ export class Player extends Entity {
 					this.invincible = false;
 				}
 				//Moins il reste de temps d'invincibilité, plus l'animation s'accélère
-				this.animationSpeed=Math.floor((this.animationSpeed+(0.005-this.timerBeforeLosingInvincibility/100000))*100000)/100000;
+				this.animationSpeed =
+					Math.floor(
+						(this.animationSpeed +
+							(0.005 - this.timerBeforeLosingInvincibility / 100000)) *
+							100000
+					) / 100000;
 			}
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;
@@ -137,18 +139,8 @@ export class Player extends Entity {
 			//On met à jour la position du joueur
 			this.speedY = 0;
 			this.speedX = 0;
-			if (keysPressed.ArrowDown) {
-				this.speedY = 5;
-			}
-			if (keysPressed.ArrowUp) {
-				this.speedY = -5;
-			}
-			if (keysPressed.ArrowLeft) {
-				this.speedX = -5;
-			}
-			if (keysPressed.ArrowRight) {
-				this.speedX = 5;
-			}
+			this.deceleration();
+			this.acceleration(keysPressed);
 			//Le joueur déclenche un tir et active le cooldown si il appuie sur espace
 			if (keysPressed.Space) {
 				if (this.timerBeforeShots <= 0) {
@@ -157,16 +149,7 @@ export class Player extends Entity {
 				}
 			}
 			//Collisions avec les bords du canvas
-			if (this.posX > canvas.width - this.width) {
-				this.posX = canvas.width - this.width;
-			} else if (this.posX < 0) {
-				this.posX = 0;
-			}
-			if (this.posY > canvas.height - this.width) {
-				this.posY = canvas.height - this.width;
-			} else if (this.posY < 0) {
-				this.posY = 0;
-			}
+			this.borderCollision();
 		} else {
 			//Si le joueur n'est pas vivant,
 			//on vérifie le timer avant sa réapparition
@@ -175,6 +158,27 @@ export class Player extends Entity {
 			if (this.timerBeforeRespawn <= 0) {
 				this.respawn();
 			}
+		}
+	}
+
+	borderCollision() {
+		if (this.posX > canvas.width - this.width) {
+			this.posX = canvas.width - this.width;
+			this.accelerationX = 0;
+			this.speedX = 0;
+		} else if (this.posX < 0) {
+			this.posX = 0;
+			this.accelerationX = 0;
+			this.speedX = 0;
+		}
+		if (this.posY > canvas.height - this.width) {
+			this.posY = canvas.height - this.width;
+			this.speedY = 0;
+			this.accelerationY = 0;
+		} else if (this.posY < 0) {
+			this.posY = 0;
+			this.speedY = 0;
+			this.accelerationY = 0;
 		}
 	}
 
@@ -205,19 +209,75 @@ export class Player extends Entity {
 		this.respawn();
 	}
 
-
-//Collisions des tirs du joueurs avec les ennemis
-playerShotsCollideWithEnnemy(ennemy) {
-	for (let s = 0; s < this.shots.length; s++) {
-		if (this.shots[s].active) {
-			if (this.shots[s].isCollidingWith(ennemy)) {
-				this.shots[s].active = false;
-				if(ennemy.getHurt()){
-					this.addScorePointOnEnemyKill();
-					document.querySelector('#scoreValue').innerHTML = this.score;
+	//Collisions des tirs du joueurs avec les ennemis
+	playerShotsCollideWithEnnemy(ennemy) {
+		for (let s = 0; s < this.shots.length; s++) {
+			if (this.shots[s].active) {
+				if (this.shots[s].isCollidingWith(ennemy)) {
+					this.shots[s].active = false;
+					if (ennemy.getHurt()) {
+						this.addScorePointOnEnemyKill();
+						document.querySelector('#scoreValue').innerHTML = this.score;
+					}
 				}
 			}
 		}
 	}
-}
+
+	accelerateLeft(acceleration) {
+		acceleration =
+			Math.round((acceleration - 0.2 * Player.accelerationMultiplier) * 100) /
+			100;
+		return acceleration;
+	}
+
+	accelerateUp(acceleration) {
+		return this.accelerateLeft(acceleration);
+	}
+
+	accelerateRight(acceleration) {
+		acceleration =
+			Math.round((acceleration + 0.2 * Player.accelerationMultiplier) * 100) /
+			100;
+		return acceleration;
+	}
+
+	accelerateDown(acceleration) {
+		return this.accelerateRight(acceleration);
+	}
+
+	acceleration(keysPressed) {
+		if (keysPressed.ArrowDown) {
+			this.speedY = Player.playerSpeed;
+			this.accelerationY = this.accelerateDown(this.accelerationY);
+		}
+		if (keysPressed.ArrowUp) {
+			this.speedY = -Player.playerSpeed;
+			this.accelerationY = this.accelerateUp(this.accelerationY);
+		}
+		if (keysPressed.ArrowLeft) {
+			this.speedX = -Player.playerSpeed;
+			this.accelerationX = this.accelerateLeft(this.accelerationX);
+		}
+		if (keysPressed.ArrowRight) {
+			this.speedX = Player.playerSpeed;
+			this.accelerationX = this.accelerateRight(this.accelerationX);
+		}
+		this.speedX += this.accelerationX;
+		this.speedY += this.accelerationY;
+	}
+
+	deceleration() {
+		this.accelerationX = this.decelerate(this.accelerationX);
+		this.accelerationY = this.decelerate(this.accelerationY);
+	}
+
+	decelerate(acceleration) {
+		if (acceleration < 0) {
+			acceleration = Math.round((acceleration + 0.2) * 100) / 100;
+		} else if (acceleration > 0) {
+			acceleration = Math.round((acceleration - 0.2) * 100) / 100;
+		}
+		return acceleration;
+	}
 }

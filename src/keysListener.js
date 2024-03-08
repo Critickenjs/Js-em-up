@@ -9,6 +9,7 @@ const keysPressed = {
 window.addEventListener('keydown', event => {
 	if (event.key == 'ArrowDown' || event.key == 's') {
 		keysPressed.ArrowDown = true;
+		console.log(keysPressed.ArrowDown);
 	}
 	if (event.key == 'ArrowUp' || event.key == 'z') {
 		keysPressed.ArrowUp = true;
@@ -32,7 +33,7 @@ window.addEventListener('keyup', event => {
 		keysPressed.ArrowUp = false;
 	}
 	if (event.key == 'ArrowLeft' || event.key == 'q') {
-		keysPressed.ArrowLeft = false
+		keysPressed.ArrowLeft = false;
 	}
 	if (event.key == 'ArrowRight' || event.key == 'd') {
 		keysPressed.ArrowRight = false;

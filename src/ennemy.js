@@ -9,7 +9,7 @@ export class Ennemy extends Entity {
 	static width = 30;
 	static height = 30;
 	static types = ['red', 'purple', 'orange', 'darkred'];
-	static bulletSpeed = 8;
+	static bulletSpeed = Shot.defaultSpeed;
 	static shootTimer = 100;
 
 	//Paramétrage technique
