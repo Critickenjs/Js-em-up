@@ -7,17 +7,17 @@ const keysPressed = {
 };
 
 window.addEventListener('keydown', event => {
-	if (event.key == 'ArrowDown' || event.key == 's') {
+	if (down(event)) {
 		keysPressed.ArrowDown = true;
 		console.log(keysPressed.ArrowDown);
 	}
-	if (event.key == 'ArrowUp' || event.key == 'z') {
+	if (up(event)) {
 		keysPressed.ArrowUp = true;
 	}
-	if (event.key == 'ArrowLeft' || event.key == 'q') {
+	if (left(event)) {
 		keysPressed.ArrowLeft = true;
 	}
-	if (event.key == 'ArrowRight' || event.key == 'd') {
+	if (right(event)) {
 		keysPressed.ArrowRight = true;
 	}
 	if (event.key == ' ') {
@@ -26,21 +26,37 @@ window.addEventListener('keydown', event => {
 });
 
 window.addEventListener('keyup', event => {
-	if (event.key == 'ArrowDown' || event.key == 's') {
+	if (down(event)) {
 		keysPressed.ArrowDown = false;
 	}
-	if (event.key == 'ArrowUp' || event.key == 'z') {
+	if (up(event)) {
 		keysPressed.ArrowUp = false;
 	}
-	if (event.key == 'ArrowLeft' || event.key == 'q') {
+	if (left(event)) {
 		keysPressed.ArrowLeft = false;
 	}
-	if (event.key == 'ArrowRight' || event.key == 'd') {
+	if (right(event)) {
 		keysPressed.ArrowRight = false;
 	}
 	if (event.key == ' ') {
 		keysPressed.Space = false;
 	}
 });
+
+function down(event){
+	return event.key == 'ArrowDown' || event.key == 's' ||event.key=='S';
+}
+
+function up(event){
+	return event.key == 'ArrowUp' || event.key == 'z' || event.key == 'Z';
+}
+
+function right(event){
+	return event.key == 'ArrowRight' || event.key == 'd' || event.key == 'D';
+}
+
+function left(event){
+	return event.key == 'ArrowLeft' || event.key == 'q' || event.key == 'Q';
+}
 
 export default keysPressed;
