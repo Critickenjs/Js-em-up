@@ -27,6 +27,50 @@ body {
     justify-content: center;
 }
 
+canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 3px dashed #777;
+    z-index: 1;
+}
+
+.hud{
+    position: absolute;
+    padding: 10px;
+    color: #000;
+    font-size: 1em;
+    z-index: 2;
+}
+
+
+
+
+
+.lifes {
+    top: 0;
+    left: 0;
+}
+
+.waves {
+    top: 0;
+    left: 25%;
+}
+
+.time {
+    top: 0;
+    right: 25%;
+} 
+
+.score { 
+    top: 0;
+    right: 0;
+}
+
+
+
 h1 {
     font-weight: 100;
 }
@@ -114,7 +158,7 @@ div{
     width: 100%;
     height: 100%;
     /* Utilisation de flexbox */
-    z-index: 100;
+    z-index: 10;
     flex-direction: column;
     align-items: center;
     /* Les éléments sont empilés verticalement */

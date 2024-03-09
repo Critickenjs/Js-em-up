@@ -6,13 +6,14 @@ export default class HomePage {
 	}
 
 	show() {
-		document
-			.querySelector('.gameCanvas')
-			.setAttribute('style', 'display : none;');
 
 		document.querySelector('.score').setAttribute('style', 'display : none;');
 		document.querySelector('.waves').setAttribute('style', 'display : none;');
+		document.querySelector('.time').setAttribute('style', 'display : none;');
 		document.querySelector('.lifes').setAttribute('style', 'display : none;');
+		document
+			.querySelector('.gameCanvas')
+			.setAttribute('style', 'display : none;');
 	}
 
 	Play() {
@@ -24,6 +25,7 @@ export default class HomePage {
 
 		document.querySelector('.score').setAttribute('style', 'display : block;');
 		document.querySelector('.waves').setAttribute('style', 'display : block;');
+		document.querySelector('.time').setAttribute('style', 'display : block;');
 		document.querySelector('.lifes').setAttribute('style', 'display : block;');
 	}
 }

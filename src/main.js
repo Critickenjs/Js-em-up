@@ -50,6 +50,7 @@ canvas.addEventListener('mouseup', function() {
 });
 
 let isInGame = false;
+let time = 0;
 const homePage = new HomePage();
 const gameOver = new GameOver();
 const scoreBoard = new ScoreBoard();
@@ -117,14 +118,16 @@ function update() {
 //Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
 function addScorePointOverTime() {
 	if (isInGame) {
-		player.score += 1;
+		player.score +=3;
+		time++;
+		document.querySelector('#timeValue').innerHTML = time;
 		document.querySelector('#scoreValue').innerHTML = player.score;
 		//Vitesse du jeu augmente au fur et à mesure
 		Entity.addToSpeed(0.001);
 	}
 }
 
-setInterval(addScorePointOverTime, 1500);
+setInterval(addScorePointOverTime, 1000);
 setInterval(update, 1000 / 60);
 requestAnimationFrame(render);
 
@@ -152,4 +155,5 @@ function restartGame() {
 	player.restart();
 	isInGame = true;
 	wavesManager.firstWave();
+	time=0;
 }

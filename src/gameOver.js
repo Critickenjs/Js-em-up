@@ -9,6 +9,7 @@ export default class GameOver {
 		document.querySelector('.score').setAttribute('style', 'display : none;');
 		document.querySelector('.waves').setAttribute('style', 'display : none;');
 		document.querySelector('.lifes').setAttribute('style', 'display : none;');
+		document.querySelector('.time').setAttribute('style', 'display : none;');
 	}
 
 	hide() {
@@ -20,5 +21,6 @@ export default class GameOver {
 		document.querySelector('.score').setAttribute('style', 'display : block;');
 		document.querySelector('.waves').setAttribute('style', 'display : block;');
 		document.querySelector('.lifes').setAttribute('style', 'display : block;');
+		document.querySelector('.time').setAttribute('style', 'display : block;');
 	}
 }
