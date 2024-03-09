@@ -24,6 +24,13 @@ window.addEventListener('keydown', event => {
 	if (event.key == ' ') {
 		keysPressed.Space = true;
 	}
+	if (event.key == 'M' || event.key == 'm') {
+		if(keysPressed.MouseMode){
+			keysPressed.MouseMode=false;
+		}else{
+			keysPressed.MouseMode=true;
+		}
+	}
 });
 
 window.addEventListener('keyup', event => {
