@@ -89,6 +89,7 @@ export class WavesManager {
 				if (player.alive && !player.invincible) {
 					if (this.ennemys[a].isCollidingWith(player)) {
 						player.die();
+						this.ennemys[a].fate();
 					}
 				}
 				player.playerShotsCollideWithEnnemy(this.ennemys[a]);
