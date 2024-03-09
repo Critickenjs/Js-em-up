@@ -61,6 +61,8 @@ export class Ennemy extends Entity {
 		super.update();
 		if (this.posX < 0 - this.width) {
 			this.fate();
+			//Pour permettre la perte de points en cas d'ennemis qui aurait réussi à passer les joueurs, c'est ici
+			//Mais pour cela il faudrait créer les joueurs en static dans joueur plutot qu'en dur dans main.
 		}
 		if (this.posY < 0) {
 			this.speedY = Math.abs(this.speedY);

@@ -105,9 +105,8 @@ function update() {
 	}
 }
 
-//Ajoute des points au fur et à mesure aux joueurs
+//Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
 function addScorePointOverTime() {
-	//A renommer updateHUD
 	if (isInGame) {
 		player.score += 1;
 		document.querySelector('#scoreValue').innerHTML = player.score;

@@ -11,7 +11,9 @@ export class Player extends Entity {
 	static bulletSpeed = Shot.defaultSpeed;
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibilty = 100;
-	static accelerationMultiplier = 1.4;
+	static accelerationMultiplier = 1.2;
+	static inertiaMultiplier = 1.5; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
+	static maxAcceleration = 8;
 
 	//Les déclarations
 	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
@@ -32,6 +34,7 @@ export class Player extends Entity {
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
 		this.image.src = '../images/monster.png';	this.accelerationX = 0;
+		this.accelerationX = 0;
 		this.accelerationY = 0;
 	}
 
@@ -113,6 +116,7 @@ export class Player extends Entity {
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
 		this.updateShots();
+		console.log("Accelration : "+this.accelerationX);
 		if (this.alive) {
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
@@ -192,8 +196,8 @@ export class Player extends Entity {
 	}
 
 	//Ajoute des points au joueur pour chaque kill d'ennemis
-	addScorePointOnEnemyKill() {
-		this.score += 10;
+	addScorePointOnEnemyKill(ennemy) {
+		this.score += ennemy.value;
 	}
 
 	//Réinitialise le joueur pour le préparer à une nouvelle partie.
@@ -213,7 +217,7 @@ export class Player extends Entity {
 				if (this.shots[s].isCollidingWith(ennemy)) {
 					this.shots[s].active = false;
 					if (ennemy.getHurt()) {
-						this.addScorePointOnEnemyKill();
+						this.addScorePointOnEnemyKill(ennemy);
 						document.querySelector('#scoreValue').innerHTML = this.score;
 					}
 				}
@@ -223,8 +227,8 @@ export class Player extends Entity {
 
 	accelerateLeft(acceleration) {
 		acceleration =
-			Math.round((acceleration - 0.2 * Player.accelerationMultiplier) * 100) /
-			100;
+			Math.round((acceleration - 0.1 * Player.accelerationMultiplier) * 1000) /
+			1000;
 		return acceleration;
 	}
 
@@ -234,8 +238,8 @@ export class Player extends Entity {
 
 	accelerateRight(acceleration) {
 		acceleration =
-			Math.round((acceleration + 0.2 * Player.accelerationMultiplier) * 100) /
-			100;
+			Math.round((acceleration + 0.1 * Player.accelerationMultiplier) * 1000) /
+			1000;
 		return acceleration;
 	}
 
@@ -260,8 +264,22 @@ export class Player extends Entity {
 			this.speedX = Player.playerSpeed;
 			this.accelerationX = this.accelerateRight(this.accelerationX);
 		}
+		this.checkMaxAcceleration();
 		this.speedX += this.accelerationX;
 		this.speedY += this.accelerationY;
+	}
+
+	checkMaxAcceleration(){
+		if(this.accelerationX>Player.maxAcceleration){
+			this.accelerationX=Player.maxAcceleration
+		}if(this.accelerationX<-Player.maxAcceleration){
+			this.accelerationX=-Player.maxAcceleration
+		}
+		if(this.accelerationY>Player.maxAcceleration){
+			this.accelerationY=Player.maxAcceleration
+		}else if(this.accelerationY<-Player.maxAcceleration){
+			this.accelerationY=-Player.maxAcceleration
+		}
 	}
 
 	deceleration() {
@@ -271,9 +289,9 @@ export class Player extends Entity {
 
 	decelerate(acceleration) {
 		if (acceleration < 0) {
-			acceleration = Math.round((acceleration + 0.2) * 100) / 100;
+			acceleration = Math.round((acceleration + 1/(10 * Player.inertiaMultiplier)) * 1000) / 1000;
 		} else if (acceleration > 0) {
-			acceleration = Math.round((acceleration - 0.2) * 100) / 100;
+			acceleration = Math.round((acceleration - 1/(10 * Player.inertiaMultiplier)) * 1000) / 1000;
 		}
 		return acceleration;
 	}
