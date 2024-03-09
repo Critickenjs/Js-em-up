@@ -24,17 +24,16 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	console.log(canvas.width);
-	console.log(canvas.height);
+	console.log("canvas.width:"+canvas.width);
+	console.log("canvas.height:"+canvas.height);
 }
 
-canvas.width = canvas.clientWidth;
-canvas.height = canvas.clientHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 //Chargement des assets
 preloadAssets(assets).then(() => {
 	console.log('Assets are loaded');
-	
 });
 
 //création du joueur
@@ -65,7 +64,6 @@ document
 	});
 
 const wavesManager = new WavesManager();
-wavesManager.firstWave();
 
 //Gêre l'affichage du jeu
 function render() {
@@ -138,6 +136,9 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	homePage.Play();
 	player.pseudo = homePage.username;
 	isInGame = true;
+	WavesManager.difficulty=getDifficultyValue();
+	wavesManager.firstWave();
+	console.log("Difficulté : "+WavesManager.difficulty);
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
@@ -147,6 +148,14 @@ document.querySelector('#checkmouse').addEventListener('click', () => {
 		keysPressed.MouseMode=true;
 	}
 });
+
+function getDifficultyValue() {
+	let select = document.getElementById("difficulty");
+	let choice = select.selectedIndex  // Récupération de l'index du <option> choisi
+	 
+	return select.options[choice].value; // Récupération du texte du <option> d'index "choice"
+}
+
 
 document.querySelector('#restartButton2').addEventListener('click', () => {
 	scoreBoard.hide();

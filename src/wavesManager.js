@@ -4,8 +4,10 @@ import { getRandomInt } from './utils.js';
 import canvas from './main.js';
 
 export class WavesManager {
+	static difficulty = 0;
 	// Nombre max d'ennemis pouvant apparaitre à l'écran. A ajuster en fonction des lags.
 	static ennemyBuffer = 10;
+
 
 	//Waves
 	static waveMaxNumberOfEnnemys = 5;
@@ -26,12 +28,13 @@ export class WavesManager {
 		WavesManager.waveMaxNumberOfEnnemys = 5;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
 		Entity.speedMultiplier = 0.8;
+		console.log("Nb ennemis"+(WavesManager.ennemyBuffer*WavesManager.difficulty));
 		for (let i = 0; i < WavesManager.ennemyBuffer; i++) {
 			this.ennemys[i] = new Ennemy(
-				canvas.width +
+				window.innerWidth +
 					getRandomInt(WavesManager.maxRandomSpawnDistance) +
 					WavesManager.spawnDistance,
-				getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset) +
+				getRandomInt(window.innerHeight - Ennemy.height - Ennemy.spawnOffset) +
 					Ennemy.spawnOffset
 			);
 			this.ennemys[i].index = i;
