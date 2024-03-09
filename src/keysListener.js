@@ -1,15 +1,16 @@
 const keysPressed = {
+	MouseMode:false,
 	ArrowUp: false,
 	ArrowDown: false,
 	ArrowLeft: false,
 	ArrowRight: false,
 	Space: false,
+	MouseDown:false,
 };
 
 window.addEventListener('keydown', event => {
 	if (down(event)) {
 		keysPressed.ArrowDown = true;
-		console.log(keysPressed.ArrowDown);
 	}
 	if (up(event)) {
 		keysPressed.ArrowUp = true;
@@ -42,6 +43,13 @@ window.addEventListener('keyup', event => {
 		keysPressed.Space = false;
 	}
 });
+
+window.mouseX = 0;
+window.mouseY = 0;
+window.onmousemove = function(e) {
+	window.mouseX = e.x;
+	window.mouseY = e.y;
+}
 
 function down(event){
 	return event.key == 'ArrowDown' || event.key == 's' ||event.key=='S';

@@ -38,6 +38,7 @@ export class Player extends Entity {
 		this.accelerationY = 0;
 	}
 
+
 	//Tue le joueur, initialise le timer avant sa réapparition
 	die() {
 		this.alive = false;
@@ -116,8 +117,9 @@ export class Player extends Entity {
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
 		this.updateShots();
-		console.log("Accelration : "+this.accelerationX);
+		
 		if (this.alive) {
+			
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
 				this.timerBeforeLosingInvincibility--;
@@ -132,23 +134,27 @@ export class Player extends Entity {
 							100000
 					) / 100000;
 			}
+			
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;
 			if (this.timerBeforeShots < 0) {
 				this.timerBeforeShots = 0;
 			}
+			
 			//On met à jour la position du joueur
 			this.speedY = 0;
 			this.speedX = 0;
 			this.deceleration();
 			this.acceleration(keysPressed);
+			
 			//Le joueur déclenche un tir et active le cooldown si il appuie sur espace
 			if (keysPressed.Space) {
-				if (this.timerBeforeShots <= 0) {
-					this.shoot();
-					this.timerBeforeShots = 10;
-				}
+				this.shootWithRecharge();
 			}
+			if(keysPressed.MouseDown){
+				this.shootWithRecharge();
+			}
+			
 			//Collisions avec les bords du canvas
 			this.borderCollision();
 		} else {
@@ -180,6 +186,14 @@ export class Player extends Entity {
 			this.posY = 0;
 			this.speedY = 0;
 			this.accelerationY = 0;
+		}
+	}
+
+	
+	shootWithRecharge(){
+		if (this.timerBeforeShots <= 0) {
+			this.shoot();
+			this.timerBeforeShots = 10;
 		}
 	}
 
@@ -225,44 +239,40 @@ export class Player extends Entity {
 		}
 	}
 
-	accelerateLeft(acceleration) {
+	///// Accélère en fonction des directions.
+	//Distance sert uniquement lors du controle à la souris,
+	//en cas de controle clavier il faut laisser la valeur par défaut
+	//et donc ne pas mettre de 2ème argument.
+
+	accelerateLeft(acceleration, distance=0.1) {
 		acceleration =
-			Math.round((acceleration - 0.1 * Player.accelerationMultiplier) * 1000) /
+			Math.round((acceleration - distance * Player.accelerationMultiplier) * 1000) /
 			1000;
 		return acceleration;
 	}
 
-	accelerateUp(acceleration) {
-		return this.accelerateLeft(acceleration);
+	accelerateUp(acceleration, distance=0.1) {
+		return this.accelerateLeft(acceleration,distance);
 	}
 
-	accelerateRight(acceleration) {
+	accelerateRight(acceleration, distance=0.1) {
 		acceleration =
-			Math.round((acceleration + 0.1 * Player.accelerationMultiplier) * 1000) /
+			Math.round((acceleration + distance * Player.accelerationMultiplier) * 1000) /
 			1000;
 		return acceleration;
 	}
 
-	accelerateDown(acceleration) {
-		return this.accelerateRight(acceleration);
+	accelerateDown(acceleration, distance=0.1) {
+		return this.accelerateRight(acceleration,distance);
 	}
+
+	/////
 
 	acceleration(keysPressed) {
-		if (keysPressed.ArrowDown) {
-			this.speedY = Player.playerSpeed;
-			this.accelerationY = this.accelerateDown(this.accelerationY);
-		}
-		if (keysPressed.ArrowUp) {
-			this.speedY = -Player.playerSpeed;
-			this.accelerationY = this.accelerateUp(this.accelerationY);
-		}
-		if (keysPressed.ArrowLeft) {
-			this.speedX = -Player.playerSpeed;
-			this.accelerationX = this.accelerateLeft(this.accelerationX);
-		}
-		if (keysPressed.ArrowRight) {
-			this.speedX = Player.playerSpeed;
-			this.accelerationX = this.accelerateRight(this.accelerationX);
+		if(keysPressed.MouseMode){
+			this.mouseMovement();
+		}else{
+			this.keyBoardMovement(keysPressed);
 		}
 		this.checkMaxAcceleration();
 		this.speedX += this.accelerationX;
@@ -295,4 +305,49 @@ export class Player extends Entity {
 		}
 		return acceleration;
 	}
+
+	keyBoardMovement(keysPressed){
+		if (keysPressed.ArrowDown) {
+			this.speedY = Player.playerSpeed;
+			this.accelerationY = this.accelerateDown(this.accelerationY);
+		}
+		if (keysPressed.ArrowUp) {
+			this.speedY = -Player.playerSpeed;
+			this.accelerationY = this.accelerateUp(this.accelerationY);
+		}
+		if (keysPressed.ArrowLeft) {
+			this.speedX = -Player.playerSpeed;
+			this.accelerationX = this.accelerateLeft(this.accelerationX);
+		}
+		if (keysPressed.ArrowRight) {
+			this.speedX = Player.playerSpeed;
+			this.accelerationX = this.accelerateRight(this.accelerationX);
+		}
+	}
+
+	mouseMovement(){
+		const vaguely=10;
+		const distanceX = Math.round(Math.abs(window.mouseX-this.posX))/2000;
+		const distanceY = Math.round(Math.abs(window.mouseY-this.posY))/2000;
+		
+		if(!(this.posX+this.width/2>window.mouseX-vaguely && this.posX+this.width/2<window.mouseX+vaguely)){
+			if(this.posX+this.width/2>window.mouseX){
+				this.speedX = -Player.playerSpeed;
+				this.accelerationX = this.accelerateLeft(this.accelerationX,distanceX);
+			}else{
+				this.speedX = Player.playerSpeed;
+				this.accelerationX = this.accelerateRight(this.accelerationX,distanceX);
+			}
+		}
+		if(!(this.posY+this.height/2<window.mouseY+vaguely && this.posY+this.height/2>window.mouseY-vaguely)){
+			if(this.posY+this.height/2>window.mouseY){
+				this.speedY = -Player.playerSpeed;
+				this.accelerationY = this.accelerateUp(this.accelerationY,distanceY);
+			}else{
+				this.speedY = Player.playerSpeed;
+				this.accelerationY = this.accelerateDown(this.accelerationY,distanceY);
+			}
+		}
+	}
+
 }

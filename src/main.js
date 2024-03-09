@@ -1,14 +1,16 @@
+//Imports
 import { Player } from './player.js';
-import keysPressed from './keysListener.js';
 import HomePage from './homePage.js';
 import GameOver from './gameOver.js';
 import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
+import keysPressed from './keysListener.js';
 import { Entity } from './entity.js';
 import { Power } from './power.js';
 import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
 
+//Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 export default canvas;
@@ -37,8 +39,15 @@ preloadAssets(assets).then(() => {
 
 //création du joueur
 //Player.players.push(new Player(100, canvas.height / 2));
+const player = new Player(100, canvas.height / 2);
 
-let player = new Player(100, canvas.height / 2);
+//Impossible de mettre ces fonctions dans KeysListener
+canvas.addEventListener('mousedown', function() {
+	keysPressed.MouseDown=true;
+});
+canvas.addEventListener('mouseup', function() {
+	keysPressed.MouseDown=false;
+});
 
 let isInGame = false;
 const homePage = new HomePage();
