@@ -140,6 +140,14 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	isInGame = true;
 });
 
+document.querySelector('#checkmouse').addEventListener('click', () => {
+	if(keysPressed.MouseMode){
+		keysPressed.MouseMode=false;
+	}else{
+		keysPressed.MouseMode=true;
+	}
+});
+
 document.querySelector('#restartButton2').addEventListener('click', () => {
 	scoreBoard.hide();
 	restartGame();
