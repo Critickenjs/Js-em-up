@@ -19,8 +19,9 @@ export class Ennemy extends Entity {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.index = -1;
 		this.isDead = false;
-		this.lifes = 1;
 		this.type = 'red';
+		this.lifes = 1;
+		this.value=10;
 		this.applyType();
 		this.timeBeforeNextShoot = Ennemy.shootTimer;
 		this.shots = [];
@@ -143,16 +144,19 @@ export class Ennemy extends Entity {
 				this.lifes = 1;
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = 0;
+				this.value=10;
 				break;
 			case 'purple':
 				this.lifes = 1;
 				this.speedX = -1;
 				this.speedY = 5;
+				this.value=15;
 				break;
 			case 'orange':
 				this.lifes = 1;
 				this.speedX = -1;
 				this.speedY = getRandomIntWithMin(-1, 1);
+				this.value = 20;
 				break;
 			case 'darkred':
 				this.lifes = 3;
@@ -160,6 +164,7 @@ export class Ennemy extends Entity {
 				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
 				this.speedX = -1;
 				this.speedY = 0;
+				this.value=25;
 				break;
 		}
 	}
