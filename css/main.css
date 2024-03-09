@@ -5,6 +5,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: "Minecraft regular", sans-serif;
 }
 
 html,
@@ -20,7 +21,6 @@ body {
 	background: #d6d6d6;*/
     color: #acb2b8;
     color: #000000;
-    font-family: "Minecraft regular", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -45,7 +45,7 @@ h1 em {
     display: block;
 }
 
-login-container {
+.login-container {
     width: 100%;
     max-width: 400px;
     padding: 20px;
@@ -54,28 +54,18 @@ login-container {
     align-items: center;
     justify-content: center;
     background-color: #ffffffb3;
-    box-shadow: 0px 0px 5px 0px rgba(160, 159, 159, 0.1);
     border-radius: 5px;
+    border-style:dashed;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
-
-
-
 .container {
-
     display: flex;
     align-items: center;
     justify-content: center;
-
 }
-
-
-
-
 
 h2 {
     text-align: center;
@@ -93,137 +83,55 @@ input[type="password"] {
     border-radius: 3px;
 }
 
-/*button[type="submit"] {
-    background-color: #2c3e50;
-    color: #fff;
-    padding: 8px 16px;
-    height:31px;
-    border-radius: 3px;
+button{
     cursor: pointer;
-    width: 100%;
+    height: 30px;
+    width: 250px;
+    margin: auto;
+    color: #fff;
     background: url(../images/btn1.png) no-repeat;
     background-size: contain;
-}*/
-
-button[type="submit"] {
-    cursor: pointer;
-    height: 2em;
-    width: 100%;
-    color: #fff;
-    background: url(../images/btn1.png) no-repeat;
+    border-style: none;
 }
 
-button[type="submit"]:hover {
-    height: 2em;
-    background-color: #34495e;
+button:hover{
     background: url(../images/btn2.png) no-repeat;
+    background-size: contain;
 }
 
+div{
+    text-align: center;
+}
 
-.gameOver {
+.box {
+    /*On cache la box*/
     display: none;
+    /*Position de la box*/
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0%;
+    left: 0%;
+    /*La Box prend toute la taille de l'écran*/
     width: 100%;
     height: 100%;
-    background: rgba(250, 0, 0, 0.585);
-    z-index: 100;
-    display: flex;
     /* Utilisation de flexbox */
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    z-index: 100;
     flex-direction: column;
+    align-items: center;
     /* Les éléments sont empilés verticalement */
 }
 
-.gameOver :active {
-    display: block;
+.box :active {
+    display: flex;
 }
 
-/*
-.restartButton {
-    height: 40px;
-    width: 405px;
-    text-align: center;
-    color: white;
-    cursor: pointer;
-    background: url(../images/btn1.png) no-repeat;
-    background-size: contain;
-    line-height: 26px;
-    padding-top: 6px;
-    margin-top: 20px;
-}*/
-
-.restartButton {
-    cursor: pointer;
-    height: 29px;
-    width: 250px;
-    margin: 5px;
-    color: #fff;
-    background: url(../images/btn1.png) no-repeat;
-    background-size: contain;
-}
-
-.restartButton:hover {
-    background-color: #34495e;
-    background: url(../images/btn2.png) no-repeat;
-    background-size: contain;
+.gameOver{
+    background: rgba(250, 0, 0, 0.585);
 }
 
 .scoreboard {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
     background: rgba(44, 62, 80, 0.585);
-    z-index: 100;
-    display: flex;
-    /* Utilisation de flexbox */
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-    /* Les éléments sont empilés verticalement */
 }
 
-.scoreboard :active {
-    display: block;
-}
-
-/*.scoreboardButton {
-    height: 40px;
-    width: 405px;
-    text-align: center;
-    color: white;
-    cursor: pointer;
-    background: url(../images/btn1.png) no-repeat;
-    background-size: contain;
-    line-height: 26px;
-    padding-top: 6px;
-    margin-top: 20px;}*/
-
-.scoreboardButton {
-    cursor: pointer;
-    height: 29px;
-    width: 250px;
-    margin: 5px;
-    color: #fff;
-    background: url(../images/btn1.png) no-repeat;
-    background-size: contain;
-}
-
-.scoreboardButton:hover {
-    height: 29px;
-    background-color: #34495e;
-    background: url(../images/btn2.png) no-repeat;
-    background-size: contain;
-}
 
 .difficulty {
     margin-top: 20px;
@@ -241,3 +149,94 @@ button[type="submit"]:hover {
     border: 1px solid #ddd;
     border-radius: 3px;
 }
+
+
+
+/*button[type="submit"] {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 8px 16px;
+    height:31px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+}*/
+/*
+button[type="submit"] {
+    cursor: pointer;
+    height: 2em;
+    width: 100%;
+    color: #fff;
+    background: url(../images/btn1.png) no-repeat;
+}
+
+button[type="submit"]:hover {
+    height: 2em;
+    background-color: #34495e;
+    background: url(../images/btn2.png) no-repeat;
+}*/
+
+/*
+.restartButton {
+    height: 40px;
+    width: 405px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+    line-height: 26px;
+    padding-top: 6px;
+    margin-top: 20px;
+}*/
+/*
+.restartButton {
+    cursor: pointer;
+    height: 29px;
+    width: 250px;
+    margin: 5px;
+    color: #fff;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+    border-style: none;
+}
+
+.restartButton:hover {
+    background: url(../images/btn2.png) no-repeat;
+    background-size: contain;
+}*/
+
+
+
+/*.scoreboardButton {
+    height: 40px;
+    width: 405px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+    line-height: 26px;
+    padding-top: 6px;
+    margin-top: 20px;}*/
+/*
+.scoreboardButton {
+    cursor: pointer;
+    height: 29px;
+    width: 250px;
+    margin: 5px;
+    color: #fff;
+    background: url(../images/btn1.png) no-repeat;
+    background-size: contain;
+}
+
+.scoreboardButton:hover {
+    height: 29px;
+    background-color: #34495e;
+    background: url(../images/btn2.png) no-repeat;
+    background-size: contain;
+}
+*/
+

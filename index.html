@@ -54,11 +54,9 @@
 <body>
 	<div id="root">
 		<div class="HomePage active">
-			<div className="login-container">
-				<div className="login-image">
-					<h2>CONNECTION</h2>
-				</div>
-				<div className="container">
+			<div class="login-container">
+				<h2>CONNECTION</h2>
+				<div class="container">
 					<form>
 						<input type="text" placeholder="Username" />
 						<button type="submit">Jouer</button>
@@ -79,18 +77,20 @@
 		<p class="score">Score: <span id="scoreValue">0</span></p>
 		<canvas class="gameCanvas"> </canvas>
 	</div>
-	<div class="gameOver" style="display: none;">
+	<div class="box gameOver">
 		<h1>Game Over</h1>
 		<p>Score: <span id="scoreValue">0</span></p>
-		<button id="restartButton" class="restartButton">Rejouer</button>
-		<button class="scoreboardButton">Voir le tableau des scores</button>
+		<div><button id="restartButton" class="restartButton">Rejouer</button>
+			<button class="scoreboardButton">Voir le tableau des scores</button></div>
+		
 
 	</div>
-	<div class="scoreboard" style="display: none;">
+	<div class="box scoreboard">
 		<h1>Tableau des scores</h1>
 		<ul id="scoreList">
 		</ul>
-		<button class="restartButton" id="restartButton2">Rejouer</button>
+		<div><button class="restartButton" id="restartButton2">Rejouer</button></div>
+		
 </body>
 
 </html>
