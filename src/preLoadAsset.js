@@ -1,12 +1,25 @@
-export default function preloadAssets(assets) {
-	const promises = assets.map(asset => {
-		return new Promise((resolve, reject) => {
-			const image = new Image();
-			image.onload = resolve;
-			image.onerror = reject;
-			image.src = asset;
-		});
+export default function preloadAssets(soundUrls, imageUrls, callback) {
+	let loadedCount = 0;
+	let totalCount = soundUrls.length + imageUrls.length;
+
+	function assetLoaded() {
+		loadedCount++;
+		if (loadedCount === totalCount) {
+			callback();
+		}
+	}
+
+	// Charger les sons
+	soundUrls.forEach(function (url) {
+		let audio = new Audio();
+		audio.onload = assetLoaded;
+		audio.src = url;
 	});
 
-	return Promise.all(promises);
+	// Charger les images
+	imageUrls.forEach(function (url) {
+		let image = new Image();
+		image.onload = assetLoaded;
+		image.src = url;
+	});
 }

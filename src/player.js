@@ -9,6 +9,9 @@ export class Player extends Entity {
 	static width = 50;
 	static height = 50;
 
+	//Sound
+	static sound = '../sounds/dead.mp3';
+
 	static defaultNumberOfLife = 4;
 	static playerSpeed = 3;
 	static bulletSpeed = Shot.defaultSpeed;
@@ -41,19 +44,21 @@ export class Player extends Entity {
 		this.timerBeforeShots = 0;
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+
 		//Bonus
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibility;
 		this.timerBeforeLosingIceMalus = 0;
 		this.iceMultiplierMalus=1;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
-		this.scoreMultiplierBonus=1;
+		this.scoreMultiplierBonus = 1;
 
 		//Graphic
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
-		this.image.src = '../images/monster.png';	this.accelerationX = 0;
-	
+		this.image.src = '../images/monster.png';
+		this.accelerationX = 0;
+
 		//Movement
 		this.accelerationX = 0;
 		this.accelerationY = 0;
@@ -61,8 +66,13 @@ export class Player extends Entity {
 
 	//Tue le joueur, initialise le timer avant sa réapparition
 	die() {
+		this.sound = new Audio(Player.sound);
+		this.sound.play();
 		this.alive = false;
-		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * (Math.round((1+WavesManager.difficulty/10)*100)/100)) | 0; //Le respawn devient de plus en plus long plus on meurt.
+		this.maxTimeBeforeRespawn =
+			(this.maxTimeBeforeRespawn *
+				(Math.round((1 + WavesManager.difficulty / 10) * 100) / 100)) |
+			0; //Le respawn devient de plus en plus long plus on meurt.
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 	}
 
@@ -71,7 +81,9 @@ export class Player extends Entity {
 		Player.teamLifes--;
 		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 		this.alive = true;
-		this.becomeInvincible(Player.maxTimeForInvincibility/WavesManager.difficulty | 0);
+		this.becomeInvincible(
+			(Player.maxTimeForInvincibility / WavesManager.difficulty) | 0
+		);
 		this.posY = canvas.height / 2;
 		this.posX = 100;
 		this.speedX = 0;
@@ -105,28 +117,37 @@ export class Player extends Entity {
 		}
 	}
 
-	
-
 	//Affiche le joueur.
 	render() {
 		const context = canvas.getContext('2d');
 		this.renderShots(context);
 		if (this.alive) {
-
 			if (this.invincible) {
 				this.invincibleAnimation--;
-				if(this.invincibleAnimation<(10/this.animationSpeed) | 0){
-					context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
-					if(this.invincibleAnimation<0){
-						this.invincibleAnimation=(20/this.animationSpeed) | 0;
+				if ((this.invincibleAnimation < 10 / this.animationSpeed) | 0) {
+					context.drawImage(
+						this.image,
+						this.posX,
+						this.posY,
+						this.width,
+						this.height
+					);
+					if (this.invincibleAnimation < 0) {
+						this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 					}
 				}
 				context.lineWidth = 3;
 				context.strokeStyle = 'purple';
 				context.rect(this.posX, this.posY, this.width, this.height);
 				context.stroke();
-			}else{
-				context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
+			} else {
+				context.drawImage(
+					this.image,
+					this.posX,
+					this.posY,
+					this.width,
+					this.height
+				);
 			}
 			context.lineWidth = 1;
 			context.font = '16px Minecraft Regular';
@@ -139,14 +160,12 @@ export class Player extends Entity {
 	//met à jour le joueur.
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
-		this.updateShots();
-		console.log("timerBeforeLosingIceMalus"+this.timerBeforeLosingIceMalus);
+		this.updateShots();Z
 				
 		if (this.alive) {
-			
-			if(this.gotScoreMultiplierBonus()){
+			if (this.gotScoreMultiplierBonus()) {
 				this.timerBeforeLosingScoreMultiplierBonus--;
-				if(this.timerBeforeLosingScoreMultiplierBonus<0){
+				if (this.timerBeforeLosingScoreMultiplierBonus < 0) {
 					this.loseScoreMuliplierBonus();
 				}
 			}
@@ -172,27 +191,27 @@ export class Player extends Entity {
 							100000
 					) / 100000;
 			}
-			
+
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;
 			if (this.timerBeforeShots < 0) {
 				this.timerBeforeShots = 0;
 			}
-			
+
 			//On met à jour la position du joueur
 			this.speedY = 0;
 			this.speedX = 0;
 			this.deceleration();
 			this.acceleration(keysPressed);
-			
+
 			//Le joueur déclenche un tir et active le cooldown si il appuie sur espace
 			if (keysPressed.Space) {
 				this.shootWithRecharge();
 			}
-			if(keysPressed.MouseDown){
+			if (keysPressed.MouseDown) {
 				this.shootWithRecharge();
 			}
-			
+
 			//Collisions avec les bords du canvas
 			this.borderCollision();
 		} else {
@@ -227,8 +246,7 @@ export class Player extends Entity {
 		}
 	}
 
-	
-	shootWithRecharge(){
+	shootWithRecharge() {
 		if (this.timerBeforeShots <= 0) {
 			this.shoot();
 			this.timerBeforeShots = Player.maxTimeBeforeShooting;
@@ -249,7 +267,8 @@ export class Player extends Entity {
 
 	//Ajoute des points au joueur pour chaque kill d'ennemis
 	addScorePointOnEnemyKill(ennemy) {
-		this.score += (ennemy.value*WavesManager.difficulty)*this.scoreMultiplierBonus;
+		this.score +=
+			ennemy.value * WavesManager.difficulty * this.scoreMultiplierBonus;
 	}
 
 	//Réinitialise le joueur pour le préparer à une nouvelle partie.
@@ -262,8 +281,8 @@ export class Player extends Entity {
 		Player.resetTeamLivesNumber();
 	}
 
-	static resetTeamLivesNumber(){
-		Player.teamLifes = Player.defaultNumberOfLife-WavesManager.difficulty;
+	static resetTeamLivesNumber() {
+		Player.teamLifes = Player.defaultNumberOfLife - WavesManager.difficulty;
 		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
 
@@ -287,34 +306,36 @@ export class Player extends Entity {
 	//en cas de controle clavier il faut laisser la valeur par défaut
 	//et donc ne pas mettre de 2ème argument.
 
-	accelerateLeft(acceleration, distance=0.1) {
+	accelerateLeft(acceleration, distance = 0.1) {
 		acceleration =
-			Math.round((acceleration - distance * Player.accelerationMultiplier) * 1000) /
-			1000;
+			Math.round(
+				(acceleration - distance * Player.accelerationMultiplier) * 1000
+			) / 1000;
 		return acceleration;
 	}
 
-	accelerateUp(acceleration, distance=0.1) {
-		return this.accelerateLeft(acceleration,distance);
+	accelerateUp(acceleration, distance = 0.1) {
+		return this.accelerateLeft(acceleration, distance);
 	}
 
-	accelerateRight(acceleration, distance=0.1) {
+	accelerateRight(acceleration, distance = 0.1) {
 		acceleration =
-			Math.round((acceleration + distance * Player.accelerationMultiplier) * 1000) /
-			1000;
+			Math.round(
+				(acceleration + distance * Player.accelerationMultiplier) * 1000
+			) / 1000;
 		return acceleration;
 	}
 
-	accelerateDown(acceleration, distance=0.1) {
-		return this.accelerateRight(acceleration,distance);
+	accelerateDown(acceleration, distance = 0.1) {
+		return this.accelerateRight(acceleration, distance);
 	}
 
 	/////
 
 	acceleration(keysPressed) {
-		if(keysPressed.MouseMode){
+		if (keysPressed.MouseMode) {
 			this.mouseMovement();
-		}else{
+		} else {
 			this.keyBoardMovement(keysPressed);
 		}
 		this.checkMaxAcceleration();
@@ -322,16 +343,17 @@ export class Player extends Entity {
 		this.speedY += this.accelerationY;
 	}
 
-	checkMaxAcceleration(){
-		if(this.accelerationX>Player.maxAcceleration){
-			this.accelerationX=Player.maxAcceleration
-		}if(this.accelerationX<-Player.maxAcceleration){
-			this.accelerationX=-Player.maxAcceleration
+	checkMaxAcceleration() {
+		if (this.accelerationX > Player.maxAcceleration) {
+			this.accelerationX = Player.maxAcceleration;
 		}
-		if(this.accelerationY>Player.maxAcceleration){
-			this.accelerationY=Player.maxAcceleration
-		}else if(this.accelerationY<-Player.maxAcceleration){
-			this.accelerationY=-Player.maxAcceleration
+		if (this.accelerationX < -Player.maxAcceleration) {
+			this.accelerationX = -Player.maxAcceleration;
+		}
+		if (this.accelerationY > Player.maxAcceleration) {
+			this.accelerationY = Player.maxAcceleration;
+		} else if (this.accelerationY < -Player.maxAcceleration) {
+			this.accelerationY = -Player.maxAcceleration;
 		}
 	}
 
@@ -342,14 +364,20 @@ export class Player extends Entity {
 
 	decelerate(acceleration) {
 		if (acceleration < 0) {
-			acceleration = Math.round((acceleration + 1/(10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000) / 1000;
+			acceleration =
+				Math.round(
+					(acceleration + 1 / (10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000
+				) / 1000;
 		} else if (acceleration > 0) {
-			acceleration = Math.round((acceleration - 1/(10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000) / 1000;
+			acceleration =
+				Math.round(
+					(acceleration - 1 / (10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000
+				) / 1000;
 		}
 		return acceleration;
 	}
 
-	keyBoardMovement(keysPressed){
+	keyBoardMovement(keysPressed) {
 		if (keysPressed.ArrowDown) {
 			this.speedY = Player.playerSpeed;
 			this.accelerationY = this.accelerateDown(this.accelerationY);
@@ -368,27 +396,40 @@ export class Player extends Entity {
 		}
 	}
 
-	mouseMovement(){
-		const vaguely=10;
-		const distanceX = Math.round(Math.abs(window.mouseX-this.posX))/2000;
-		const distanceY = Math.round(Math.abs(window.mouseY-this.posY))/2000;
-		
-		if(!(this.posX+this.width/2>window.mouseX-vaguely && this.posX+this.width/2<window.mouseX+vaguely)){
-			if(this.posX+this.width/2>window.mouseX){
+	mouseMovement() {
+		const vaguely = 10;
+		const distanceX = Math.round(Math.abs(window.mouseX - this.posX)) / 2000;
+		const distanceY = Math.round(Math.abs(window.mouseY - this.posY)) / 2000;
+
+		if (
+			!(
+				this.posX + this.width / 2 > window.mouseX - vaguely &&
+				this.posX + this.width / 2 < window.mouseX + vaguely
+			)
+		) {
+			if (this.posX + this.width / 2 > window.mouseX) {
 				this.speedX = -Player.playerSpeed;
-				this.accelerationX = this.accelerateLeft(this.accelerationX,distanceX);
-			}else{
+				this.accelerationX = this.accelerateLeft(this.accelerationX, distanceX);
+			} else {
 				this.speedX = Player.playerSpeed;
-				this.accelerationX = this.accelerateRight(this.accelerationX,distanceX);
+				this.accelerationX = this.accelerateRight(
+					this.accelerationX,
+					distanceX
+				);
 			}
 		}
-		if(!(this.posY+this.height/2<window.mouseY+vaguely && this.posY+this.height/2>window.mouseY-vaguely)){
-			if(this.posY+this.height/2>window.mouseY){
+		if (
+			!(
+				this.posY + this.height / 2 < window.mouseY + vaguely &&
+				this.posY + this.height / 2 > window.mouseY - vaguely
+			)
+		) {
+			if (this.posY + this.height / 2 > window.mouseY) {
 				this.speedY = -Player.playerSpeed;
-				this.accelerationY = this.accelerateUp(this.accelerationY,distanceY);
-			}else{
+				this.accelerationY = this.accelerateUp(this.accelerationY, distanceY);
+			} else {
 				this.speedY = Player.playerSpeed;
-				this.accelerationY = this.accelerateDown(this.accelerationY,distanceY);
+				this.accelerationY = this.accelerateDown(this.accelerationY, distanceY);
 			}
 		}
 	}
