@@ -65,8 +65,6 @@ export class Player extends Entity {
 
 		//Sounds
 		this.soundShot = new Audio(Player.soundShotPath);
-		this.soundShot.preload = "auto";
-		this.soundShot.load();
 		this.soundDead = new Audio(Player.soundDeadPath);
 
 		//Movement
@@ -87,6 +85,7 @@ export class Player extends Entity {
 
 	//Fais réapparaitre le jouer à ses coordonnées de départ et le rend invincible quelques instants
 	respawn() {
+		
 		Player.teamLifes--;
 		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 		this.alive = true;
@@ -174,7 +173,7 @@ export class Player extends Entity {
 	//met à jour le joueur.
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
-		this.updateShots();		
+		this.updateShots();
 		if (this.alive) {
 			if (this.gotScoreMultiplierBonus()) {
 				this.timerBeforeLosingScoreMultiplierBonus--;
@@ -268,13 +267,7 @@ export class Player extends Entity {
 
 	//Fais tirer au joueur un projectile.
 	shoot() { 
-		if(this.soundShot.currentTime==0){
-			this.soundShot.play();
-		}else{
-			console.log("clone");
-			this.soundShot.cloneNode(true).play();
-		}
-		
+		this.soundShot.cloneNode(true).play();
 		this.shots.push(
 			new Shot(
 				this.posX + this.width,
