@@ -6,6 +6,7 @@ import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
 import keysPressed from './keysListener.js';
 import { Entity } from './entity.js';
+import { Particules } from './particules.js';
 import { Power } from './power.js';
 import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
@@ -16,10 +17,17 @@ const context = canvas.getContext('2d');
 export default canvas;
 
 const assets = [
-	'../images/monster.png',
-	'../images/spaceship.png',
 	'../images/btn1.png',
 	'../images/btn2.png',
+	'../images/ice.svg',
+	'../images/shield.svg',
+	'../images/shield2.svg',
+	'../images/monster.png',
+	'../images/spaceship.png',
+	'../images/asteroid.png',
+	'../images/bonusArrows.svg',
+	'../images/bonusLife.svg',
+	'../images/bonusShield.svg',
 ];
 const sounds = [
 	'../sounds/shot.mp3',
@@ -63,6 +71,7 @@ let time = 0;
 const homePage = new HomePage();
 const gameOver = new GameOver();
 const scoreBoard = new ScoreBoard();
+Particules.init();
 
 document
 	.querySelector('.scoreboardButton')
@@ -78,10 +87,9 @@ const wavesManager = new WavesManager();
 //Gêre l'affichage du jeu
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	Particules.renderAll();
 	player.render();
-	for (let i = 0; i < Power.powers.length; i++) {
-		Power.powers[i].render();
-	}
+	Power.renderAll();
 	wavesManager.wavesRender();
 	requestAnimationFrame(render);
 }
@@ -89,23 +97,16 @@ function render() {
 //Gêre la mise à jour des éléments du jeu.
 function update() {
 	if (isInGame) {
+		Particules.updateAll();
 		player.update(keysPressed);
-		for (let i = 0; i < Power.powers.length; i++) {
-			Power.powers[i].powerCollideWithPlayer(player);
-			Power.powers[i].update();
-		}
+		Power.updateAll(player);
+		
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
 		let allDead = wavesManager.wavesUpdates(player);
 		if (allDead) {
 			//Si la vague est finie, on passe à la prochaine.
 			wavesManager.nextWave();
-			Power.powers.push(
-				new Power(
-					canvas.width,
-					getRandomInt(canvas.height - Power.radius * 2) + Power.radius
-				)
-			);
-			if (WavesManager.waveNumber % 4 == 0) {
+			if (WavesManager.waveNumber % ((WavesManager.difficultyMax+1)-WavesManager.difficulty) == 0) {
 				Power.powers.push(
 					new Power(
 						canvas.width,

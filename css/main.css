@@ -35,12 +35,14 @@ canvas {
     left: 0;
     border: 3px dashed #777;
     z-index: 1;
+    background-color: #000;
+
 }
 
 .hud{
     position: absolute;
     padding: 10px;
-    color: #000;
+    color: #fff;
     font-size: 1em;
     z-index: 2;
     user-select: none;
@@ -57,12 +59,12 @@ canvas {
 
 .waves {
     top: 0;
-    left: 25%;
+    left: 30%;
 }
 
 .time {
     top: 0;
-    right: 25%;
+    right: 30%;
 } 
 
 .score { 

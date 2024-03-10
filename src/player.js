@@ -10,7 +10,8 @@ export class Player extends Entity {
 	static height = 50;
 
 	//Sound
-	static sound = '../sounds/dead.mp3';
+	static soundDeadPath = '../sounds/dead.mp3';
+	static soundShotPath = '../sounds/shot.mp3';
 
 	static defaultNumberOfLife = 4;
 	static playerSpeed = 3;
@@ -56,8 +57,17 @@ export class Player extends Entity {
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
-		this.image.src = '../images/monster.png';
-		this.accelerationX = 0;
+		this.image.src = '../images/spaceship.png';
+		this.imageShield = new Image();
+		this.imageShield.src = '../images/shield.svg';
+		this.imageShield2 = new Image();
+		this.imageShield2.src = '../images/shield2.svg';
+
+		//Sounds
+		this.soundShot = new Audio(Player.soundShotPath);
+		this.soundShot.preload = "auto";
+		this.soundShot.load();
+		this.soundDead = new Audio(Player.soundDeadPath);
 
 		//Movement
 		this.accelerationX = 0;
@@ -66,8 +76,7 @@ export class Player extends Entity {
 
 	//Tue le joueur, initialise le timer avant sa réapparition
 	die() {
-		this.sound = new Audio(Player.sound);
-		this.sound.play();
+		this.soundDead.play();
 		this.alive = false;
 		this.maxTimeBeforeRespawn =
 			(this.maxTimeBeforeRespawn *
@@ -122,32 +131,37 @@ export class Player extends Entity {
 		const context = canvas.getContext('2d');
 		this.renderShots(context);
 		if (this.alive) {
+			super.render(context);
+			context.drawImage(
+				this.image,
+				this.posX,
+				this.posY,
+				this.width,
+				this.height
+			);
 			if (this.invincible) {
 				this.invincibleAnimation--;
 				if ((this.invincibleAnimation < 10 / this.animationSpeed) | 0) {
 					context.drawImage(
-						this.image,
-						this.posX,
-						this.posY,
-						this.width,
-						this.height
+						this.imageShield,
+						this.posX-(this.width*1.5)/5 | 0,
+						this.posY-(this.height*1.5)/5 | 0,
+						this.width*1.5 | 0,
+						this.height*1.5 | 0
 					);
 					if (this.invincibleAnimation < 0) {
 						this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 					}
+				}else{
+					context.drawImage(
+						this.imageShield2,
+						this.posX-(this.width*1.5)/5 | 0,
+						this.posY-(this.height*1.5)/5 | 0,
+						this.width*1.5 | 0,
+						this.height*1.5 | 0
+					);
 				}
-				context.lineWidth = 3;
-				context.strokeStyle = 'purple';
-				context.rect(this.posX, this.posY, this.width, this.height);
-				context.stroke();
-			} else {
-				context.drawImage(
-					this.image,
-					this.posX,
-					this.posY,
-					this.width,
-					this.height
-				);
+				
 			}
 			context.lineWidth = 1;
 			context.font = '16px Minecraft Regular';
@@ -160,8 +174,7 @@ export class Player extends Entity {
 	//met à jour le joueur.
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
-		this.updateShots();Z
-				
+		this.updateShots();		
 		if (this.alive) {
 			if (this.gotScoreMultiplierBonus()) {
 				this.timerBeforeLosingScoreMultiplierBonus--;
@@ -254,13 +267,20 @@ export class Player extends Entity {
 	}
 
 	//Fais tirer au joueur un projectile.
-	shoot() {
+	shoot() { 
+		if(this.soundShot.currentTime==0){
+			this.soundShot.play();
+		}else{
+			console.log("clone");
+			this.soundShot.cloneNode(true).play();
+		}
+		
 		this.shots.push(
 			new Shot(
 				this.posX + this.width,
 				this.posY + this.height / 3,
-				Player.bulletSpeed,
-				true
+				true,
+				Player.bulletSpeed
 			)
 		);
 	}

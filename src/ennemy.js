@@ -6,16 +6,18 @@ import { WavesManager } from './wavesManager.js';
 
 export class Ennemy extends Entity {
 	//Les variables de gameplay
-	static width = 30;
-	static height = 30;
+	static width = 40;
+	static height = 40;
 	static types = ['red', 'purple', 'orange', 'darkred'];
 	static bulletSpeed = Shot.defaultSpeed;
+	static soundShotPath = '../sounds/shotEnemy.mp3';
 
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 
 	constructor(posX, posY) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
+		this.image = new Image();
 		this.index = -1;
 		this.isDead = false;
 		this.type = 'red';
@@ -25,6 +27,7 @@ export class Ennemy extends Entity {
 		this.shots = [];
 		this.shootTimer=100+60/WavesManager.difficulty | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
+		this.soundShot = new Audio(Ennemy.soundShotPath);
 	}
 
 	//Afficher les tirs causés par un ennemi.
@@ -49,9 +52,17 @@ export class Ennemy extends Entity {
 		const context = canvas.getContext('2d');
 		this.renderShots(context);
 		if (!this.isDead) {
+			super.render(context);
 			context.beginPath();
 			context.fillStyle = this.type;
-			context.fillRect(this.posX, this.posY, this.width, this.width);
+			//context.fillRect(this.posX, this.posY, this.width, this.width);
+			context.drawImage(
+				this.image,
+				this.posX,
+				this.posY,
+				this.width,
+				this.height
+			);
 		}
 	}
 
@@ -141,21 +152,22 @@ export class Ennemy extends Entity {
 	applyType() {
 		this.height = Ennemy.height;
 		this.width = Ennemy.width;
+		this.lifes = 1;
+		this.image.src = '../images/ennemy.png';
 		switch (this.type) {
 			case 'red':
-				this.lifes = 1;
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = 0;
 				this.value=5;
 				break;
 			case 'purple':
-				this.lifes = 1;
 				this.speedX = -1;
 				this.speedY = 5;
 				this.value=7;
 				break;
 			case 'orange':
-				this.lifes = 1;
+				this.height = Ennemy.height*1.5;
+				this.width = Ennemy.width*1.5;
 				this.speedX = -1;
 				this.speedY = getRandomIntWithMin(-1, 1);
 				this.value = 10;
@@ -164,6 +176,7 @@ export class Ennemy extends Entity {
 				this.lifes = 3;
 				this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
 				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
+				this.image.src = '../images/asteroid.png';
 				this.speedX = -1;
 				this.speedY = 0;
 				this.value=15;
@@ -172,12 +185,13 @@ export class Ennemy extends Entity {
 	}
 
 	shoot() {
+		this.soundShot.play();
 		this.shots.push(
 			new Shot(
 				this.posX,
 				this.posY + this.height / 3,
-				-Ennemy.bulletSpeed,
-				false
+				false,
+				-Ennemy.bulletSpeed
 			)
 		);
 	}
