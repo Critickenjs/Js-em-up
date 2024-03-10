@@ -15,7 +15,17 @@ const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
 export default canvas;
 
-const assets = ['../images/monster.png', '../images/spaceship.png', '../images/btn1.png', '../images/btn2.png'];
+const assets = [
+	'../images/monster.png',
+	'../images/spaceship.png',
+	'../images/btn1.png',
+	'../images/btn2.png',
+];
+const sounds = [
+	'../sounds/shot.mp3',
+	'../sounds/shotEnemy.mp3',
+	'../sounds/dead.mp3',
+];
 
 //met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
@@ -24,16 +34,16 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	console.log("canvas.width:"+canvas.width);
-	console.log("canvas.height:"+canvas.height);
+	console.log('canvas.width:' + canvas.width);
+	console.log('canvas.height:' + canvas.height);
 }
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 //Chargement des assets
-preloadAssets(assets).then(() => {
-	console.log('Assets are loaded');
+preloadAssets(assets, sounds, () => {
+	console.log('Assets loaded');
 });
 
 //création du joueur
@@ -41,11 +51,11 @@ preloadAssets(assets).then(() => {
 const player = new Player(100, window.innerHeight / 2);
 
 //Impossible de mettre ces fonctions dans KeysListener
-canvas.addEventListener('mousedown', function() {
-	keysPressed.MouseDown=true;
+canvas.addEventListener('mousedown', function () {
+	keysPressed.MouseDown = true;
 });
-canvas.addEventListener('mouseup', function() {
-	keysPressed.MouseDown=false;
+canvas.addEventListener('mouseup', function () {
+	keysPressed.MouseDown = false;
 });
 
 let isInGame = false;
@@ -122,7 +132,7 @@ function addScorePointOverTime() {
 		document.querySelector('#timeValue').innerHTML = time;
 		document.querySelector('#scoreValue').innerHTML = player.score;
 		//Vitesse du jeu augmente au fur et à mesure
-		Entity.addToSpeed(0.001*WavesManager.difficulty);
+		Entity.addToSpeed(0.001 * WavesManager.difficulty);
 	}
 }
 
@@ -136,27 +146,26 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isInGame = true;
 	homePage.Play();
-	WavesManager.difficulty=getDifficultyValue();
+	WavesManager.difficulty = getDifficultyValue();
 	wavesManager.firstWave();
 	player.pseudo = homePage.username;
 	Player.resetTeamLivesNumber();
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
-	if(keysPressed.MouseMode){
-		keysPressed.MouseMode=false;
-	}else{
-		keysPressed.MouseMode=true;
+	if (keysPressed.MouseMode) {
+		keysPressed.MouseMode = false;
+	} else {
+		keysPressed.MouseMode = true;
 	}
 });
 
 function getDifficultyValue() {
-	let select = document.getElementById("difficulty");
-	let choice = select.selectedIndex  // Récupération de l'index du <option> choisi
-	 
-	return  parseInt(select.options[choice].value); // Récupération du texte du <option> d'index "choice"
-}
+	let select = document.getElementById('difficulty');
+	let choice = select.selectedIndex; // Récupération de l'index du <option> choisi
 
+	return parseInt(select.options[choice].value); // Récupération du texte du <option> d'index "choice"
+}
 
 document.querySelector('#restartButton2').addEventListener('click', () => {
 	scoreBoard.hide();
@@ -173,5 +182,5 @@ function restartGame() {
 	player.restart();
 	isInGame = true;
 	wavesManager.firstWave();
-	time=0;
+	time = 0;
 }
