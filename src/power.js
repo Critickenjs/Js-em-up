@@ -2,6 +2,7 @@ import { Entity } from './entity.js';
 import { getRandomInt } from './utils.js';
 import { Player } from './player.js';
 import canvas from './main.js';
+import { WavesManager } from './wavesManager.js';
 export class Power extends Entity {
 	static radius = 30;
     static speed = 6;
@@ -37,7 +38,7 @@ export class Power extends Entity {
         if(this.active){
             if (this.isCollidingWith(player)){
                 this.active=false;
-                player.becomeInvincible(Player.maxTimeForInvincibilty*5);
+                player.becomeInvincible(Player.maxTimeForInvincibility*((WavesManager.difficultyMax+1)-WavesManager.difficulty));
             };
         }
     }

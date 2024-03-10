@@ -4,9 +4,10 @@ import { getRandomInt } from './utils.js';
 import canvas from './main.js';
 
 export class WavesManager {
+	static difficultyMax = 4;
 	static difficulty = 0;
 	// Nombre max d'ennemis pouvant apparaitre à l'écran. A ajuster en fonction des lags.
-	static ennemyBuffer = 10;
+	static ennemyBuffer = 5;
 
 
 	//Waves
@@ -25,11 +26,10 @@ export class WavesManager {
 	firstWave() {
 		WavesManager.waveNumber = 1;
 		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
-		WavesManager.waveMaxNumberOfEnnemys = 5;
+		WavesManager.waveMaxNumberOfEnnemys = (WavesManager.ennemyBuffer*WavesManager.difficulty)/2 + 1 | 0;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
 		Entity.speedMultiplier = 0.8;
-		console.log("Nb ennemis"+(WavesManager.ennemyBuffer*WavesManager.difficulty));
-		for (let i = 0; i < WavesManager.ennemyBuffer; i++) {
+		for (let i = 0; i < WavesManager.ennemyBuffer*WavesManager.difficulty; i++) {
 			this.ennemys[i] = new Ennemy(
 				window.innerWidth +
 					getRandomInt(WavesManager.maxRandomSpawnDistance) +
@@ -62,7 +62,7 @@ export class WavesManager {
 		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
-		Entity.addToSpeed(0.01);
+		Entity.addToSpeed(0.01*WavesManager.difficulty);
 		console.log(
 			'Vague n°' +
 				WavesManager.waveNumber +
@@ -71,7 +71,7 @@ export class WavesManager {
 				' ennemies.'
 		);
 		WavesManager.waveMaxNumberOfEnnemys =
-			((5 + getRandomInt(2) + WavesManager.waveNumber / 2) *
+			(((3+WavesManager.difficulty+getRandomInt(WavesManager.difficulty)) + WavesManager.waveNumber / 2) *
 				WavesManager.waveMultiplier) |
 			0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
 		for (let a = 0; a < this.ennemys.length; a++) {

@@ -1,22 +1,23 @@
 import { Entity } from './entity.js';
 import { Shot } from './shot.js';
 import canvas from './main.js';
+import { WavesManager } from './wavesManager.js';
 
 export class Player extends Entity {
 	//Les variables de gameplay
 	static width = 50;
 	static height = 50;
-	static defaultNumberOfLife = 3;
+	static defaultNumberOfLife = 4;
 	static playerSpeed = 3;
 	static bulletSpeed = Shot.defaultSpeed;
 	static maxTimeBeforeShooting = 10;
-	static maxTimeForInvincibilty = 100;
+	static maxTimeForInvincibility = 150;
 	static accelerationMultiplier = 1.2;
 	static inertiaMultiplier = 1.5; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
 
 	//Les déclarations
-	static teamLifes = Player.defaultNumberOfLife; //vies de départ : default 3
+	static teamLifes; //vies de départ : default 4-WavesManager.difficulty dans main.js
 	static players = [];
 
 	constructor(posX, posY) {
@@ -29,7 +30,7 @@ export class Player extends Entity {
 		this.pseudo = 'player';
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
-		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibilty;
+		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibility;
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
@@ -42,7 +43,7 @@ export class Player extends Entity {
 	//Tue le joueur, initialise le timer avant sa réapparition
 	die() {
 		this.alive = false;
-		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * 1.2) | 0; //Le respawn devient de plus en plus long plus on meurt.
+		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * (Math.round((1+WavesManager.difficulty/10)*100)/100)) | 0; //Le respawn devient de plus en plus long plus on meurt.
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 	}
 
@@ -51,7 +52,7 @@ export class Player extends Entity {
 		Player.teamLifes--;
 		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 		this.alive = true;
-		this.becomeInvincible(Player.maxTimeForInvincibilty);
+		this.becomeInvincible(Player.maxTimeForInvincibility/WavesManager.difficulty | 0);
 		this.posY = canvas.height / 2;
 		this.posX = 100;
 		this.speedX = 0;
@@ -117,7 +118,8 @@ export class Player extends Entity {
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
 		this.updateShots();
-		
+		console.log("timerBeforeLosingInvincibility"+this.timerBeforeLosingInvincibility);
+				
 		if (this.alive) {
 			
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
@@ -211,17 +213,22 @@ export class Player extends Entity {
 
 	//Ajoute des points au joueur pour chaque kill d'ennemis
 	addScorePointOnEnemyKill(ennemy) {
-		this.score += ennemy.value;
+		this.score += ennemy.value*WavesManager.difficulty;
 	}
 
 	//Réinitialise le joueur pour le préparer à une nouvelle partie.
 	restart() {
-		Player.teamLifes = Player.defaultNumberOfLife;
 		this.score = 0;
 		document.querySelector('#scoreValue').innerHTML = this.score;
 		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn();
+		Player.resetTeamLivesNumber();
+	}
+
+	static resetTeamLivesNumber(){
+		Player.teamLifes = Player.defaultNumberOfLife-WavesManager.difficulty;
+		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
 
 	//Collisions des tirs du joueurs avec les ennemis

@@ -10,7 +10,6 @@ export class Ennemy extends Entity {
 	static height = 30;
 	static types = ['red', 'purple', 'orange', 'darkred'];
 	static bulletSpeed = Shot.defaultSpeed;
-	static shootTimer = 100;
 
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
@@ -23,8 +22,9 @@ export class Ennemy extends Entity {
 		this.lifes = 1;
 		this.value=10;
 		this.applyType();
-		this.timeBeforeNextShoot = Ennemy.shootTimer;
 		this.shots = [];
+		this.shootTimer=200/WavesManager.difficulty | 0;
+		this.timeBeforeNextShoot = this.shootTimer;
 	}
 
 	//Afficher les tirs causés par un ennemi.
@@ -73,7 +73,7 @@ export class Ennemy extends Entity {
 			this.timeBeforeNextShoot--;
 			if (this.timeBeforeNextShoot <= 0) {
 				this.shoot();
-				this.timeBeforeNextShoot = Ennemy.shootTimer;
+				this.timeBeforeNextShoot = this.shootTimer;
 			}
 		}
 	}
@@ -146,19 +146,19 @@ export class Ennemy extends Entity {
 				this.lifes = 1;
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = 0;
-				this.value=10;
+				this.value=5;
 				break;
 			case 'purple':
 				this.lifes = 1;
 				this.speedX = -1;
 				this.speedY = 5;
-				this.value=15;
+				this.value=7;
 				break;
 			case 'orange':
 				this.lifes = 1;
 				this.speedX = -1;
 				this.speedY = getRandomIntWithMin(-1, 1);
-				this.value = 20;
+				this.value = 10;
 				break;
 			case 'darkred':
 				this.lifes = 3;
@@ -166,7 +166,7 @@ export class Ennemy extends Entity {
 				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
 				this.speedX = -1;
 				this.speedY = 0;
-				this.value=25;
+				this.value=15;
 				break;
 		}
 	}

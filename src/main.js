@@ -38,7 +38,7 @@ preloadAssets(assets).then(() => {
 
 //création du joueur
 //Player.players.push(new Player(100, canvas.height / 2));
-const player = new Player(100, canvas.height / 2);
+const player = new Player(100, window.innerHeight / 2);
 
 //Impossible de mettre ces fonctions dans KeysListener
 canvas.addEventListener('mousedown', function() {
@@ -94,6 +94,12 @@ function update() {
 				console.log('Vous gagnez une vie suplémentaire !');
 				document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 			}
+			Power.powers.push(
+				new Power(
+					canvas.width,
+					getRandomInt(canvas.height - Power.radius * 2) + Power.radius
+				)
+			);
 			if (WavesManager.waveNumber % 5 == 0) {
 				Power.powers.push(
 					new Power(
@@ -116,12 +122,12 @@ function update() {
 //Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
 function addScorePointOverTime() {
 	if (isInGame) {
-		player.score +=3;
+		player.score += WavesManager.difficulty;
 		time++;
 		document.querySelector('#timeValue').innerHTML = time;
 		document.querySelector('#scoreValue').innerHTML = player.score;
 		//Vitesse du jeu augmente au fur et à mesure
-		Entity.addToSpeed(0.001);
+		Entity.addToSpeed(0.001*WavesManager.difficulty);
 	}
 }
 
@@ -133,12 +139,12 @@ document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
-	homePage.Play();
-	player.pseudo = homePage.username;
 	isInGame = true;
+	homePage.Play();
 	WavesManager.difficulty=getDifficultyValue();
 	wavesManager.firstWave();
-	console.log("Difficulté : "+WavesManager.difficulty);
+	player.pseudo = homePage.username;
+	Player.resetTeamLivesNumber();
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
@@ -153,7 +159,7 @@ function getDifficultyValue() {
 	let select = document.getElementById("difficulty");
 	let choice = select.selectedIndex  // Récupération de l'index du <option> choisi
 	 
-	return select.options[choice].value; // Récupération du texte du <option> d'index "choice"
+	return  parseInt(select.options[choice].value); // Récupération du texte du <option> d'index "choice"
 }
 
 
