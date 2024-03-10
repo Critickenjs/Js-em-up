@@ -1,4 +1,7 @@
 export class Entity {
+
+	static showCollisions = false;
+
 	static speedMultiplier=0.8;
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
@@ -16,12 +19,14 @@ export class Entity {
 	}
 
 	render(context){
-		context.beginPath();
-        context.lineWidth = 1;
-		context.strokeStyle='red';
-		context.rect(this.posX, this.posY,
-					this.width, this.width);
-		context.stroke();
+		if(Entity.showCollisions){
+			context.beginPath();
+			context.lineWidth = 1;
+			context.strokeStyle='red';
+			context.rect(this.posX-2, this.posY-2,
+						this.width+2, this.height+2);
+			context.stroke();
+		}
 	}
 
 	update() {

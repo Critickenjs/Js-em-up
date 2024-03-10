@@ -1,3 +1,5 @@
+import { Entity } from "./entity.js";
+
 const keysPressed = {
 	MouseMode:false,
 	ArrowUp: false,
@@ -29,6 +31,13 @@ window.addEventListener('keydown', event => {
 			keysPressed.MouseMode=false;
 		}else{
 			keysPressed.MouseMode=true;
+		}
+	}
+	if (event.key == 'C' || event.key == 'c') {
+		if(Entity.showCollisions){
+			Entity.showCollisions=false;
+		}else{
+			Entity.showCollisions=true;
 		}
 	}
 });
