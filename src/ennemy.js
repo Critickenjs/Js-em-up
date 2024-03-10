@@ -23,7 +23,7 @@ export class Ennemy extends Entity {
 		this.value=10;
 		this.applyType();
 		this.shots = [];
-		this.shootTimer=200/WavesManager.difficulty | 0;
+		this.shootTimer=100+60/WavesManager.difficulty | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
 	}
 

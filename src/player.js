@@ -15,8 +15,9 @@ export class Player extends Entity {
 
 	//Timer
 	static maxTimeBeforeShooting = 10;
-	static maxTimeForInvincibility = 150;
-	static maxTimeForScoreMultiplierBonus = 300;
+	static maxTimeForInvincibility = 600;
+	static maxTimeForScoreMultiplierBonus = 456;
+	static maxTimeIceMalus = 300;
 
 	//Movement
 	static accelerationMultiplier = 1.2;
@@ -40,9 +41,10 @@ export class Player extends Entity {
 		this.timerBeforeShots = 0;
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
-		
 		//Bonus
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibility;
+		this.timerBeforeLosingIceMalus = 0;
+		this.iceMultiplierMalus=1;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
 		this.scoreMultiplierBonus=1;
 
@@ -56,26 +58,6 @@ export class Player extends Entity {
 		this.accelerationX = 0;
 		this.accelerationY = 0;
 	}
-
-
-	obtainScoreMultiplierBonus(){
-		this.timerBeforeLosingScoreMultiplierBonus = Player.maxTimeForScoreMultiplierBonus;
-		this.scoreMultiplierBonus=getRandomInt(1)+2;
-	}
-
-	loseScoreMuliplierBonus(){
-		this.scoreMultiplierBonus=1;
-	}
-
-	gotScoreMultiplierBonus(){
-		return this.scoreMultiplierBonus!=1;
-	}
-
-	
-	gotScoreMultiplierBonus(){
-		return this.scoreMultiplierBonus!=1;
-	}
-
 
 	//Tue le joueur, initialise le timer avant sa réapparition
 	die() {
@@ -158,7 +140,7 @@ export class Player extends Entity {
 	update(keysPressed) {
 		super.update(); //Essentiel pour les collisions entre entités
 		this.updateShots();
-		console.log("timerBeforeLosingInvincibility"+this.timerBeforeLosingInvincibility);
+		console.log("timerBeforeLosingIceMalus"+this.timerBeforeLosingIceMalus);
 				
 		if (this.alive) {
 			
@@ -166,6 +148,13 @@ export class Player extends Entity {
 				this.timerBeforeLosingScoreMultiplierBonus--;
 				if(this.timerBeforeLosingScoreMultiplierBonus<0){
 					this.loseScoreMuliplierBonus();
+				}
+			}
+
+			if(this.gotIceMalus()){
+				this.timerBeforeLosingIceMalus--;
+				if(this.timerBeforeLosingIceMalus<0){
+					this.loseIceMalus();
 				}
 			}
 			
@@ -353,9 +342,9 @@ export class Player extends Entity {
 
 	decelerate(acceleration) {
 		if (acceleration < 0) {
-			acceleration = Math.round((acceleration + 1/(10 * Player.inertiaMultiplier)) * 1000) / 1000;
+			acceleration = Math.round((acceleration + 1/(10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000) / 1000;
 		} else if (acceleration > 0) {
-			acceleration = Math.round((acceleration - 1/(10 * Player.inertiaMultiplier)) * 1000) / 1000;
+			acceleration = Math.round((acceleration - 1/(10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000) / 1000;
 		}
 		return acceleration;
 	}
@@ -403,5 +392,37 @@ export class Player extends Entity {
 			}
 		}
 	}
+
+	
+	obtainScoreMultiplierBonus(){
+		this.timerBeforeLosingScoreMultiplierBonus = Player.maxTimeForScoreMultiplierBonus;
+		this.scoreMultiplierBonus=getRandomInt(WavesManager.difficulty)+2;
+		document.querySelector('#scoreBonusValue').innerHTML = "x"+this.scoreMultiplierBonus;
+	}
+
+	loseScoreMuliplierBonus(){
+		this.scoreMultiplierBonus=1;
+		document.querySelector('#scoreBonusValue').innerHTML = "x1";
+	}
+
+	gotScoreMultiplierBonus(){
+		return this.scoreMultiplierBonus!=1;
+	}
+
+
+
+	obtainIceMalus(){
+		this.iceMultiplierMalus=1+WavesManager.difficulty;
+		this.timerBeforeLosingIceMalus=Player.maxTimeIceMalus+((Player.maxTimeIceMalus/10 | 0)*WavesManager.difficulty);
+	}
+
+	loseIceMalus(){
+		this.iceMultiplierMalus=1;
+	}
+
+	gotIceMalus(){
+		return this.iceMultiplierMalus!=1;
+	}
+
 
 }

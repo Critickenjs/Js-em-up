@@ -6,7 +6,7 @@ import { WavesManager } from './wavesManager.js';
 export class Power extends Entity {
 	static radius = 30;
     static speed = 6;
-    static types = ['invincible','life','ScoreMultiplierBonus'];//,'ice','fastShots'
+    static types = ['invincible','life','ScoreMultiplierBonus','ice'];//'fastShots','perforation' -> plus de limite de tirs et passe au travers des ennemis
     static powers = [];
 	constructor(posX, posY, type=Power.types[getRandomInt(Power.types.length)]) {
 		super(posX, posY, Power.radius, Power.radius);
@@ -49,6 +49,9 @@ export class Power extends Entity {
                     break;
                     case('ScoreMultiplierBonus'):
                         player.obtainScoreMultiplierBonus();
+                    break;
+                    case('ice'):
+                        player.obtainIceMalus();
                     break;
                 }
             };
