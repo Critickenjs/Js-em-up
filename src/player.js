@@ -2,41 +2,78 @@ import { Entity } from './entity.js';
 import { Shot } from './shot.js';
 import canvas from './main.js';
 import { WavesManager } from './wavesManager.js';
+import { getRandomInt } from './utils.js';
 
 export class Player extends Entity {
 	//Les variables de gameplay
 	static width = 50;
 	static height = 50;
+
 	static defaultNumberOfLife = 4;
 	static playerSpeed = 3;
 	static bulletSpeed = Shot.defaultSpeed;
+
+	//Timer
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibility = 150;
+	static maxTimeForScoreMultiplierBonus = 300;
+
+	//Movement
 	static accelerationMultiplier = 1.2;
 	static inertiaMultiplier = 1.5; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
 
-	//Les déclarations
+	//declarations
 	static teamLifes; //vies de départ : default 4-WavesManager.difficulty dans main.js
 	static players = [];
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
-		this.timerBeforeShots = 0;
+		//Declarations
 		this.alive = true;
 		this.invincible = true;
 		this.score = 0;
 		this.shots = [];
 		this.pseudo = 'player';
+
+		//Timer
+		this.timerBeforeShots = 0;
 		this.maxTimeBeforeRespawn = 50;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+		
+		//Bonus
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibility;
+		this.timerBeforeLosingScoreMultiplierBonus = 0;
+		this.scoreMultiplierBonus=1;
+
+		//Graphic
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
 		this.image.src = '../images/monster.png';	this.accelerationX = 0;
+	
+		//Movement
 		this.accelerationX = 0;
 		this.accelerationY = 0;
+	}
+
+
+	obtainScoreMultiplierBonus(){
+		this.timerBeforeLosingScoreMultiplierBonus = Player.maxTimeForScoreMultiplierBonus;
+		this.scoreMultiplierBonus=getRandomInt(1)+2;
+	}
+
+	loseScoreMuliplierBonus(){
+		this.scoreMultiplierBonus=1;
+	}
+
+	gotScoreMultiplierBonus(){
+		return this.scoreMultiplierBonus!=1;
+	}
+
+	
+	gotScoreMultiplierBonus(){
+		return this.scoreMultiplierBonus!=1;
 	}
 
 
@@ -86,11 +123,14 @@ export class Player extends Entity {
 		}
 	}
 
+	
+
 	//Affiche le joueur.
 	render() {
 		const context = canvas.getContext('2d');
 		this.renderShots(context);
 		if (this.alive) {
+
 			if (this.invincible) {
 				this.invincibleAnimation--;
 				if(this.invincibleAnimation<(10/this.animationSpeed) | 0){
@@ -121,6 +161,13 @@ export class Player extends Entity {
 		console.log("timerBeforeLosingInvincibility"+this.timerBeforeLosingInvincibility);
 				
 		if (this.alive) {
+			
+			if(this.gotScoreMultiplierBonus()){
+				this.timerBeforeLosingScoreMultiplierBonus--;
+				if(this.timerBeforeLosingScoreMultiplierBonus<0){
+					this.loseScoreMuliplierBonus();
+				}
+			}
 			
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
@@ -195,7 +242,7 @@ export class Player extends Entity {
 	shootWithRecharge(){
 		if (this.timerBeforeShots <= 0) {
 			this.shoot();
-			this.timerBeforeShots = 10;
+			this.timerBeforeShots = Player.maxTimeBeforeShooting;
 		}
 	}
 
@@ -213,7 +260,7 @@ export class Player extends Entity {
 
 	//Ajoute des points au joueur pour chaque kill d'ennemis
 	addScorePointOnEnemyKill(ennemy) {
-		this.score += ennemy.value*WavesManager.difficulty;
+		this.score += (ennemy.value*WavesManager.difficulty)*this.scoreMultiplierBonus;
 	}
 
 	//Réinitialise le joueur pour le préparer à une nouvelle partie.

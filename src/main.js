@@ -89,18 +89,13 @@ function update() {
 		if (allDead) {
 			//Si la vague est finie, on passe à la prochaine.
 			wavesManager.nextWave();
-			if (WavesManager.waveNumber % 20 == 0) {
-				Player.teamLifes++;
-				console.log('Vous gagnez une vie suplémentaire !');
-				document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
-			}
 			Power.powers.push(
 				new Power(
 					canvas.width,
 					getRandomInt(canvas.height - Power.radius * 2) + Power.radius
 				)
 			);
-			if (WavesManager.waveNumber % 5 == 0) {
+			if (WavesManager.waveNumber % 4 == 0) {
 				Power.powers.push(
 					new Power(
 						canvas.width,

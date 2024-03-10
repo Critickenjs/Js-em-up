@@ -6,14 +6,14 @@ import { WavesManager } from './wavesManager.js';
 export class Power extends Entity {
 	static radius = 30;
     static speed = 6;
-    static types = ['invincibility'];
+    static types = ['invincible','life','ScoreMultiplierBonus'];//,'ice','fastShots'
     static powers = [];
-	constructor(posX, posY) {
+	constructor(posX, posY, type=Power.types[getRandomInt(Power.types.length)]) {
 		super(posX, posY, Power.radius, Power.radius);
 		this.speedX = -Power.speed;
 		this.speedY = 0;
 		this.active = true;
-        this.type=Power.types[getRandomInt(Power.types.length)];
+        this.type=type;
 	}
 	
 	render() {
@@ -38,7 +38,19 @@ export class Power extends Entity {
         if(this.active){
             if (this.isCollidingWith(player)){
                 this.active=false;
-                player.becomeInvincible(Player.maxTimeForInvincibility*((WavesManager.difficultyMax+1)-WavesManager.difficulty));
+                switch(this.type){
+                    case('invincible'):
+                        player.becomeInvincible(Player.maxTimeForInvincibility*((WavesManager.difficultyMax+1)-WavesManager.difficulty));
+                    break;
+                    case('life'):
+                       Player.teamLifes++;
+                       console.log('Vous gagnez une vie suplémentaire !');
+                       document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
+                    break;
+                    case('ScoreMultiplierBonus'):
+                        player.obtainScoreMultiplierBonus();
+                    break;
+                }
             };
         }
     }
