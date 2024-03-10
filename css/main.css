@@ -170,10 +170,14 @@ div{
 
 .gameOver{
     background: rgba(250, 0, 0, 0.585);
+    align-items: center;
+    justify-content: center;
 }
 
 .scoreboard {
     background: rgba(44, 62, 80, 0.585);
+    align-items: center;
+    justify-content: center;
 }
 
 
