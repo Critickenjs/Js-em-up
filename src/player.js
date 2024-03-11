@@ -450,10 +450,10 @@ export class Player extends Entity {
 		}
 	}
 
-	
-	obtainScoreMultiplierBonus(){
-		this.timerBeforeLosingScoreMultiplierBonus = Player.maxTimeForScoreMultiplierBonus;
-		this.scoreMultiplierBonus=getRandomInt(WavesManager.difficulty)+2;
+	//Duration en tick (60 ticks par seconde)
+	obtainScoreMultiplierBonus(duration, multiplier=getRandomInt(WavesManager.difficulty)+2){
+		this.timerBeforeLosingScoreMultiplierBonus = duration;
+		this.scoreMultiplierBonus=multiplier;
 		document.querySelector('#scoreBonusValue').innerHTML = "x"+this.scoreMultiplierBonus;
 	}
 
@@ -466,11 +466,10 @@ export class Player extends Entity {
 		return this.scoreMultiplierBonus!=1;
 	}
 
-
-
-	obtainIceMalus(){
-		this.iceMultiplierMalus=1+WavesManager.difficulty;
-		this.timerBeforeLosingIceMalus=Player.maxTimeIceMalus+((Player.maxTimeIceMalus/10 | 0)*WavesManager.difficulty);
+	//Duration en tick (60 ticks par seconde)
+	obtainIceMalus(duration, multiplier=1+WavesManager.difficulty){
+		this.iceMultiplierMalus=duration;
+		this.timerBeforeLosingIceMalus=multiplier;
 	}
 
 	loseIceMalus(){

@@ -83,10 +83,10 @@ export class Power extends Entity {
                        document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
                     break;
                     case('ScoreMultiplierBonus'):
-                        player.obtainScoreMultiplierBonus();
+                        player.obtainScoreMultiplierBonus(Player.maxTimeForScoreMultiplierBonus);
                     break;
                     case('ice'):
-                        player.obtainIceMalus();
+                        player.obtainIceMalus(Player.maxTimeIceMalus+((Player.maxTimeIceMalus/10 | 0)*WavesManager.difficulty));
                     break;
                 }
             };
