@@ -22,6 +22,7 @@ export class Player extends Entity {
 	static maxTimeForInvincibility = 300;
 	static maxTimeForScoreMultiplierBonus = 456;
 	static maxTimeIceMalus = 300;
+	static maxTimePerforationBonus = 300;
 
 	//Movement
 	static accelerationMultiplier = 1.2;
@@ -52,6 +53,7 @@ export class Player extends Entity {
 		this.iceMultiplierMalus=1;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
 		this.scoreMultiplierBonus = 1;
+		this.timerBeforeLosingPerforationBonus = 0;
 
 		//Graphic
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
@@ -102,6 +104,7 @@ export class Player extends Entity {
 		this.iceMultiplierMalus=1;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
 		this.scoreMultiplierBonus = 1;
+		this.timerBeforeLosingPerforationBonus = 0;
 	}
 
 	becomeInvincible(duration) {
@@ -191,6 +194,10 @@ export class Player extends Entity {
 					this.loseIceMalus();
 				}
 			}
+
+			if(this.gotPerforationBonus()){
+				this.timerBeforeLosingPerforationBonus--;
+			}
 			
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
@@ -220,11 +227,8 @@ export class Player extends Entity {
 			this.acceleration(keysPressed);
 
 			//Le joueur déclenche un tir et active le cooldown si il appuie sur espace
-			if (keysPressed.Space) {
-				this.shootWithRecharge();
-			}
-			if (keysPressed.MouseDown) {
-				this.shootWithRecharge();
+			if (keysPressed.Space || keysPressed.MouseDown) {
+				this.shootWithRecharge(this.gotPerforationBonus());
 			}
 
 			//Collisions avec les bords du canvas
@@ -261,22 +265,23 @@ export class Player extends Entity {
 		}
 	}
 
-	shootWithRecharge() {
+	shootWithRecharge(perforationBonus=false) {
 		if (this.timerBeforeShots <= 0) {
-			this.shoot();
+			this.shoot(perforationBonus);
 			this.timerBeforeShots = Player.maxTimeBeforeShooting;
 		}
 	}
 
 	//Fais tirer au joueur un projectile.
-	shoot() { 
+	shoot(perforationBonus=false) { 
 		this.soundShot.cloneNode(true).play();
 		this.shots.push(
 			new Shot(
 				this.posX + this.width,
 				this.posY + this.height / 3,
 				true,
-				Player.bulletSpeed
+				Player.bulletSpeed,
+				perforationBonus
 			)
 		);
 	}
@@ -307,7 +312,7 @@ export class Player extends Entity {
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
 				if (this.shots[s].isCollidingWith(ennemy)) {
-					this.shots[s].active = false;
+					this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
 					if (ennemy.getHurt()) {
 						this.addScorePointOnEnemyKill(ennemy);
 						document.querySelector('#scoreValue').innerHTML = this.score;
@@ -468,8 +473,8 @@ export class Player extends Entity {
 
 	//Duration en tick (60 ticks par seconde)
 	obtainIceMalus(duration, multiplier=1+WavesManager.difficulty){
-		this.iceMultiplierMalus=duration;
-		this.timerBeforeLosingIceMalus=multiplier;
+		this.iceMultiplierMalus=multiplier;
+		this.timerBeforeLosingIceMalus=duration;
 	}
 
 	loseIceMalus(){
@@ -478,6 +483,19 @@ export class Player extends Entity {
 
 	gotIceMalus(){
 		return this.iceMultiplierMalus!=1;
+	}
+
+	//Duration en tick (60 ticks par seconde)
+	obtainPerforationBonus(duration){
+		this.timerBeforeLosingPerforationBonus=duration;
+	}
+
+	gotPerforationBonus(){
+		return this.timerBeforeLosingPerforationBonus>0;
+	}
+
+	checkPowerUp(){
+
 	}
 
 

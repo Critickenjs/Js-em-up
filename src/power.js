@@ -6,7 +6,7 @@ import { WavesManager } from './wavesManager.js';
 export class Power extends Entity {
 	static radius = 40;
     static speed = 6;
-    static types = ['invincible','life','ScoreMultiplierBonus','ice'];//'fastShots','perforation' -> plus de limite de tirs et passe au travers des ennemis
+    static types = ['perforation'];//'fastShots','perforation' -> plus de limite de tirs et passe au travers des ennemis
     static powers = [];
 	constructor(posX, posY, type=Power.types[getRandomInt(Power.types.length)]) {
 		super(posX, posY, Power.radius, Power.radius);
@@ -27,6 +27,9 @@ export class Power extends Entity {
             break;
             case('ice'):
                 this.image.src = '../images/ice.png';
+            break;
+            case('perforation'):
+                this.image.src = '../images/bonusArrows.png';
             break;
         }
 	}
@@ -87,6 +90,9 @@ export class Power extends Entity {
                     break;
                     case('ice'):
                         player.obtainIceMalus(Player.maxTimeIceMalus+((Player.maxTimeIceMalus/10 | 0)*WavesManager.difficulty));
+                    break;
+                    case('perforation'):
+                        player.obtainPerforationBonus(Player.maxTimePerforationBonus+Player.maxTimePerforationBonus/WavesManager.difficulty);
                     break;
                 }
             };
