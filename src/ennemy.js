@@ -77,7 +77,7 @@ export class Ennemy extends Entity {
 		}
 		if (this.posY < 0) {
 			this.speedY = Math.abs(this.speedY);
-		} else if (this.posY > canvas.height - Ennemy.height) {
+		} else if (this.posY > canvas.height - this.height) {
 			this.speedY = -this.speedY;
 		}
 		if (this.type == 'orange' && this.posX < canvas.width * 1.2) {
