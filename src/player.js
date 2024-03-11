@@ -266,6 +266,7 @@ export class Player extends Entity {
 	}
 
 	shootWithRecharge(perforationBonus=false) {
+		//this.shoot(perforationBonus);
 		if (this.timerBeforeShots <= 0) {
 			this.shoot(perforationBonus);
 			this.timerBeforeShots = Player.maxTimeBeforeShooting;
