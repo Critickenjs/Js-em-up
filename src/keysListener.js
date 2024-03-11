@@ -1,4 +1,5 @@
 import { Entity } from "./entity.js";
+import {isInGame} from './main.js';
 
 const keysPressed = {
 	MouseMode:false,
@@ -11,33 +12,35 @@ const keysPressed = {
 };
 
 window.addEventListener('keydown', event => {
-	if (down(event)) {
-		keysPressed.ArrowDown = true;
-	}
-	if (up(event)) {
-		keysPressed.ArrowUp = true;
-	}
-	if (left(event)) {
-		keysPressed.ArrowLeft = true;
-	}
-	if (right(event)) {
-		keysPressed.ArrowRight = true;
-	}
-	if (event.key == ' ') {
-		keysPressed.Space = true;
-	}
-	if (event.key == 'M' || event.key == 'm') {
-		if(keysPressed.MouseMode){
-			keysPressed.MouseMode=false;
-		}else{
-			keysPressed.MouseMode=true;
+	if(isInGame){
+		if (down(event)) {
+			keysPressed.ArrowDown = true;
 		}
-	}
-	if (event.key == 'C' || event.key == 'c') {
-		if(Entity.showCollisions){
-			Entity.showCollisions=false;
-		}else{
-			Entity.showCollisions=true;
+		if (up(event)) {
+			keysPressed.ArrowUp = true;
+		}
+		if (left(event)) {
+			keysPressed.ArrowLeft = true;
+		}
+		if (right(event)) {
+			keysPressed.ArrowRight = true;
+		}
+		if (event.key == ' ') {
+			keysPressed.Space = true;
+		}
+		if (event.key == 'M' || event.key == 'm') {
+			if(keysPressed.MouseMode){
+				keysPressed.MouseMode=false;
+			}else{
+				keysPressed.MouseMode=true;
+			}
+		}
+		if (event.key == 'C' || event.key == 'c') {
+			if(Entity.showCollisions){
+				Entity.showCollisions=false;
+			}else{
+				Entity.showCollisions=true;
+			}
 		}
 	}
 });

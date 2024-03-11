@@ -85,7 +85,6 @@ export class Player extends Entity {
 
 	//Fais réapparaitre le jouer à ses coordonnées de départ et le rend invincible quelques instants
 	respawn() {
-		
 		Player.teamLifes--;
 		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 		this.alive = true;
@@ -99,6 +98,10 @@ export class Player extends Entity {
 		this.accelerationX = 0;
 		this.accelerationY = 0;
 		this.timerBeforeShots = 0;
+		this.timerBeforeLosingIceMalus = 0;
+		this.iceMultiplierMalus=1;
+		this.timerBeforeLosingScoreMultiplierBonus = 0;
+		this.scoreMultiplierBonus = 1;
 	}
 
 	becomeInvincible(duration) {
@@ -165,7 +168,7 @@ export class Player extends Entity {
 			context.lineWidth = 1;
 			context.font = '16px Minecraft Regular';
 			context.imageSmoothingEnabled = false;
-			context.fillStyle = 'black';
+			context.fillStyle = 'white';
 			context.fillText(this.pseudo, this.posX, this.posY - 10);
 		}
 	}
