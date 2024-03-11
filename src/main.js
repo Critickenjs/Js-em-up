@@ -19,15 +19,15 @@ export default canvas;
 const assets = [
 	'./images/btn1.png',
 	'./images/btn2.png',
-	'./images/ice.svg',
-	'./images/shield.svg',
-	'./images/shield2.svg',
+	'./images/ice.png',
+	'./images/shield.png',
+	'./images/shield2.png',
 	'./images/monster.png',
 	'./images/spaceship.png',
 	'./images/asteroid.png',
-	'./images/bonusArrows.svg',
-	'./images/bonusLife.svg',
-	'./images/bonusShield.svg',
+	'./images/bonusArrows.png',
+	'./images/bonusLife.png',
+	'./images/bonusShield.png',
 ];
 const sounds = [
 	'./sounds/shot.mp3',

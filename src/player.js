@@ -19,7 +19,7 @@ export class Player extends Entity {
 
 	//Timer
 	static maxTimeBeforeShooting = 10;
-	static maxTimeForInvincibility = 600;
+	static maxTimeForInvincibility = 300;
 	static maxTimeForScoreMultiplierBonus = 456;
 	static maxTimeIceMalus = 300;
 
@@ -59,9 +59,9 @@ export class Player extends Entity {
 		this.image = new Image();
 		this.image.src = '../images/spaceship.png';
 		this.imageShield = new Image();
-		this.imageShield.src = '../images/shield.svg';
+		this.imageShield.src = '../images/shield.png';
 		this.imageShield2 = new Image();
-		this.imageShield2.src = '../images/shield2.svg';
+		this.imageShield2.src = '../images/shield2.png';
 
 		//Sounds
 		this.soundShot = new Audio(Player.soundShotPath);

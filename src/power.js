@@ -4,7 +4,7 @@ import { Player } from './player.js';
 import canvas from './main.js';
 import { WavesManager } from './wavesManager.js';
 export class Power extends Entity {
-	static radius = 30;
+	static radius = 40;
     static speed = 6;
     static types = ['invincible','life','ScoreMultiplierBonus','ice'];//'fastShots','perforation' -> plus de limite de tirs et passe au travers des ennemis
     static powers = [];
@@ -17,16 +17,16 @@ export class Power extends Entity {
 		this.image = new Image();
         switch(this.type){
             case('invincible'):
-                this.image.src = '../images/bonusShield.svg';
+                this.image.src = '../images/bonusShield.png';
             break;
             case('life'):
-                this.image.src = '../images/bonusLife.svg';
+                this.image.src = '../images/bonusLife.png';
             break;
             case('ScoreMultiplierBonus'):
-                this.image.src = '../images/bonusArrows.svg';
+                this.image.src = '../images/bonusArrows.png';
             break;
             case('ice'):
-                this.image.src = '../images/ice.svg';
+                this.image.src = '../images/ice.png';
             break;
         }
 	}
@@ -75,7 +75,7 @@ export class Power extends Entity {
                 this.active=false;
                 switch(this.type){
                     case('invincible'):
-                        player.becomeInvincible(Player.maxTimeForInvincibility/WavesManager.difficulty);
+                        player.becomeInvincible(Player.maxTimeForInvincibility+Player.maxTimeForInvincibility/WavesManager.difficulty);
                     break;
                     case('life'):
                        Player.teamLifes++;
