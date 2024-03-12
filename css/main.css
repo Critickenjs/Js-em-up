@@ -84,13 +84,7 @@ h1 em {
     color: #777;
 }
 
-.HomePage {
-    display: none;
-}
 
-.HomePage.active {
-    display: block;
-}
 
 .login-container {
     width: 100%;
@@ -166,9 +160,8 @@ div{
     /* Les éléments sont empilés verticalement */
 }
 
-.box :active {
-    display: flex;
-}
+
+
 
 .gameOver{
     background: rgba(250, 0, 0, 0.585);
