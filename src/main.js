@@ -1,7 +1,7 @@
 //Imports
 import { Player } from './player.js';
-import HomePage from './homePage.js';
-import GameOver from './gameOver.js';
+import HomePage from './homePageView.js';
+import GameOver from './gameOverView.js';
 import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
 import keysPressed from './keysListener.js';
@@ -10,6 +10,7 @@ import { Particules } from './particules.js';
 import { Power } from './power.js';
 import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
+import GameView from './gameView.js';
 
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
@@ -68,8 +69,9 @@ canvas.addEventListener('mouseup', function () {
 
 export let isInGame = false;
 let time = 0;
-const homePage = new HomePage(document.getElementById('root'));
-const gameOver = new GameOver(document.getElementById('root'));
+const homePage = new HomePage(document.querySelector('.HomePage'));
+const gameOver = new GameOver(document.querySelector('.gameOver'));
+const gameView = new GameView(document.querySelector('.box'));
 const scoreBoard = new ScoreBoard();
 Particules.init();
 
@@ -151,6 +153,7 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isInGame = true;
 	homePage.Play();
+	gameView.show();
 	WavesManager.difficulty = getDifficultyValue();
 	wavesManager.firstWave();
 	player.pseudo = homePage.username;
@@ -175,16 +178,19 @@ function getDifficultyValue() {
 document.querySelector('#restartButton2').addEventListener('click', () => {
 	scoreBoard.hide();
 	restartGame();
+	gameView.show();
 });
 
 document.querySelector('#restartButton').addEventListener('click', () => {
 	restartGame();
+	gameView.show();
 });
 
 //Permet de réinitialiser le jeu pour pouvoir recommencer une autre partie.
 function restartGame() {
 	gameOver.restartGame();
 	player.restart();
+	gameView.show();
 	isInGame = true;
 	wavesManager.firstWave();
 	time = 0;
