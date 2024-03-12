@@ -68,8 +68,8 @@ canvas.addEventListener('mouseup', function () {
 
 export let isInGame = false;
 let time = 0;
-const homePage = new HomePage();
-const gameOver = new GameOver();
+const homePage = new HomePage(document.getElementById('root'));
+const gameOver = new GameOver(document.getElementById('root'));
 const scoreBoard = new ScoreBoard();
 Particules.init();
 
@@ -100,13 +100,17 @@ function update() {
 		Particules.updateAll();
 		player.update(keysPressed);
 		Power.updateAll(player);
-		
+
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
 		let allDead = wavesManager.wavesUpdates(player);
 		if (allDead) {
 			//Si la vague est finie, on passe à la prochaine.
 			wavesManager.nextWave();
-			if (WavesManager.waveNumber % ((WavesManager.difficultyMax+1)-WavesManager.difficulty) == 0) {
+			if (
+				WavesManager.waveNumber %
+					(WavesManager.difficultyMax + 1 - WavesManager.difficulty) ==
+				0
+			) {
 				Power.powers.push(
 					new Power(
 						canvas.width,

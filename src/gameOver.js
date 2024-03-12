@@ -1,15 +1,24 @@
-export default class GameOver {
-	constructor() {
-		this.scoreElement = document.querySelector('#scoreValue');
-		this.restartButton = document.querySelector('#restartButton');
-		this.element = document.querySelector('.gameOver');
+import View from './view.js';
+
+export default class GameOver extends View {
+	constructor(element) {
+		super(element);
+		this.element = element;
 	}
 	show() {
 		this.element.style.display = 'flex';
-		document.querySelector('.score').setAttribute('style', 'display : none;');
-		document.querySelector('.waves').setAttribute('style', 'display : none;');
-		document.querySelector('.lifes').setAttribute('style', 'display : none;');
-		document.querySelector('.time').setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.score')
+			.setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.waves')
+			.setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.lifes')
+			.setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.time')
+			.setAttribute('style', 'display : none;');
 	}
 
 	hide() {
@@ -18,9 +27,17 @@ export default class GameOver {
 
 	restartGame() {
 		this.hide();
-		document.querySelector('.score').setAttribute('style', 'display : block;');
-		document.querySelector('.waves').setAttribute('style', 'display : block;');
-		document.querySelector('.lifes').setAttribute('style', 'display : block;');
-		document.querySelector('.time').setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.score')
+			.setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.waves')
+			.setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.lifes')
+			.setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.time')
+			.setAttribute('style', 'display : block;');
 	}
 }

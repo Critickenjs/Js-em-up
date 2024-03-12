@@ -1,31 +1,49 @@
-export default class HomePage {
+import View from './view.js';
+export default class HomePage extends View {
 	username;
-	constructor() {
+	constructor(element) {
+		super(element);
+		this.element = element;
 		this.username = '';
 		this.show();
 	}
 
 	show() {
-
-		document.querySelector('.score').setAttribute('style', 'display : none;');
-		document.querySelector('.waves').setAttribute('style', 'display : none;');
-		document.querySelector('.time').setAttribute('style', 'display : none;');
-		document.querySelector('.lifes').setAttribute('style', 'display : none;');
-		document
+		this.element
+			.querySelector('.score')
+			.setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.waves')
+			.setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.time')
+			.setAttribute('style', 'display : none;');
+		this.element
+			.querySelector('.lifes')
+			.setAttribute('style', 'display : none;');
+		this.element
 			.querySelector('.gameCanvas')
 			.setAttribute('style', 'display : none;');
 	}
 
 	Play() {
-		this.username = document.querySelector('input[type="text"]').value;
-		document.querySelector('.HomePage').classList.remove('active');
-		document
+		this.username = this.element.querySelector('input[type="text"]').value;
+		this.element.querySelector('.HomePage').classList.remove('active');
+		this.element
 			.querySelector('.gameCanvas')
 			.setAttribute('style', 'display : block;');
 
-		document.querySelector('.score').setAttribute('style', 'display : block;');
-		document.querySelector('.waves').setAttribute('style', 'display : block;');
-		document.querySelector('.time').setAttribute('style', 'display : block;');
-		document.querySelector('.lifes').setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.score')
+			.setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.waves')
+			.setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.time')
+			.setAttribute('style', 'display : block;');
+		this.element
+			.querySelector('.lifes')
+			.setAttribute('style', 'display : block;');
 	}
 }
