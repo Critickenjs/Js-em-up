@@ -4,13 +4,13 @@ import HomePage from './homePageView.js';
 import GameOver from './gameOverView.js';
 import ScoreBoard from './scoreBoard.js';
 import preloadAssets from './preLoadAsset.js';
-import keysPressed from './keysListener.js';
 import { Entity } from './entity.js';
 import { Particules } from './particules.js';
 import { Power } from './power.js';
 import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
 import GameView from './gameView.js';
+import KeysListener from './keysListener.js';
 
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
@@ -55,16 +55,19 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
+const keys = new KeysListener(window);
+keys.init();
+
 //création du joueur
 //Player.players.push(new Player(100, canvas.height / 2));
 const player = new Player(100, window.innerHeight / 2);
 
 //Impossible de mettre ces fonctions dans KeysListener
 canvas.addEventListener('mousedown', function () {
-	keysPressed.MouseDown = true;
+	keys.keysPressed.MouseDown = true;
 });
 canvas.addEventListener('mouseup', function () {
-	keysPressed.MouseDown = false;
+	keys.keysPressed.MouseDown = false;
 });
 
 export let isInGame = false;
@@ -72,7 +75,7 @@ let time = 0;
 const homePage = new HomePage(document.querySelector('.HomePage'));
 const gameOver = new GameOver(document.querySelector('.gameOver'));
 const gameView = new GameView(document.querySelector('.box'));
-const scoreBoard = new ScoreBoard();
+const scoreBoard = new ScoreBoard(document.querySelector('.scoreboard'));
 Particules.init();
 
 document
@@ -100,7 +103,7 @@ function render() {
 function update() {
 	if (isInGame) {
 		Particules.updateAll();
-		player.update(keysPressed);
+		player.update(keys.keysPressed);
 		Power.updateAll(player);
 
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
@@ -161,10 +164,10 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
-	if (keysPressed.MouseMode) {
-		keysPressed.MouseMode = false;
+	if (keys.keysPressed.MouseMode) {
+		keys.keysPressed.MouseDown = false;
 	} else {
-		keysPressed.MouseMode = true;
+		keys.keysPressed.MouseMode = true;
 	}
 });
 
