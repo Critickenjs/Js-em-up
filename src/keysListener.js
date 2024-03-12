@@ -1,89 +1,94 @@
-import { Entity } from "./entity.js";
-import {isInGame} from './main.js';
+import { Entity } from './entity.js';
+import { isInGame } from './main.js';
 
-const keysPressed = {
-	MouseMode:false,
-	ArrowUp: false,
-	ArrowDown: false,
-	ArrowLeft: false,
-	ArrowRight: false,
-	Space: false,
-	MouseDown:false,
-};
+export default class KeysListener {
+	constructor(element) {
+		this.element = element;
+		this.keysPressed = {
+			MouseMode: false,
+			ArrowUp: false,
+			ArrowDown: false,
+			ArrowLeft: false,
+			ArrowRight: false,
+			Space: false,
+			MouseDown: false,
+		};
+	}
 
-window.addEventListener('keydown', event => {
-	if(isInGame){
-		if (down(event)) {
-			keysPressed.ArrowDown = true;
-		}
-		if (up(event)) {
-			keysPressed.ArrowUp = true;
-		}
-		if (left(event)) {
-			keysPressed.ArrowLeft = true;
-		}
-		if (right(event)) {
-			keysPressed.ArrowRight = true;
-		}
-		if (event.key == ' ') {
-			keysPressed.Space = true;
-		}
-		if (event.key == 'M' || event.key == 'm') {
-			if(keysPressed.MouseMode){
-				keysPressed.MouseMode=false;
-			}else{
-				keysPressed.MouseMode=true;
+	init() {
+		this.element.addEventListener('keydown', event => {
+			if (isInGame) {
+				if (this.down(event)) {
+					this.keysPressed.ArrowDown = true;
+				}
+				if (this.up(event)) {
+					this.keysPressed.ArrowUp = true;
+				}
+				if (this.left(event)) {
+					this.keysPressed.ArrowLeft = true;
+				}
+				if (this.right(event)) {
+					this.keysPressed.ArrowRight = true;
+				}
+				if (event.key == ' ') {
+					this.keysPressed.Space = true;
+				}
+				if (event.key == 'M' || event.key == 'm') {
+					if (this.keysPressed.MouseMode) {
+						this.keysPressed.MouseMode = false;
+					} else {
+						this.keysPressed.MouseMode = true;
+					}
+				}
+				if (event.key == 'C' || event.key == 'c') {
+					if (Entity.showCollisions) {
+						Entity.showCollisions = false;
+					} else {
+						Entity.showCollisions = true;
+					}
+				}
 			}
-		}
-		if (event.key == 'C' || event.key == 'c') {
-			if(Entity.showCollisions){
-				Entity.showCollisions=false;
-			}else{
-				Entity.showCollisions=true;
+		});
+
+		this.element.addEventListener('keyup', event => {
+			if (this.down(event)) {
+				this.keysPressed.ArrowDown = false;
 			}
-		}
-	}
-});
+			if (this.up(event)) {
+				this.keysPressed.ArrowUp = false;
+			}
+			if (this.left(event)) {
+				this.keysPressed.ArrowLeft = false;
+			}
+			if (this.right(event)) {
+				this.keysPressed.ArrowRight = false;
+			}
+			if (event.key == ' ') {
+				this.keysPressed.Space = false;
+			}
+		});
 
-window.addEventListener('keyup', event => {
-	if (down(event)) {
-		keysPressed.ArrowDown = false;
+		/*this.element.mouseX = 0;
+		this.element.mouseY = 0;
+		this.element.onmousemove = function (e) {
+			this.element.mouseX = e.x;
+			this.element.mouseY = e.y;
+		};*/
 	}
-	if (up(event)) {
-		keysPressed.ArrowUp = false;
-	}
-	if (left(event)) {
-		keysPressed.ArrowLeft = false;
-	}
-	if (right(event)) {
-		keysPressed.ArrowRight = false;
-	}
-	if (event.key == ' ') {
-		keysPressed.Space = false;
-	}
-});
 
-window.mouseX = 0;
-window.mouseY = 0;
-window.onmousemove = function(e) {
-	window.mouseX = e.x;
-	window.mouseY = e.y;
+	down(event) {
+		return event.key == 'ArrowDown' || event.key == 's' || event.key == 'S';
+	}
+
+	up(event) {
+		return event.key == 'ArrowUp' || event.key == 'z' || event.key == 'Z';
+	}
+
+	right(event) {
+		return event.key == 'ArrowRight' || event.key == 'd' || event.key == 'D';
+	}
+
+	left(event) {
+		return event.key == 'ArrowLeft' || event.key == 'q' || event.key == 'Q';
+	}
 }
-
-function down(event){
-	return event.key == 'ArrowDown' || event.key == 's' ||event.key=='S';
-}
-
-function up(event){
-	return event.key == 'ArrowUp' || event.key == 'z' || event.key == 'Z';
-}
-
-function right(event){
-	return event.key == 'ArrowRight' || event.key == 'd' || event.key == 'D';
-}
-
-function left(event){
-	return event.key == 'ArrowLeft' || event.key == 'q' || event.key == 'Q';
-}
-
-export default keysPressed;
