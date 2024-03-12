@@ -1,17 +1,10 @@
 import csvData from './csvData.js';
+import View from './view.js';
 
-export default class ScoreBoard {
-	constructor() {
-		this.scoreListElement = document.querySelector('#scoreList');
-		this.element = document.querySelector('.scoreboard');
-	}
-
-	show() {
-		this.element.style.display = 'flex';
-	}
-
-	hide() {
-		this.element.style.display = 'none';
+export default class ScoreBoard extends View {
+	constructor(element) {
+		super(element);
+		this.scoreListElement = this.element.querySelector('#scoreList');
 	}
 
 	async getData() {
@@ -31,9 +24,7 @@ export default class ScoreBoard {
 		data = Object.entries(data);
 		data.sort((a, b) => b[1] - a[1]);
 		data.forEach(element => {
-			const li = document.createElement('li');
-			li.textContent = `${element[0]}: ${element[1]}`;
-			this.scoreListElement.appendChild(li);
+			this.scoreListElement.innerHTML += `<li>${element[0]} : ${element[1]}</li>`;
 		});
 	}
 }
