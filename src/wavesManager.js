@@ -28,7 +28,7 @@ export class WavesManager {
 		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
 		WavesManager.waveMaxNumberOfEnnemys = (WavesManager.ennemyBuffer*WavesManager.difficulty)/2 + 1 | 0;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
-		Entity.speedMultiplier = 0.8;
+		Entity.speedMultiplier=Entity.speedMultiplierDefault;
 		for (let i = 0; i < WavesManager.ennemyBuffer*WavesManager.difficulty; i++) {
 			this.ennemys[i] = new Ennemy(
 				window.innerWidth +

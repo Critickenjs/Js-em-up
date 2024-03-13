@@ -10,7 +10,7 @@ export class Ennemy extends Entity {
 	static height = 40;
 	static types = ['red', 'purple', 'orange', 'darkred'];
 	static bulletSpeed = Shot.defaultSpeed;
-	static soundShotPath = '../sounds/shotEnemy.mp3';
+	static soundShotPath = './sounds/shotEnemy.mp3';
 
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
@@ -162,14 +162,14 @@ export class Ennemy extends Entity {
 				this.value=5;
 				break;
 			case 'purple':
-				this.speedX = -2;
+				this.speedX = -getRandomIntWithMin(1,2);
 				this.speedY = 5;
 				this.value=7;
 				break;
 			case 'orange':
 				this.height = Ennemy.height*1.5;
 				this.width = Ennemy.width*1.5;
-				this.speedX = -2;
+				this.speedX = -getRandomIntWithMin(1,2);
 				this.speedY = getRandomIntWithMin(-1, 1);
 				this.value = 10;
 				break;
