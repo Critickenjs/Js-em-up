@@ -25,8 +25,8 @@ export class Player extends Entity {
 	static maxTimePerforationBonus = 300;
 
 	//Movement
-	static accelerationMultiplier = 1.2;
-	static inertiaMultiplier = 1.5; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
+	static accelerationMultiplier = 1.5;
+	static inertiaMultiplier = 1.2; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
 
 	//declarations
@@ -44,7 +44,7 @@ export class Player extends Entity {
 
 		//Timer
 		this.timerBeforeShots = 0;
-		this.maxTimeBeforeRespawn = 50;
+		this.maxTimeBeforeRespawn = 100;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 
 		//Bonus

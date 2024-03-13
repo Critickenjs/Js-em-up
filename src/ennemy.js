@@ -102,6 +102,7 @@ export class Ennemy extends Entity {
 			this.fate();
 			return true;
 		} else if (this.type == 'darkred') {
+			this.image.src = '../images/asteroid'+(getRandomInt(4)+1)+'.png';
 			this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
 			this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
 			this.posX += this.width / 3;
@@ -156,19 +157,19 @@ export class Ennemy extends Entity {
 		this.image.src = '../images/ennemy.png';
 		switch (this.type) {
 			case 'red':
-				this.speedX = -getRandomIntWithMin(1, 2);
+				this.speedX = -getRandomIntWithMin(2, 3);
 				this.speedY = 0;
 				this.value=5;
 				break;
 			case 'purple':
-				this.speedX = -1;
+				this.speedX = -2;
 				this.speedY = 5;
 				this.value=7;
 				break;
 			case 'orange':
 				this.height = Ennemy.height*1.5;
 				this.width = Ennemy.width*1.5;
-				this.speedX = -1;
+				this.speedX = -2;
 				this.speedY = getRandomIntWithMin(-1, 1);
 				this.value = 10;
 				break;
@@ -176,7 +177,7 @@ export class Ennemy extends Entity {
 				this.lifes = 3;
 				this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
 				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
-				this.image.src = '../images/asteroid.png';
+				this.image.src = '../images/asteroid'+(getRandomInt(4)+1)+'.png';
 				this.speedX = -1;
 				this.speedY = 0;
 				this.value=15;
