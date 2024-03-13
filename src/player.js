@@ -473,7 +473,7 @@ export class Player extends Entity {
 	}
 
 	//Duration en tick (60 ticks par seconde)
-	obtainIceMalus(duration, multiplier=1+WavesManager.difficulty){
+	obtainIceMalus(duration, multiplier=5){
 		this.iceMultiplierMalus=multiplier;
 		this.timerBeforeLosingIceMalus=duration;
 	}
