@@ -9,7 +9,6 @@ export class WavesManager {
 	// Nombre max d'ennemis pouvant apparaitre à l'écran. A ajuster en fonction des lags.
 	static ennemyBuffer = 5;
 
-
 	//Waves
 	static waveMaxNumberOfEnnemys = 5;
 	static waveNumberOfEnnemysSpawned = 0;
@@ -18,23 +17,29 @@ export class WavesManager {
 	static maxRandomSpawnDistance = 400;
 	static spawnDistance = 100;
 
-	constructor() {
+	constructor(element) {
 		this.ennemys = [];
+		this.element = element;
 	}
 
 	//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
-	firstWave() {
+	firstWave(width, height) {
 		WavesManager.waveNumber = 1;
-		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
-		WavesManager.waveMaxNumberOfEnnemys = (WavesManager.ennemyBuffer*WavesManager.difficulty)/2 + 1 | 0;
+		this.element.innerHTML = WavesManager.waveNumber;
+		WavesManager.waveMaxNumberOfEnnemys =
+			((WavesManager.ennemyBuffer * WavesManager.difficulty) / 2 + 1) | 0;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
-		Entity.speedMultiplier=Entity.speedMultiplierDefault;
-		for (let i = 0; i < WavesManager.ennemyBuffer*WavesManager.difficulty; i++) {
+		Entity.speedMultiplier = Entity.speedMultiplierDefault;
+		for (
+			let i = 0;
+			i < WavesManager.ennemyBuffer * WavesManager.difficulty;
+			i++
+		) {
 			this.ennemys[i] = new Ennemy(
-				window.innerWidth +
+				width +
 					getRandomInt(WavesManager.maxRandomSpawnDistance) +
 					WavesManager.spawnDistance,
-				getRandomInt(window.innerHeight - Ennemy.height - Ennemy.spawnOffset) +
+				getRandomInt(height - Ennemy.height - Ennemy.spawnOffset) +
 					Ennemy.spawnOffset
 			);
 			this.ennemys[i].index = i;
@@ -59,10 +64,11 @@ export class WavesManager {
 	nextWave() {
 		Entity.speedMultiplier;
 		WavesManager.waveNumber++;
-		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
+		this.element.querySelector('#wavesValue').innerHTML =
+			WavesManager.waveNumber;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
-		Entity.addToSpeed(0.01*WavesManager.difficulty);
+		Entity.addToSpeed(0.01 * WavesManager.difficulty);
 		console.log(
 			'Vague n°' +
 				WavesManager.waveNumber +
@@ -71,7 +77,10 @@ export class WavesManager {
 				' ennemies.'
 		);
 		WavesManager.waveMaxNumberOfEnnemys =
-			(((3+WavesManager.difficulty+getRandomInt(WavesManager.difficulty)) + WavesManager.waveNumber / 2) *
+			((3 +
+				WavesManager.difficulty +
+				getRandomInt(WavesManager.difficulty) +
+				WavesManager.waveNumber / 2) *
 				WavesManager.waveMultiplier) |
 			0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
 		for (let a = 0; a < this.ennemys.length; a++) {

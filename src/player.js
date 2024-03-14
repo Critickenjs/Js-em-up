@@ -33,7 +33,7 @@ export class Player extends Entity {
 	static teamLifes; //vies de départ : default 4-WavesManager.difficulty dans main.js
 	static players = [];
 
-	constructor(posX, posY) {
+	constructor(posX, posY, element) {
 		super(posX, posY, Player.width, Player.height);
 		//Declarations
 		this.alive = true;
@@ -41,6 +41,7 @@ export class Player extends Entity {
 		this.score = 0;
 		this.shots = [];
 		this.pseudo = 'player';
+		this.element = element;
 
 		//Timer
 		this.timerBeforeShots = 0;
@@ -72,6 +73,7 @@ export class Player extends Entity {
 		//Movement
 		this.accelerationX = 0;
 		this.accelerationY = 0;
+		this.element = element;
 	}
 
 	//Tue le joueur, initialise le timer avant sa réapparition
@@ -88,7 +90,7 @@ export class Player extends Entity {
 	//Fais réapparaitre le jouer à ses coordonnées de départ et le rend invincible quelques instants
 	respawn() {
 		Player.teamLifes--;
-		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
+		this.element.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 		this.alive = true;
 		this.becomeInvincible(
 			(Player.maxTimeForInvincibility / WavesManager.difficulty) | 0
@@ -298,7 +300,7 @@ export class Player extends Entity {
 	//Réinitialise le joueur pour le préparer à une nouvelle partie.
 	restart() {
 		this.score = 0;
-		document.querySelector('#scoreValue').innerHTML = this.score;
+		this.element.querySelector('#scoreValue').innerHTML = this.score;
 		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn();
@@ -307,7 +309,7 @@ export class Player extends Entity {
 
 	static resetTeamLives() {
 		Player.teamLifes = Player.defaultNumberOfLife - WavesManager.difficulty;
-		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
+		this.element.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
 
 	//Collisions des tirs du joueurs avec les ennemis
@@ -318,7 +320,7 @@ export class Player extends Entity {
 					this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
 					if (ennemy.getHurt()) {
 						this.addScorePointOnEnemyKill(ennemy);
-						document.querySelector('#scoreValue').innerHTML = this.score;
+						this.element.querySelector('#scoreValue').innerHTML = this.score;
 					}
 				}
 			}
@@ -474,13 +476,21 @@ export class Player extends Entity {
 	) {
 		this.timerBeforeLosingScoreMultiplierBonus = duration;
 		this.scoreMultiplierBonus = multiplier;
+<<<<<<< HEAD
 		document.querySelector('#scoreBonusValue').innerHTML =
+=======
+		this.element.querySelector('#scoreBonusValue').innerHTML =
+>>>>>>> bf8792b10f95cd67fe0b0cd89d9eb5762248fedc
 			'x' + this.scoreMultiplierBonus;
 	}
 
 	loseScoreMuliplierBonus() {
 		this.scoreMultiplierBonus = 1;
+<<<<<<< HEAD
 		document.querySelector('#scoreBonusValue').innerHTML = 'x1';
+=======
+		this.element.querySelector('#scoreBonusValue').innerHTML = 'x1';
+>>>>>>> bf8792b10f95cd67fe0b0cd89d9eb5762248fedc
 	}
 
 	gotScoreMultiplierBonus() {
