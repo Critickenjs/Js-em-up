@@ -5,11 +5,11 @@
   "main": "server/index.js",
   "type": "module",
   "scripts": {
-    "test": "node --test",
+    "client:test": "node --test",
     "test:watch": "node --test --watch",
-    "build": "webpack --mode=production",
-    "watch": "webpack --mode=development --watch",
-    "start": "webpack serve --mode=development",
+    "client:build": "webpack --mode=production",
+    "client:watch": "webpack --mode=development --watch",
+    "client:start": "webpack serve --mode=development",
     "server": "node .",
     "server:watch": "node --watch ."
   },

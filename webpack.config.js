@@ -4,7 +4,7 @@ export default {
 	entry: './client/src/main.js',
 	// Fichier de sortie :
 	output: {
-		path: path.resolve(import.meta.dirname, './client/build'),
+		path: path.resolve(import.meta.dirname, './client/public/build'),
 		filename: 'main.bundle.js',
 		publicPath: '/build/',
 	},
