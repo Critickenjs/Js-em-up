@@ -163,7 +163,7 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	WavesManager.difficulty = getDifficultyValue();
 	wavesManager.firstWave();
 	player.pseudo = homePage.username;
-	Player.resetTeamLivesNumber();
+	Player.resetTeamLives();
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {

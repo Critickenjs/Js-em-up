@@ -50,7 +50,7 @@ export class Player extends Entity {
 		//Bonus
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibility;
 		this.timerBeforeLosingIceMalus = 0;
-		this.iceMultiplierMalus=1;
+		this.iceMultiplierMalus = 1;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
 		this.scoreMultiplierBonus = 1;
 		this.timerBeforeLosingPerforationBonus = 0;
@@ -101,7 +101,7 @@ export class Player extends Entity {
 		this.accelerationY = 0;
 		this.timerBeforeShots = 0;
 		this.timerBeforeLosingIceMalus = 0;
-		this.iceMultiplierMalus=1;
+		this.iceMultiplierMalus = 1;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
 		this.scoreMultiplierBonus = 1;
 		this.timerBeforeLosingPerforationBonus = 0;
@@ -151,24 +151,23 @@ export class Player extends Entity {
 				if ((this.invincibleAnimation < 10 / this.animationSpeed) | 0) {
 					context.drawImage(
 						this.imageShield,
-						this.posX-(this.width*1.5)/5 | 0,
-						this.posY-(this.height*1.5)/5 | 0,
-						this.width*1.5 | 0,
-						this.height*1.5 | 0
+						(this.posX - (this.width * 1.5) / 5) | 0,
+						(this.posY - (this.height * 1.5) / 5) | 0,
+						(this.width * 1.5) | 0,
+						(this.height * 1.5) | 0
 					);
 					if (this.invincibleAnimation < 0) {
 						this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 					}
-				}else{
+				} else {
 					context.drawImage(
 						this.imageShield2,
-						this.posX-(this.width*1.5)/5 | 0,
-						this.posY-(this.height*1.5)/5 | 0,
-						this.width*1.5 | 0,
-						this.height*1.5 | 0
+						(this.posX - (this.width * 1.5) / 5) | 0,
+						(this.posY - (this.height * 1.5) / 5) | 0,
+						(this.width * 1.5) | 0,
+						(this.height * 1.5) | 0
 					);
 				}
-				
 			}
 			//Encore au dessus, on dessine le pseudo du joueur.
 			context.lineWidth = 1;
@@ -191,17 +190,17 @@ export class Player extends Entity {
 				}
 			}
 
-			if(this.gotIceMalus()){
+			if (this.gotIceMalus()) {
 				this.timerBeforeLosingIceMalus--;
-				if(this.timerBeforeLosingIceMalus<0){
+				if (this.timerBeforeLosingIceMalus < 0) {
 					this.loseIceMalus();
 				}
 			}
 
-			if(this.gotPerforationBonus()){
+			if (this.gotPerforationBonus()) {
 				this.timerBeforeLosingPerforationBonus--;
 			}
-			
+
 			//On vérifie le timer de l'invincibilité du joueur et on la retire si nécessaire.
 			if (this.invincible) {
 				this.timerBeforeLosingInvincibility--;
@@ -268,7 +267,7 @@ export class Player extends Entity {
 		}
 	}
 
-	shootWithRecharge(perforationBonus=false) {
+	shootWithRecharge(perforationBonus = false) {
 		//this.shoot(perforationBonus);
 		if (this.timerBeforeShots <= 0) {
 			this.shoot(perforationBonus);
@@ -277,7 +276,7 @@ export class Player extends Entity {
 	}
 
 	//Fais tirer au joueur un projectile.
-	shoot(perforationBonus=false) { 
+	shoot(perforationBonus = false) {
 		this.soundShot.cloneNode(true).play();
 		this.shots.push(
 			new Shot(
@@ -303,10 +302,10 @@ export class Player extends Entity {
 		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn();
-		Player.resetTeamLivesNumber();
+		Player.resetTeamLives();
 	}
 
-	static resetTeamLivesNumber() {
+	static resetTeamLives() {
 		Player.teamLifes = Player.defaultNumberOfLife - WavesManager.difficulty;
 		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
@@ -324,6 +323,11 @@ export class Player extends Entity {
 				}
 			}
 		}
+	}
+
+	static addToTeamLives(n) {
+		Player.teamLifes += n;
+		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
 
 	///// Accélère en fonction des directions.
@@ -391,12 +395,16 @@ export class Player extends Entity {
 		if (acceleration < 0) {
 			acceleration =
 				Math.round(
-					(acceleration + 1 / (10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000
+					(acceleration +
+						1 / (10 * (Player.inertiaMultiplier * this.iceMultiplierMalus))) *
+						1000
 				) / 1000;
 		} else if (acceleration > 0) {
 			acceleration =
 				Math.round(
-					(acceleration - 1 / (10 * (Player.inertiaMultiplier*this.iceMultiplierMalus))) * 1000
+					(acceleration -
+						1 / (10 * (Player.inertiaMultiplier * this.iceMultiplierMalus))) *
+						1000
 				) / 1000;
 		}
 		return acceleration;
@@ -460,47 +468,47 @@ export class Player extends Entity {
 	}
 
 	//Duration en tick (60 ticks par seconde)
-	obtainScoreMultiplierBonus(duration, multiplier=getRandomInt(WavesManager.difficulty)+2){
+	obtainScoreMultiplierBonus(
+		duration,
+		multiplier = getRandomInt(WavesManager.difficulty) + 2
+	) {
 		this.timerBeforeLosingScoreMultiplierBonus = duration;
-		this.scoreMultiplierBonus=multiplier;
-		document.querySelector('#scoreBonusValue').innerHTML = "x"+this.scoreMultiplierBonus;
+		this.scoreMultiplierBonus = multiplier;
+		document.querySelector('#scoreBonusValue').innerHTML =
+			'x' + this.scoreMultiplierBonus;
 	}
 
-	loseScoreMuliplierBonus(){
-		this.scoreMultiplierBonus=1;
-		document.querySelector('#scoreBonusValue').innerHTML = "x1";
+	loseScoreMuliplierBonus() {
+		this.scoreMultiplierBonus = 1;
+		document.querySelector('#scoreBonusValue').innerHTML = 'x1';
 	}
 
-	gotScoreMultiplierBonus(){
-		return this.scoreMultiplierBonus!=1;
-	}
-
-	//Duration en tick (60 ticks par seconde)
-	obtainIceMalus(duration, multiplier=5){
-		this.iceMultiplierMalus=multiplier;
-		this.timerBeforeLosingIceMalus=duration;
-	}
-
-	loseIceMalus(){
-		this.iceMultiplierMalus=1;
-	}
-
-	gotIceMalus(){
-		return this.iceMultiplierMalus!=1;
+	gotScoreMultiplierBonus() {
+		return this.scoreMultiplierBonus != 1;
 	}
 
 	//Duration en tick (60 ticks par seconde)
-	obtainPerforationBonus(duration){
-		this.timerBeforeLosingPerforationBonus=duration;
+	obtainIceMalus(duration, multiplier = 5) {
+		this.iceMultiplierMalus = multiplier;
+		this.timerBeforeLosingIceMalus = duration;
 	}
 
-	gotPerforationBonus(){
-		return this.timerBeforeLosingPerforationBonus>0;
+	loseIceMalus() {
+		this.iceMultiplierMalus = 1;
 	}
 
-	checkPowerUp(){
-
+	gotIceMalus() {
+		return this.iceMultiplierMalus != 1;
 	}
 
+	//Duration en tick (60 ticks par seconde)
+	obtainPerforationBonus(duration) {
+		this.timerBeforeLosingPerforationBonus = duration;
+	}
 
+	gotPerforationBonus() {
+		return this.timerBeforeLosingPerforationBonus > 0;
+	}
+
+	checkPowerUp() {}
 }
