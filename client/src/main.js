@@ -11,9 +11,9 @@ import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
 import GameView from './gameView.js';
 import KeysListener from './keysListener.js';
-//import {io} from 'socket.io-client';
+import {io} from 'socket.io-client';
 
-//const socket = io();
+const socket = io();
 
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
