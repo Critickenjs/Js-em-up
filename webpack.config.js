@@ -1,10 +1,10 @@
 import path from 'path';
 export default {
 	// Fichier d'entrée :
-	entry: './src/main.js',
+	entry: './client/src/main.js',
 	// Fichier de sortie :
 	output: {
-		path: path.resolve(import.meta.dirname, './build'),
+		path: path.resolve(import.meta.dirname, './client/build'),
 		filename: 'main.bundle.js',
 		publicPath: '/build/',
 	},
