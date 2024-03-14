@@ -2,15 +2,17 @@
   "name": "jsae",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type":"module",
+  "main": "server/index.js",
+  "type": "module",
   "scripts": {
     "test": "node --test",
     "test:watch": "node --test --watch",
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
     "start": "webpack serve --mode=development",
-    "scss": "node-sass --watch scss -o css"
+    "server": "node .",
+    "server:watch": "node --watch ."
+
   },
   "author": "Thomas Fritsch <thomas.fritsch@univ-lille.fr> (https://gitlab.univ-lille.fr/thomas.fritsch)",
   "homepage": "https://gitlab.univ-lille.fr/camille.fourmaintraux.etu/sae-2024-groupek-el-atifi-tas-fourmaintraux",
@@ -24,5 +26,8 @@
     "webpack": "^5.90.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.2"
+  },
+  "dependencies": {
+    "http": "^0.0.1-security"
   }
 }
