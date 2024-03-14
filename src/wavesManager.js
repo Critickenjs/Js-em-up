@@ -1,7 +1,6 @@
 import { Entity } from './entity.js';
 import { Ennemy } from './ennemy.js';
 import { getRandomInt } from './utils.js';
-import canvas from './main.js';
 
 export class WavesManager {
 	static difficultyMax = 4;
@@ -17,9 +16,10 @@ export class WavesManager {
 	static maxRandomSpawnDistance = 400;
 	static spawnDistance = 100;
 
-	constructor(element) {
+	constructor(element, canvas) {
 		this.ennemys = [];
 		this.element = element;
+		this.canvas = canvas;
 	}
 
 	//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
@@ -40,7 +40,8 @@ export class WavesManager {
 					getRandomInt(WavesManager.maxRandomSpawnDistance) +
 					WavesManager.spawnDistance,
 				getRandomInt(height - Ennemy.height - Ennemy.spawnOffset) +
-					Ennemy.spawnOffset
+					Ennemy.spawnOffset,
+				this.canvas
 			);
 			this.ennemys[i].index = i;
 			WavesManager.waveNumberOfEnnemysSpawned++;
@@ -64,8 +65,7 @@ export class WavesManager {
 	nextWave() {
 		Entity.speedMultiplier;
 		WavesManager.waveNumber++;
-		this.element.querySelector('#wavesValue').innerHTML =
-			WavesManager.waveNumber;
+		this.element.innerHTML = WavesManager.waveNumber;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
 		Entity.addToSpeed(0.01 * WavesManager.difficulty);

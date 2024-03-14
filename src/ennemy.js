@@ -1,7 +1,6 @@
 import { Entity } from './entity.js';
 import { Shot } from './shot.js';
 import { getRandomInt, getRandomIntWithMin } from './utils.js';
-import canvas from './main.js';
 import { WavesManager } from './wavesManager.js';
 
 export class Ennemy extends Entity {
@@ -15,19 +14,20 @@ export class Ennemy extends Entity {
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 
-	constructor(posX, posY) {
+	constructor(posX, posY, canvas) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.image = new Image();
 		this.index = -1;
 		this.isDead = false;
 		this.type = 'red';
 		this.lifes = 1;
-		this.value=10;
+		this.value = 10;
 		this.applyType();
 		this.shots = [];
-		this.shootTimer=100+60/WavesManager.difficulty | 0;
+		this.shootTimer = (100 + 60 / WavesManager.difficulty) | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
 		this.soundShot = new Audio(Ennemy.soundShotPath);
+		this.canvas = canvas;
 	}
 
 	//Afficher les tirs causés par un ennemi.
@@ -49,7 +49,7 @@ export class Ennemy extends Entity {
 
 	//Afficher l'ennemi
 	render() {
-		const context = canvas.getContext('2d');
+		const context = this.canvas.getContext('2d');
 		this.renderShots(context);
 		if (!this.isDead) {
 			super.render(context);
@@ -77,10 +77,10 @@ export class Ennemy extends Entity {
 		}
 		if (this.posY < 0) {
 			this.speedY = Math.abs(this.speedY);
-		} else if (this.posY > canvas.height - this.height) {
+		} else if (this.posY > this.canvas.height - this.height) {
 			this.speedY = -this.speedY;
 		}
-		if (this.type == 'orange' && this.posX < canvas.width * 1.2) {
+		if (this.type == 'orange' && this.posX < this.canvas.width * 1.2) {
 			this.timeBeforeNextShoot--;
 			if (this.timeBeforeNextShoot <= 0) {
 				this.shoot();
@@ -102,7 +102,7 @@ export class Ennemy extends Entity {
 			this.fate();
 			return true;
 		} else if (this.type == 'darkred') {
-			this.image.src = '../images/asteroid'+(getRandomInt(4)+1)+'.png';
+			this.image.src = '../images/asteroid' + (getRandomInt(4) + 1) + '.png';
 			this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
 			this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
 			this.posX += this.width / 3;
@@ -129,17 +129,17 @@ export class Ennemy extends Entity {
 		this.type = Ennemy.types[getRandomInt(Ennemy.types.length)];
 		this.applyType();
 		this.posX =
-			canvas.width +
+			this.canvas.width +
 			getRandomInt(WavesManager.maxRandomSpawnDistance) +
 			WavesManager.spawnDistance;
 		if (this.type == 'darkred') {
 			this.posY =
 				getRandomInt(
-					canvas.height - Ennemy.height * this.lifes - Ennemy.spawnOffset
+					this.canvas.height - Ennemy.height * this.lifes - Ennemy.spawnOffset
 				) + Ennemy.spawnOffset;
 		} else {
 			this.posY =
-				getRandomInt(canvas.height - Ennemy.height - Ennemy.spawnOffset) +
+				getRandomInt(this.canvas.height - Ennemy.height - Ennemy.spawnOffset) +
 				Ennemy.spawnOffset;
 		}
 		WavesManager.waveNumberOfEnnemysSpawned++;
@@ -159,17 +159,17 @@ export class Ennemy extends Entity {
 			case 'red':
 				this.speedX = -getRandomIntWithMin(2, 3);
 				this.speedY = 0;
-				this.value=5;
+				this.value = 5;
 				break;
 			case 'purple':
-				this.speedX = -getRandomIntWithMin(1,2);
+				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = 5;
-				this.value=7;
+				this.value = 7;
 				break;
 			case 'orange':
-				this.height = Ennemy.height*1.5;
-				this.width = Ennemy.width*1.5;
-				this.speedX = -getRandomIntWithMin(1,2);
+				this.height = Ennemy.height * 1.5;
+				this.width = Ennemy.width * 1.5;
+				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = getRandomIntWithMin(-1, 1);
 				this.value = 10;
 				break;
@@ -177,10 +177,10 @@ export class Ennemy extends Entity {
 				this.lifes = 3;
 				this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
 				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
-				this.image.src = '../images/asteroid'+(getRandomInt(4)+1)+'.png';
+				this.image.src = '../images/asteroid' + (getRandomInt(4) + 1) + '.png';
 				this.speedX = -1;
 				this.speedY = 0;
-				this.value=15;
+				this.value = 15;
 				break;
 		}
 	}
