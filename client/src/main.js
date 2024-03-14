@@ -11,6 +11,9 @@ import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
 import GameView from './gameView.js';
 import KeysListener from './keysListener.js';
+//import {io} from 'socket.io-client';
+
+//const socket = io();
 
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
@@ -18,26 +21,26 @@ const context = canvas.getContext('2d');
 export default canvas;
 
 const assets = [
-	'./images/btn1.png',
-	'./images/btn2.png',
-	'./images/ice.png',
-	'./images/shield.png',
-	'./images/shield2.png',
-	'./images/monster.png',
-	'./images/spaceship.png',
-	'./images/asteroid1.png',
-	'./images/asteroid2.png',
-	'./images/asteroid3.png',
-	'./images/asteroid4.png',
-	'./images/bonusArrows.png',
-	'./images/bonusLife.png',
-	'./images/bonusShield.png',
-	'./images/spaceBackground.jpg',
+	'./public/res/images/btn1.png',
+	'./public/res/images/btn2.png',
+	'./public/res/images/ice.png',
+	'./public/res/images/shield.png',
+	'./public/res/images/shield2.png',
+	'./public/res/images/monster.png',
+	'./public/res/images/spaceship.png',
+	'./public/res/images/asteroid1.png',
+	'./public/res/images/asteroid2.png',
+	'./public/res/images/asteroid3.png',
+	'./public/res/images/asteroid4.png',
+	'./public/res/images/bonusArrows.png',
+	'./public/images/bonusLife.png',
+	'./public/res/images/bonusShield.png',
+	'./public/res/images/spaceBackground.jpg',
 ];
 const sounds = [
-	'./sounds/shot.mp3',
-	'./sounds/shotEnemy.mp3',
-	'./sounds/dead.mp3',
+	'./res/sounds/shot.mp3',
+	'./res/sounds/shotEnemy.mp3',
+	'./res/sounds/dead.mp3',
 ];
 
 //met à jour dynamiquement la taille du canvas

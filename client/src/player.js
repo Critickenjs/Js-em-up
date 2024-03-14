@@ -9,8 +9,8 @@ export class Player extends Entity {
 	static height = 50;
 
 	//Sound
-	static soundDeadPath = './sounds/dead.mp3';
-	static soundShotPath = './sounds/shot.mp3';
+	static soundDeadPath = './public/res/sounds/dead.mp3';
+	static soundShotPath = './public/res/sounds/shot.mp3';
 
 	static defaultNumberOfLife = 4;
 	static playerSpeed = 3;
@@ -58,11 +58,11 @@ export class Player extends Entity {
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
-		this.image.src = './images/spaceship.png';
+		this.image.src = './public/res/images/spaceship.png';
 		this.imageShield = new Image();
-		this.imageShield.src = './images/shield.png';
+		this.imageShield.src = './public/res/images/shield.png';
 		this.imageShield2 = new Image();
-		this.imageShield2.src = './images/shield2.png';
+		this.imageShield2.src = './public/res/images/shield2.png';
 
 		//Sounds
 		this.soundShot = new Audio(Player.soundShotPath);

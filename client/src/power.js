@@ -20,19 +20,19 @@ export class Power extends Entity {
 		this.image = new Image();
 		switch (this.type) {
 			case 'invincible':
-				this.image.src = '../images/bonusShield.png';
+				this.image.src = './public/res/images/bonusShield.png';
 				break;
 			case 'life':
-				this.image.src = '../images/bonusLife.png';
+				this.image.src = './public/res/images/bonusLife.png';
 				break;
 			case 'ScoreMultiplierBonus':
-				this.image.src = '../images/bonusArrows.png';
+				this.image.src = './public/res/images/bonusArrows.png';
 				break;
 			case 'ice':
-				this.image.src = '../images/ice.png';
+				this.image.src = './public/res/images/ice.png';
 				break;
 			case 'perforation':
-				this.image.src = '../images/bonusArrows.png';
+				this.image.src = './public/res/images/bonusArrows.png';
 				break;
 		}
 	}
