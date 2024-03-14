@@ -94,7 +94,7 @@ document
 		scoreBoard.updateScore(data);
 	});
 
-const wavesManager = new WavesManager();
+const wavesManager = new WavesManager(document.querySelector('#wavesValue'));
 
 //Gêre l'affichage du jeu
 function render() {

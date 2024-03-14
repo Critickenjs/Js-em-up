@@ -17,14 +17,15 @@ export class WavesManager {
 	static maxRandomSpawnDistance = 400;
 	static spawnDistance = 100;
 
-	constructor() {
+	constructor(element) {
 		this.ennemys = [];
+		this.element = element;
 	}
 
 	//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
 	firstWave(width, height) {
 		WavesManager.waveNumber = 1;
-		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
+		this.element.innerHTML = WavesManager.waveNumber;
 		WavesManager.waveMaxNumberOfEnnemys =
 			((WavesManager.ennemyBuffer * WavesManager.difficulty) / 2 + 1) | 0;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
@@ -63,7 +64,8 @@ export class WavesManager {
 	nextWave() {
 		Entity.speedMultiplier;
 		WavesManager.waveNumber++;
-		document.querySelector('#wavesValue').innerHTML = WavesManager.waveNumber;
+		this.element.querySelector('#wavesValue').innerHTML =
+			WavesManager.waveNumber;
 		WavesManager.waveNumberOfEnnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
 		Entity.addToSpeed(0.01 * WavesManager.difficulty);
