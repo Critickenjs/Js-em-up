@@ -141,8 +141,8 @@ function update() {
 		}
 		//Vérifie si le joeuur est mort et qu'il n'a plus de vie pour déclencger le GameOver.
 		if (!player.alive && Player.teamLifes <= 0) {
+			gameOver.updateScore(player.score);
 			gameOver.show();
-			gameView.updateScore(player.score);
 			isInGame = false;
 			return;
 		}

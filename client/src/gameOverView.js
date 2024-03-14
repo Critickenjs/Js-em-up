@@ -16,4 +16,8 @@ export default class GameOver extends View {
 	restartGame() {
 		this.hide();
 	}
+
+	updateScore(score){
+		this.element.querySelector('#scoreValue').innerHTML = score;
+	}
 }
