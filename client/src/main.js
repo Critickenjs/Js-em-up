@@ -11,7 +11,6 @@ import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
 import GameView from './gameView.js';
 import KeysListener from './keysListener.js';
-//import { BackGround } from './background.js';
 
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
@@ -99,18 +98,10 @@ const wavesManager = new WavesManager(
 	canvas
 );
 
-/*
-const background1 = new BackGround(0,0);
-const background2 = new BackGround(BackGround.width,0);
-*/
 
 //Gêre l'affichage du jeu
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	/*
-	background1.render();
-	background2.render();
-	*/
 	Particules.renderAll();
 	player.render();
 	Power.renderAll();
@@ -122,10 +113,6 @@ function render() {
 function update() {
 	if (isInGame) {
 		gameView.update(Player.teamLifes,WavesManager.waveNumber,player.score,player.scoreMultiplierBonus);
-		/*
-		background1.update();
-		background2.update();
-		*/
 		Particules.updateAll();
 		player.update(keys.keysPressed);
 		Power.updateAll(player);
