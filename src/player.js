@@ -304,10 +304,10 @@ export class Player extends Entity {
 		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn();
-		Player.resetTeamLives();
+		this.resetTeamLives();
 	}
 
-	static resetTeamLives() {
+	resetTeamLives() {
 		Player.teamLifes = Player.defaultNumberOfLife - WavesManager.difficulty;
 		this.element.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}

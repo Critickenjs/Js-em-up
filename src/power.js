@@ -94,7 +94,7 @@ export class Power extends Entity {
 						);
 						break;
 					case 'life':
-						Player.addToTeamLives(1);
+						player.addToTeamLives(1);
 						break;
 					case 'ScoreMultiplierBonus':
 						player.obtainScoreMultiplierBonus(
