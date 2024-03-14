@@ -3,7 +3,6 @@ import View from './view.js';
 export default class GameView extends View {
 	constructor(element) {
 		super(element);
-		this.element = element;
 	}
 	show() {
 		this.element.style.display = 'flex';
@@ -35,4 +34,42 @@ export default class GameView extends View {
 			.querySelector('.time')
 			.setAttribute('style', 'display : none;');
 	}
+
+	
+
+    updateHUD(newLifesValue,newWavesValue,newTimeValue,newScoreValue,newScoreMultiplierValue){
+        this.updateLifes(newLifesValue);
+        this.updateWaves(newWavesValue);
+        this.updateTime(newTimeValue);
+        this.updateScore(newScoreValue);
+        this.updateScoreMultiplier(newScoreMultiplierValue);
+    }
+
+    update(newLifesValue,newWavesValue,newScoreValue,newScoreMultiplierValue){
+        this.updateLifes(newLifesValue);
+        this.updateWaves(newWavesValue);
+        this.updateScore(newScoreValue);
+        this.updateScoreMultiplier(newScoreMultiplierValue);
+    }
+
+
+    updateLifes(newLifesValue){
+        this.element.querySelector('#lifesValue').innerHTML = newLifesValue;
+    }
+
+    updateWaves(newWavesValue){
+		this.element.querySelector('#wavesValue').innerHTML = newWavesValue;
+    }
+
+    updateTime(newTimeValue){
+        this.element.querySelector('#timeValue').innerHTML = newTimeValue;
+    }
+
+    updateScore(newScoreValue){
+        this.element.querySelector('#scoreValue').innerHTML = newScoreValue;
+    }
+
+    updateScoreMultiplier(newScoreMultiplierValue){
+        this.element.querySelector('#scoreBonusValue').innerHTML = newScoreMultiplierValue;
+    }
 }
