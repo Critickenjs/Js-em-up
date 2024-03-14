@@ -476,21 +476,13 @@ export class Player extends Entity {
 	) {
 		this.timerBeforeLosingScoreMultiplierBonus = duration;
 		this.scoreMultiplierBonus = multiplier;
-<<<<<<< HEAD
-		document.querySelector('#scoreBonusValue').innerHTML =
-=======
 		this.element.querySelector('#scoreBonusValue').innerHTML =
->>>>>>> bf8792b10f95cd67fe0b0cd89d9eb5762248fedc
 			'x' + this.scoreMultiplierBonus;
 	}
 
 	loseScoreMuliplierBonus() {
 		this.scoreMultiplierBonus = 1;
-<<<<<<< HEAD
-		document.querySelector('#scoreBonusValue').innerHTML = 'x1';
-=======
 		this.element.querySelector('#scoreBonusValue').innerHTML = 'x1';
->>>>>>> bf8792b10f95cd67fe0b0cd89d9eb5762248fedc
 	}
 
 	gotScoreMultiplierBonus() {
