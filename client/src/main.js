@@ -2,7 +2,7 @@
 import { Player } from './player.js';
 import HomePage from './homePageView.js';
 import GameOver from './gameOverView.js';
-import ScoreBoard from './scoreBoard.js';
+import ScoreBoard from './scoreBoardView.js';
 import preloadAssets from './preLoadAsset.js';
 import { Entity } from './entity.js';
 import { Particules } from './particules.js';
@@ -32,6 +32,7 @@ const assets = [
 	'./images/bonusArrows.png',
 	'./images/bonusLife.png',
 	'./images/bonusShield.png',
+	'./images/spaceBackground.jpg',
 ];
 const sounds = [
 	'./sounds/shot.mp3',
@@ -65,8 +66,7 @@ keys.init();
 //Player.players.push(new Player(100, canvas.height / 2));
 const player = new Player(
 	100,
-	window.innerHeight / 2,
-	document.querySelector('.game')
+	window.innerHeight / 2
 );
 
 //Impossible de mettre ces fonctions dans KeysListener
@@ -95,9 +95,9 @@ document
 	});
 
 const wavesManager = new WavesManager(
-	document.querySelector('#wavesValue'),
 	canvas
 );
+
 
 //Gêre l'affichage du jeu
 function render() {
@@ -112,6 +112,7 @@ function render() {
 //Gêre la mise à jour des éléments du jeu.
 function update() {
 	if (isInGame) {
+		gameView.update(Player.teamLifes,WavesManager.waveNumber,player.score,player.scoreMultiplierBonus);
 		Particules.updateAll();
 		player.update(keys.keysPressed);
 		Power.updateAll(player);
@@ -137,7 +138,7 @@ function update() {
 		//Vérifie si le joeuur est mort et qu'il n'a plus de vie pour déclencger le GameOver.
 		if (!player.alive && Player.teamLifes <= 0) {
 			gameOver.show();
-			document.querySelector('.gameOver #scoreValue').innerHTML = player.score;
+			gameView.updateScore(player.score);
 			isInGame = false;
 			return;
 		}
@@ -149,10 +150,11 @@ function addScorePointOverTime() {
 	if (isInGame) {
 		player.score += WavesManager.difficulty;
 		time++;
-		document.querySelector('#timeValue').innerHTML = time;
-		document.querySelector('#scoreValue').innerHTML = player.score;
+		gameView.updateScore(player.score);
+		gameView.updateTime(time);
 		//Vitesse du jeu augmente au fur et à mesure
 		Entity.addToSpeed(0.001 * WavesManager.difficulty);
+		console.log("GameSpeed : "+Entity.speedMultiplier);
 	}
 }
 
