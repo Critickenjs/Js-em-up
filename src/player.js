@@ -304,10 +304,10 @@ export class Player extends Entity {
 		this.shots = [];
 		this.maxTimeBeforeRespawn = 50;
 		this.respawn();
-		this.resetTeamLivesNumber();
+		Player.resetTeamLives();
 	}
 
-	resetTeamLivesNumber() {
+	static resetTeamLives() {
 		Player.teamLifes = Player.defaultNumberOfLife - WavesManager.difficulty;
 		this.element.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
@@ -325,6 +325,11 @@ export class Player extends Entity {
 				}
 			}
 		}
+	}
+
+	static addToTeamLives(n) {
+		Player.teamLifes += n;
+		document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 	}
 
 	///// Accélère en fonction des directions.
@@ -471,13 +476,21 @@ export class Player extends Entity {
 	) {
 		this.timerBeforeLosingScoreMultiplierBonus = duration;
 		this.scoreMultiplierBonus = multiplier;
+<<<<<<< HEAD
+		document.querySelector('#scoreBonusValue').innerHTML =
+=======
 		this.element.querySelector('#scoreBonusValue').innerHTML =
+>>>>>>> bf8792b10f95cd67fe0b0cd89d9eb5762248fedc
 			'x' + this.scoreMultiplierBonus;
 	}
 
 	loseScoreMuliplierBonus() {
 		this.scoreMultiplierBonus = 1;
+<<<<<<< HEAD
+		document.querySelector('#scoreBonusValue').innerHTML = 'x1';
+=======
 		this.element.querySelector('#scoreBonusValue').innerHTML = 'x1';
+>>>>>>> bf8792b10f95cd67fe0b0cd89d9eb5762248fedc
 	}
 
 	gotScoreMultiplierBonus() {
