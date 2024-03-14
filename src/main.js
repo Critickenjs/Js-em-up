@@ -65,7 +65,11 @@ keys.init();
 
 //création du joueur
 //Player.players.push(new Player(100, canvas.height / 2));
-const player = new Player(100, window.innerHeight / 2);
+const player = new Player(
+	100,
+	window.innerHeight / 2,
+	document.querySelector('.game')
+);
 
 //Impossible de mettre ces fonctions dans KeysListener
 canvas.addEventListener('mousedown', function () {
@@ -79,7 +83,7 @@ export let isInGame = false;
 let time = 0;
 const homePage = new HomePage(document.querySelector('.HomePage'));
 const gameOver = new GameOver(document.querySelector('.gameOver'));
-const gameView = new GameView(document.querySelector('.box'));
+const gameView = new GameView(document.querySelector('.game'));
 const scoreBoard = new ScoreBoard(document.querySelector('.scoreboard'));
 Particules.init();
 
@@ -92,7 +96,10 @@ document
 		scoreBoard.updateScore(data);
 	});
 
-const wavesManager = new WavesManager();
+const wavesManager = new WavesManager(
+	document.querySelector('#wavesValue'),
+	canvas
+);
 
 /*
 const background1 = new BackGround(0,0);
@@ -177,9 +184,9 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	homePage.Play();
 	gameView.show();
 	WavesManager.difficulty = getDifficultyValue();
-	wavesManager.firstWave();
+	wavesManager.firstWave(window.innerWidth, window.innerHeight);
 	player.pseudo = homePage.username;
-	Player.resetTeamLivesNumber();
+	player.resetTeamLives();
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
