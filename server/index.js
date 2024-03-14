@@ -1,12 +1,13 @@
 import http from 'http';
+import fs from 'fs';
+import express from 'express';
+
+const app = express();
+const httpServer = http.createServer(app);
+
+app.use(express.static('client'));
 
 console.log(`start`);
-
-const httpServer = http.createServer((req, res) => {
-	res.statusCode = 200;
-	res.setHeader('Content-Type', 'text/html');
-	res.end(`test`);
-});
 
 const port = process.env.PORT || 8000;
 httpServer.listen(port, () => {
