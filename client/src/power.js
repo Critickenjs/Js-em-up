@@ -1,7 +1,6 @@
 import { Entity } from './entity.js';
 import { getRandomInt } from './utils.js';
 import { Player } from './player.js';
-import canvas from './main.js';
 import { WavesManager } from './wavesManager.js';
 export class Power extends Entity {
 	static radius = 40;
@@ -38,9 +37,8 @@ export class Power extends Entity {
 		}
 	}
 
-	render() {
+	render(context) {
 		if (this.active) {
-			const context = canvas.getContext('2d');
 			context.beginPath();
 			context.lineWidth = 3;
 			context.strokeStyle = 'purple';
@@ -69,9 +67,9 @@ export class Power extends Entity {
 		}
 	}
 
-	static renderAll() {
+	static renderAll(context) {
 		for (let i = 0; i < Power.powers.length; i++) {
-			Power.powers[i].render();
+			Power.powers[i].render(context);
 		}
 	}
 

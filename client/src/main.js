@@ -107,8 +107,8 @@ const wavesManager = new WavesManager(
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	Particules.renderAll(context);
-	player.render();
-	Power.renderAll();
+	player.render(context);
+	Power.renderAll(context);
 	wavesManager.wavesRender(context);
 	requestAnimationFrame(render);
 }

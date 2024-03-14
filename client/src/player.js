@@ -1,6 +1,5 @@
 import { Entity } from './entity.js';
 import { Shot } from './shot.js';
-import canvas from './main.js';
 import { WavesManager } from './wavesManager.js';
 import { getRandomInt } from './utils.js';
 
@@ -92,7 +91,7 @@ export class Player extends Entity {
 		this.becomeInvincible(
 			(Player.maxTimeForInvincibility / WavesManager.difficulty) | 0
 		);
-		this.posY = canvas.height / 2;
+		this.posY = Entity.canvasHeight / 2;
 		this.posX = 100;
 		this.speedX = 0;
 		this.speedY = 0;
@@ -124,15 +123,14 @@ export class Player extends Entity {
 	updateShots() {
 		for (let i = 0; i < this.shots.length; i++) {
 			this.shots[i].update();
-			if (this.shots[i].posX > canvas.width) {
+			if (this.shots[i].posX > Entity.canvasWidth) {
 				this.shots.shift();
 			}
 		}
 	}
 
 	//Affiche le joueur.
-	render() {
-		const context = canvas.getContext('2d');
+	render(context) {
 		this.renderShots(context);
 		if (this.alive) {
 			super.render(context);
@@ -246,8 +244,8 @@ export class Player extends Entity {
 	}
 
 	borderCollision() {
-		if (this.posX > canvas.width - this.width) {
-			this.posX = canvas.width - this.width;
+		if (this.posX > Entity.canvasWidth - this.width) {
+			this.posX = Entity.canvasWidth - this.width;
 			this.accelerationX = 0;
 			this.speedX = 0;
 		} else if (this.posX < 0) {
@@ -255,8 +253,8 @@ export class Player extends Entity {
 			this.accelerationX = 0;
 			this.speedX = 0;
 		}
-		if (this.posY > canvas.height - this.width) {
-			this.posY = canvas.height - this.width;
+		if (this.posY > Entity.canvasHeight - this.width) {
+			this.posY = Entity.canvasHeight - this.width;
 			this.speedY = 0;
 			this.accelerationY = 0;
 		} else if (this.posY < 0) {
