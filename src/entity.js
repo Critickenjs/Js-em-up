@@ -1,8 +1,9 @@
 export class Entity {
 
 	static showCollisions = false;
-
-	static speedMultiplier=0.8;
+	static speedMultiplierDefault=0.8;
+	static speedMultiplierMAX=2;
+	static speedMultiplier=Entity.speedMultiplierDefault;
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
 		this.posY = posY;
@@ -68,8 +69,8 @@ export class Entity {
 
 	static addToSpeed(modifyer){
 		Entity.speedMultiplier=Math.round((Entity.speedMultiplier+modifyer)*1000)/1000
-		if(Entity.speedMultiplier>2){
-			Entity.speedMultiplier=2;
+		if(Entity.speedMultiplier>Entity.speedMultiplierMAX){
+			Entity.speedMultiplier=Entity.speedMultiplierMAX;
 		}
 	}
 

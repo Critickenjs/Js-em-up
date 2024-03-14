@@ -10,8 +10,8 @@ export class Player extends Entity {
 	static height = 50;
 
 	//Sound
-	static soundDeadPath = '../sounds/dead.mp3';
-	static soundShotPath = '../sounds/shot.mp3';
+	static soundDeadPath = './sounds/dead.mp3';
+	static soundShotPath = './sounds/shot.mp3';
 
 	static defaultNumberOfLife = 4;
 	static playerSpeed = 3;
@@ -25,8 +25,8 @@ export class Player extends Entity {
 	static maxTimePerforationBonus = 300;
 
 	//Movement
-	static accelerationMultiplier = 1.2;
-	static inertiaMultiplier = 1.5; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
+	static accelerationMultiplier = 1.5;
+	static inertiaMultiplier = 1.2; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
 
 	//declarations
@@ -45,7 +45,7 @@ export class Player extends Entity {
 
 		//Timer
 		this.timerBeforeShots = 0;
-		this.maxTimeBeforeRespawn = 50;
+		this.maxTimeBeforeRespawn = 100;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 
 		//Bonus
@@ -60,11 +60,11 @@ export class Player extends Entity {
 		this.invincibleAnimation = (20 / this.animationSpeed) | 0;
 		this.animationSpeed = 0.6; //Vitesse 0,25x 0,5x 0,75x 1x 2x 3x etc (du plus lent au plus rapide) Max 10 car après c'est tellemnt rapide c'est imperceptible.
 		this.image = new Image();
-		this.image.src = '../images/spaceship.png';
+		this.image.src = './images/spaceship.png';
 		this.imageShield = new Image();
-		this.imageShield.src = '../images/shield.png';
+		this.imageShield.src = './images/shield.png';
 		this.imageShield2 = new Image();
-		this.imageShield2.src = '../images/shield2.png';
+		this.imageShield2.src = './images/shield2.png';
 
 		//Sounds
 		this.soundShot = new Audio(Player.soundShotPath);
@@ -139,6 +139,7 @@ export class Player extends Entity {
 		this.renderShots(context);
 		if (this.alive) {
 			super.render(context);
+			//On dessine le joeur
 			context.drawImage(
 				this.image,
 				this.posX,
@@ -146,6 +147,7 @@ export class Player extends Entity {
 				this.width,
 				this.height
 			);
+			//Au dessus, on dessine le bouclier soit en phase1, soit en phase 2
 			if (this.invincible) {
 				this.invincibleAnimation--;
 				if ((this.invincibleAnimation < 10 / this.animationSpeed) | 0) {
@@ -169,11 +171,12 @@ export class Player extends Entity {
 					);
 				}
 			}
+			//Encore au dessus, on dessine le pseudo du joueur.
 			context.lineWidth = 1;
 			context.font = '16px Minecraft Regular';
 			context.imageSmoothingEnabled = false;
 			context.fillStyle = 'white';
-			context.fillText(this.pseudo, this.posX, this.posY - 10);
+			context.fillText(this.pseudo, this.posX, this.posY);
 		}
 	}
 
@@ -482,7 +485,7 @@ export class Player extends Entity {
 	}
 
 	//Duration en tick (60 ticks par seconde)
-	obtainIceMalus(duration, multiplier = 1 + WavesManager.difficulty) {
+	obtainIceMalus(duration, multiplier = 5) {
 		this.iceMultiplierMalus = multiplier;
 		this.timerBeforeLosingIceMalus = duration;
 	}
