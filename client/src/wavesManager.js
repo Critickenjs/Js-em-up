@@ -105,9 +105,9 @@ export class WavesManager {
 	}
 
 	//Affiche les ennemis appartenant à la vague en cours.
-	wavesRender() {
+	wavesRender(context) {
 		for (let i = 0; i < this.ennemys.length; i++) {
-			this.ennemys[i].render();
+			this.ennemys[i].render(context);
 		}
 	}
 }

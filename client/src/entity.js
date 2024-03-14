@@ -1,4 +1,7 @@
 export class Entity {
+	
+	static canvasWidth=0;
+	static canvasHeight=0;
 
 	static showCollisions = false;
 	static speedMultiplierDefault=0.8;
@@ -28,6 +31,11 @@ export class Entity {
 						this.width+2, this.height+2);
 			context.stroke();
 		}
+	}
+
+	static updateCanvasSize(canvasWidth,canvasHeight){
+		Entity.canvasWidth=canvasWidth;
+		Entity.canvasHeight=canvasHeight;
 	}
 
 	update() {

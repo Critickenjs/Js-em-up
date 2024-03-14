@@ -1,5 +1,4 @@
 import { Entity } from './entity.js';
-import canvas from './main.js';
 import { getRandomInt } from './utils.js';
 export class Particules extends Entity {
 	static width = 5;
@@ -14,24 +13,24 @@ export class Particules extends Entity {
 	}
 
 	static init(){
+		console.log("PARTCIULES : "+Entity.canvasWidth);
 		for (let i = 0; i <Particules.bufferParticules; i++) {
 			Particules.particules[i] = new Particules(
-				getRandomInt(canvas.width), getRandomInt(window.innerHeight)
+				getRandomInt(Entity.canvasWidth), getRandomInt(Entity.canvasHeight)
 			);
 		}
 	}
 
-	render() {
-		const context = canvas.getContext('2d');
+	render(context) {
 		//super.render(context); //Pas nécessaire.
 		context.beginPath();
 		context.fillStyle='yellow';
 		context.fillRect(this.posX, this.posY, this.width, this.height);
 	}
 
-	static renderAll(){
+	static renderAll(context){
 		for (let i = 0; i < Particules.particules.length; i++) {
-			Particules.particules[i].render();
+			Particules.particules[i].render(context);
 		}
 	}
 
@@ -51,7 +50,7 @@ export class Particules extends Entity {
 	}
 
 	respawn(){
-		this.posX=canvas.width+getRandomInt(canvas.width);
-		this.posY=getRandomInt(canvas.height);
+		this.posX=Entity.canvasWidth+getRandomInt(Entity.canvasWidth);
+		this.posY=getRandomInt(Entity.canvasHeight);
 	}
 }

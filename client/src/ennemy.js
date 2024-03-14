@@ -14,7 +14,7 @@ export class Ennemy extends Entity {
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 
-	constructor(posX, posY, canvas) {
+	constructor(posX, posY) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.image = new Image();
 		this.index = -1;
@@ -27,8 +27,9 @@ export class Ennemy extends Entity {
 		this.shootTimer = (100 + 60 / WavesManager.difficulty) | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
 		this.soundShot = new Audio(Ennemy.soundShotPath);
-		this.canvas = canvas;
 	}
+
+	
 
 	//Afficher les tirs causés par un ennemi.
 	renderShots(context) {
@@ -48,8 +49,7 @@ export class Ennemy extends Entity {
 	}
 
 	//Afficher l'ennemi
-	render() {
-		const context = this.canvas.getContext('2d');
+	render(context) {
 		this.renderShots(context);
 		if (!this.isDead) {
 			super.render(context);
@@ -77,10 +77,10 @@ export class Ennemy extends Entity {
 		}
 		if (this.posY < 0) {
 			this.speedY = Math.abs(this.speedY);
-		} else if (this.posY > this.canvas.height - this.height) {
+		} else if (this.posY > Entity.canvasHeight - this.height) {
 			this.speedY = -this.speedY;
 		}
-		if (this.type == 'orange' && this.posX < this.canvas.width * 1.2) {
+		if (this.type == 'orange' && this.posX < Entity.canvasWidth * 1.2) {
 			this.timeBeforeNextShoot--;
 			if (this.timeBeforeNextShoot <= 0) {
 				this.shoot();
@@ -129,17 +129,17 @@ export class Ennemy extends Entity {
 		this.type = Ennemy.types[getRandomInt(Ennemy.types.length)];
 		this.applyType();
 		this.posX =
-			this.canvas.width +
+			Entity.canvasWidth   +
 			getRandomInt(WavesManager.maxRandomSpawnDistance) +
 			WavesManager.spawnDistance;
 		if (this.type == 'darkred') {
 			this.posY =
 				getRandomInt(
-					this.canvas.height - Ennemy.height * this.lifes - Ennemy.spawnOffset
+					Entity.canvasHeight - Ennemy.height * this.lifes - Ennemy.spawnOffset
 				) + Ennemy.spawnOffset;
 		} else {
 			this.posY =
-				getRandomInt(this.canvas.height - Ennemy.height - Ennemy.spawnOffset) +
+				getRandomInt(Entity.canvasHeight - Ennemy.height - Ennemy.spawnOffset) +
 				Ennemy.spawnOffset;
 		}
 		WavesManager.waveNumberOfEnnemysSpawned++;

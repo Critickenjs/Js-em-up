@@ -47,12 +47,16 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	console.log('canvas.width:' + canvas.width);
-	console.log('canvas.height:' + canvas.height);
+	if(canvas.width<1200){
+		canvas.width=1200;
+	}
+	if(canvas.height<600){
+		canvas.height=600;
+	}
+	Entity.updateCanvasSize(canvas.width,canvas.height);
+	/*console.log('canvas.width:' + canvas.width);
+	console.log('canvas.height:' + canvas.height);*/
 }
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
 
 //Chargement des assets
 preloadAssets(assets, sounds, () => {
@@ -83,7 +87,6 @@ const homePage = new HomePage(document.querySelector('.HomePage'));
 const gameOver = new GameOver(document.querySelector('.gameOver'));
 const gameView = new GameView(document.querySelector('.game'));
 const scoreBoard = new ScoreBoard(document.querySelector('.scoreboard'));
-Particules.init();
 
 document
 	.querySelector('.scoreboardButton')
@@ -99,13 +102,14 @@ const wavesManager = new WavesManager(
 );
 
 
+
 //Gêre l'affichage du jeu
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	Particules.renderAll();
+	Particules.renderAll(context);
 	player.render();
 	Power.renderAll();
-	wavesManager.wavesRender();
+	wavesManager.wavesRender(context);
 	requestAnimationFrame(render);
 }
 
@@ -167,6 +171,7 @@ document.querySelector('#lifesValue').innerHTML = Player.teamLifes;
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isInGame = true;
+	Particules.init();
 	homePage.Play();
 	gameView.show();
 	WavesManager.difficulty = getDifficultyValue();
