@@ -94,7 +94,10 @@ document
 		scoreBoard.updateScore(data);
 	});
 
-const wavesManager = new WavesManager(document.querySelector('#wavesValue'));
+const wavesManager = new WavesManager(
+	document.querySelector('#wavesValue'),
+	canvas
+);
 
 //Gêre l'affichage du jeu
 function render() {
