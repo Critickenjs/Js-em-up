@@ -1,6 +1,3 @@
-import { Entity } from './entity.js';
-import { isInGame } from './main.js';
-
 export default class KeysListener {
 	constructor(element) {
 		this.element = element;
@@ -17,8 +14,7 @@ export default class KeysListener {
 
 	init() {
 		this.element.addEventListener('keydown', event => {
-			if (isInGame) {
-				if (this.down(event)) {
+			if (this.down(event)) {
 					this.keysPressed.ArrowDown = true;
 				}
 				if (this.up(event)) {
@@ -33,21 +29,6 @@ export default class KeysListener {
 				if (event.key == ' ') {
 					this.keysPressed.Space = true;
 				}
-				if (event.key == 'M' || event.key == 'm') {
-					if (this.keysPressed.MouseMode) {
-						this.keysPressed.MouseMode = false;
-					} else {
-						this.keysPressed.MouseMode = true;
-					}
-				}
-				if (event.key == 'C' || event.key == 'c') {
-					if (Entity.showCollisions) {
-						Entity.showCollisions = false;
-					} else {
-						Entity.showCollisions = true;
-					}
-				}
-			}
 		});
 
 		this.element.addEventListener('keyup', event => {
@@ -67,13 +48,6 @@ export default class KeysListener {
 				this.keysPressed.Space = false;
 			}
 		});
-
-		/*this.element.mouseX = 0;
-		this.element.mouseY = 0;
-		this.element.onmousemove = function (e) {
-			this.element.mouseX = e.x;
-			this.element.mouseY = e.y;
-		};*/
 	}
 
 	down(event) {

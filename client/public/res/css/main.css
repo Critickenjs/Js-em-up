@@ -145,7 +145,7 @@ div{
 
 .box {
     /*On cache la box*/
-    display: none;
+    display: flex;
     /*Position de la box*/
     position: fixed;
     top: 0%;
