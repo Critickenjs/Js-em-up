@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 import Client_Entity from './client_entity.js';
 import Client_Player from './client_player.js';
 import preloadAssets from './preLoadAssets.js';
+import { Particules } from './Particules.js';
+import Entity from '../../server/entity.js';
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -34,7 +36,6 @@ preloadAssets(assets, sounds, () => {
 });
 
 const socket = io();
-
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
@@ -47,16 +48,24 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
+
 	if (canvas.width < 1200) {
 		canvas.width = 1200;
 	}
 	if (canvas.height < 600) {
 		canvas.height = 600;
 	}
+	Client_Entity.canvasHeight = canvas.height;
+	Client_Entity.canvasWidth = canvas.width;
 }
 
 const players = new Map();
 let ids = [];
+Client_Entity.canvasHeight = canvas.height;
+Client_Entity.canvasWidth = canvas.width;
+console.log(canvas.width, canvas.height);
+console.log(Client_Entity.canvasWidth, Client_Entity.canvasHeight);
+Particules.init();
 
 const keys = new KeysListener(window);
 keys.init();
@@ -75,6 +84,8 @@ socket.on('update', updatedPlayers => {
 		);
 		ids.push(updatedPlayers[i].id);
 	}
+
+	Particules.updateAll();
 	removeDeconnectedPlayers();
 });
 
@@ -117,6 +128,7 @@ function render() {
 			entry.value[1].render(context);
 		}
 	}
+	Particules.renderAll(context);
 	requestAnimationFrame(render);
 }
 

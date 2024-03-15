@@ -1,42 +1,41 @@
 import Entity from './entity.js';
 
 export default class Player extends Entity {
-    static width=50;
-    static height=50;
+	static width = 50;
+	static height = 50;
 
-    //Movement
+	//Movement
 	static accelerationMultiplier = 1.5;
 	static inertiaMultiplier = 1.2; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
-    static defaultSpeed=3;
-    
+	static defaultSpeed = 3;
 
 	constructor(posX, posY) {
-        super(posX,posY,Player.width,Player.height);
+		super(posX, posY, Player.width, Player.height);
 		this.posX = posX;
 		this.posY = posY;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.width = Player.width;
 		this.height = Player.height;
-        
+
 		this.accelerationX = 0;
 		this.accelerationY = 0;
-        this.pomme=0;
+		this.pomme = 0;
 	}
 
 	update(keysPressed) {
-		this.speedX=0;
-		this.speedY=0;
+		this.speedX = 0;
+		this.speedY = 0;
 		this.deceleration();
-        this.acceleration(keysPressed);
-        console.log(this.accelerationX+" & "+this.accelerationY);
+		this.acceleration(keysPressed);
 		super.update();
 	}
 
-    accelerateLeft(acceleration, distance = 0.1) {
+	accelerateLeft(acceleration, distance = 0.1) {
 		acceleration =
-			acceleration - Math.round((distance * Player.accelerationMultiplier)*1000)/1000;
+			acceleration -
+			Math.round(distance * Player.accelerationMultiplier * 1000) / 1000;
 		return acceleration;
 	}
 
@@ -45,12 +44,15 @@ export default class Player extends Entity {
 	}
 
 	accelerateRight(acceleration, distance = 0.1) {
-		acceleration = Math.round((acceleration + distance * Player.accelerationMultiplier)*1000)/1000;
+		acceleration =
+			Math.round(
+				(acceleration + distance * Player.accelerationMultiplier) * 1000
+			) / 1000;
 		return acceleration;
 	}
 
 	accelerateDown(acceleration, distance = 0.1) {
-        return this.accelerateRight(acceleration, distance);
+		return this.accelerateRight(acceleration, distance);
 	}
 
 	acceleration(keysPressed) {
@@ -79,15 +81,21 @@ export default class Player extends Entity {
 	}
 
 	decelerate(acceleration) {
-        if (acceleration < 0) {
-			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000) / 1000;
-            if(acceleration>-0.1) acceleration=0;
+		if (acceleration < 0) {
+			acceleration =
+				Math.round(
+					(acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000
+				) / 1000;
+			if (acceleration > -0.1) acceleration = 0;
 		} else if (acceleration > 0) {
-			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier)) *1000) / 1000;
-            if(acceleration<0.1) acceleration=0;
+			acceleration =
+				Math.round(
+					(acceleration - 1 / (10 * Player.inertiaMultiplier)) * 1000
+				) / 1000;
+			if (acceleration < 0.1) acceleration = 0;
 		}
 		return acceleration;
-    }
+	}
 
 	keyBoardMovement(keysPressed) {
 		if (keysPressed.ArrowDown) {
