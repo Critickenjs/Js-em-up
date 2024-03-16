@@ -24,6 +24,8 @@ httpServer.listen(port, () => {
 
 
 const game = new Game();
+let isInGame = true;
+let time = 0;
 
 const io = new IOServer(httpServer);
 io.on('connection',socket => {
@@ -63,4 +65,27 @@ function sendPlayers(){
 	io.emit('update',coordinates);
 }*/
 
+//Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
+function updateHUD() {
+	if (isInGame) {
+		const iterator = Player.players.entries();
+        let entry;
+		for(let i=0; i<Player.players.size; i++){
+            entry = iterator.next();
+            if(entry.value!=null){
+				if(entry.value[1].alive){
+					entry.value[1].score+=1; // WavesManager.difficulty
+				}
+            }
+        }
+		time++;
+		//Vitesse du jeu augmente au fur et à mesure
+		Entity.addToSpeed(0.001); // WavesManager.difficulty
+		io.emit('time',time);
+	}
+}
+
 setInterval(update, 1000 / 60);
+setInterval(updateHUD, 1000);
+
+

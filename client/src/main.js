@@ -72,6 +72,8 @@ function resampleCanvas() {
 
 Particules.init();
 
+let time = 0;
+
 const players = new Map();
 let ids = [];
 /*console.log(canvas.width, canvas.height);
@@ -83,6 +85,10 @@ keys.init();
 socket.on('playerKeys', () => {
 	ids = [];
 	socket.emit('keys', keys.keysPressed);
+});
+
+socket.on('time', newTime => {
+	time=newTime;
 });
 
 /*
