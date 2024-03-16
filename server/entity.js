@@ -1,7 +1,7 @@
 export default class Entity {
 
-	static canvasWidth=600;//1200
-	static canvasHeight=600;
+	static canvasWidth=1200;//1200
+	static canvasHeight=1200;//600
 
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
