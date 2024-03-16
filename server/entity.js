@@ -3,6 +3,10 @@ export default class Entity {
 	static canvasWidth=1200;//1200
 	static canvasHeight=1200;//600
 
+	static speedMultiplierDefault=0.8;
+	static speedMultiplierMAX=2;
+	static speedMultiplier=Entity.speedMultiplierDefault;
+
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
 		this.posY = posY;
@@ -34,5 +38,43 @@ export default class Entity {
 			this.posY=Entity.canvasHeight-this.height;
 			this.speedY=0;
 		}
+	}
+
+	
+	isCollidingWith(entity) {
+		if (this.width * this.height < entity.width * entity.height) {
+			return this.isThisEntityInsideThisOther(entity);
+		} else {
+			return entity.isThisEntityInsideThisOther(this);
+		}
+	}
+
+	isThisEntityInsideThisOther(entity) {
+		for (const collisionProperty in this.collision) {
+			if (entity.isThisEntityContainThis(this.collision[collisionProperty])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	isThisEntityContainThis(coordinate) {
+		return (
+			coordinate[0] > this.collision.topLeft[0] &&
+			coordinate[0] < this.collision.bottomRight[0] &&
+			coordinate[1] > this.collision.topLeft[1] &&
+			coordinate[1] < this.collision.bottomRight[1]
+		);
+	}
+
+	static addToSpeed(modifyer){
+		Entity.speedMultiplier=Math.round((Entity.speedMultiplier+modifyer)*1000)/1000
+		if(Entity.speedMultiplier>Entity.speedMultiplierMAX){
+			Entity.speedMultiplier=Entity.speedMultiplierMAX;
+		}
+	}
+
+	static setSpeed(newSpeed){
+		Entity.speedMultiplier=Math.round((newSpeed)*1000)/1000
 	}
 }

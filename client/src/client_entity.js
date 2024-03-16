@@ -2,6 +2,9 @@ export default class Client_Entity {
 	static canvasWidth = 0;
 	static canvasHeight = 0;
 	static speedMultiplier = 1;
+	
+	static showCollisions = false;
+
 	constructor(posX, posY) {
 		this.posX = posX;
 		this.posY = posY;
