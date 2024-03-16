@@ -22,7 +22,6 @@ export default class Player extends Entity {
         
 		this.accelerationX = 0;
 		this.accelerationY = 0;
-        this.pomme=0;
 	}
 
 	update(keysPressed) {
@@ -30,8 +29,8 @@ export default class Player extends Entity {
 		this.speedY=0;
 		this.deceleration();
         this.acceleration(keysPressed);
-        console.log(this.accelerationX+" & "+this.accelerationY);
-		super.update();
+       	super.update();
+		
 	}
 
     accelerateLeft(acceleration, distance = 0.1) {
@@ -76,15 +75,17 @@ export default class Player extends Entity {
 	deceleration() {
 		this.accelerationX = this.decelerate(this.accelerationX);
 		this.accelerationY = this.decelerate(this.accelerationY);
+		console.log("acceleration : "+this.accelerationX+"&"+this.accelerationY);
+		
 	}
 
 	decelerate(acceleration) {
         if (acceleration < 0) {
 			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000) / 1000;
-            if(acceleration>-0.1) acceleration=0;
+            if(acceleration>-0.05) acceleration=0;
 		} else if (acceleration > 0) {
 			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier)) *1000) / 1000;
-            if(acceleration<0.1) acceleration=0;
+            if(acceleration<0.05) acceleration=0;
 		}
 		return acceleration;
     }

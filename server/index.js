@@ -5,6 +5,7 @@ import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import {Server as IOServer} from 'socket.io';
 import Entity from './entity.js';
 import Player from './player.js';
+import Game from './game.js';
 
 const app = express();
 addWebpackMiddleware(app);
@@ -20,6 +21,10 @@ httpServer.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}/`);
 });
 
+
+
+const game = new Game();
+
 const players = new Map();
 
 const io = new IOServer(httpServer);
@@ -27,7 +32,7 @@ io.on('connection',socket => {
 	console.log(`New connexion from client :${socket.id}/`);
 	let player = new Player(0,0);
 	players.set(socket.id,player);
-		
+	socket.emit('canvas',[Entity.canvasWidth,Entity.canvasHeight]);
 	socket.on('keys',(keysPressed) => {
 		player.update(keysPressed);
 		/*console.log(`Player ${socket.id} posX : `+player.posX);
@@ -43,6 +48,7 @@ io.on('connection',socket => {
 function update() {
 	io.emit('playerKeys');
 	sendPlayers();
+	game.updatePlayers(players);
 }
 
 function sendPlayers(){

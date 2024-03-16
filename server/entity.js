@@ -1,4 +1,8 @@
 export default class Entity {
+
+	static canvasWidth=500;
+	static canvasHeight=500;
+
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
 		this.posY = posY;
@@ -11,7 +15,7 @@ export default class Entity {
 	update() {
 		this.posX+=this.speedX;
 		this.posY+=this.speedY;
-		this.posX | 0;
-		this.poY | 0;
+		this.posX=Math.round(this.posX*100)/100;
+		this.posY=Math.round(this.posY*100)/100;
 	}
 }

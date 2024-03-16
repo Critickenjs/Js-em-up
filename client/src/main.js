@@ -3,7 +3,15 @@ import KeysListener from './keysListener.js';
 import {io} from 'socket.io-client';
 import Client_Entity from './client_entity.js';
 
+let canvasServerWidth=1200;
+let canvasServerHeight=600;
+
 const socket = io();
+
+socket.on('canvas',(tab) => {
+	canvasServerWidth=tab[0];
+	canvasServerHeight=tab[1];
+})
 
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
@@ -17,11 +25,11 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	if(canvas.width<1200){
-		canvas.width=1200;
+	if(canvas.width<canvasServerWidth){
+		canvas.width=canvasServerWidth;
 	}
-	if(canvas.height<600){
-		canvas.height=600;
+	if(canvas.height<canvasServerHeight){
+		canvas.height=canvasServerHeight;
 	}
 }
 
@@ -34,6 +42,8 @@ socket.on("playerKeys",()=>{
 	ids=[];
 	socket.emit("keys",keys.keysPressed);
 });
+
+
 
 socket.on("update",(updatedPlayers)=>{
 	//players.push(new Client_Entity(player.posX,player.posY))
