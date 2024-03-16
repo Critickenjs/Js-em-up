@@ -20,7 +20,6 @@ export default class Client_Entity {
 	}
 
 	render(context) {
-		console.log('POS:' + this.posX + ':' + this.posY);
 		context.beginPath();
 		context.lineWidth = Entity.lineThickness;
 		context.strokeStyle = 'red';
