@@ -7,9 +7,7 @@ export class Particules extends Client_Entity {
 	static bufferParticules = 30;
 	static particules = [];
 	constructor(posX, posY) {
-		super(posX, posY);
-		this.posX = posX;
-		this.posY = posY;
+		super(posX, posY, Particules.width, Particules.height);
 		this.speedX = -Particules.defaultSpeed;
 		this.speedY = 0;
 	}

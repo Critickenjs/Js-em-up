@@ -1,4 +1,5 @@
 import Entity from './entity.js';
+import Shot from './shot.js';
 
 export default class Player extends Entity {
 	//Declarations
@@ -18,20 +19,40 @@ export default class Player extends Entity {
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;
 
+	//Timer
+	static maxTimeBeforeShooting = 10;
+	static maxTimeForInvincibility = 300;
+	
+
 	//Players
 	static players = new Map();
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
+		this.width = Player.width;
+		this.height = Player.height;
+		this.pseudo = 'player';
+		this.score = 0;
+		//Movement
 		this.posX = posX;
 		this.posY = posY;
 		this.speedX = 0;
 		this.speedY = 0;
-		this.width = Player.width;
-		this.height = Player.height;
-
 		this.accelerationX = 0;
 		this.accelerationY = 0;
+
+		//Declarations
+		this.alive = true;
+		this.invincible = true;
+
+		//Bullets
+		this.shots = [];
+
+		//Timer
+		this.timerBeforeShots = 0;
+		this.maxTimeBeforeRespawn = 100;
+		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+
 	}
 
 	update(keysPressed) {
@@ -41,6 +62,75 @@ export default class Player extends Entity {
         this.acceleration(keysPressed);
        	super.update();
 		this.checkBorderCollision();
+		if (keysPressed.Space || keysPressed.MouseDown) {
+			this.shootWithRecharge();//this.gotPerforationBonus());
+		}
+	}
+
+	updateShots() {
+		for (let i = 0; i < this.shots.length; i++) {
+			this.shots[i].update();
+			if (this.shots[i].posX > Entity.canvasWidth) {
+				this.shots.shift();
+			}
+		}
+	}
+
+	shootWithRecharge(perforationBonus = false) {
+		//this.shoot(perforationBonus);
+		if (this.timerBeforeShots <= 0) {
+			this.shoot(perforationBonus);
+			this.timerBeforeShots = Player.maxTimeBeforeShooting;
+		}
+	}
+
+	//Fais tirer au joueur un projectile.
+	shoot(perforationBonus = false) {
+		this.shots.push(
+			new Shot(
+				this.posX + this.width,
+				this.posY + this.height / 3,
+				true,
+				Player.bulletSpeed,
+				perforationBonus
+			)
+		);
+	}
+
+	//Tue le joueur, augmente le timer avant sa réapparition
+	die() {
+		this.alive = false;
+		//Le respawn devient de plus en plus long quand on meurt. 
+		this.maxTimeBeforeRespawn =
+			(this.maxTimeBeforeRespawn *
+				(Math.round((1 + 0.1) * 100) / 100)) | 0; //TODO 1 + WavesManager.difficulty / 10
+		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+	}
+
+	respawn() {
+		Player.teamLifes--;
+		this.alive = true;
+		this.becomeInvincible(
+			(Player.maxTimeForInvincibility) | 0 // / WavesManager.difficulty
+		);
+		this.posY = Entity.canvasHeight / 2;
+		this.posX = 100;
+		this.speedX = 0;
+		this.speedY = 0;
+		this.accelerationX = 0;
+		this.accelerationY = 0;
+		this.timerBeforeShots = 0;
+		this.timerBeforeLosingIceMalus = 0;
+		this.iceMultiplierMalus = 1;
+		this.timerBeforeLosingScoreMultiplierBonus = 0;
+		this.scoreMultiplierBonus = 1;
+		this.timerBeforeLosingPerforationBonus = 0;
+	}
+
+	becomeInvincible(duration) {
+		//default 100 for respawn and 500 for power up
+		this.invincible = true;
+		this.timerBeforeLosingInvincibility = duration;
 	}
 
 	checkBorderCollision(){

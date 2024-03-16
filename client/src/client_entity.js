@@ -1,21 +1,30 @@
+import Entity from "../../server/entity.js";
+
 export default class Client_Entity {
+	//Canvas
 	static canvasWidth = 0;
 	static canvasHeight = 0;
+
+	//Particules
 	static speedMultiplier = 1;
 	
+	//Showing collisions
 	static showCollisions = false;
+	static lineThickness=3;
 
-	constructor(posX, posY) {
+	constructor(posX, posY, width, height) {
 		this.posX = posX;
 		this.posY = posY;
+		this.width=width;
+		this.height=height;
 	}
 
 	render(context) {
 		console.log('POS:' + this.posX + ':' + this.posY);
 		context.beginPath();
-		context.lineWidth = 3;
+		context.lineWidth = Entity.lineThickness;
 		context.strokeStyle = 'red';
-		context.rect(this.posX, this.posY, 50, 50);
+		context.rect(this.posX-Entity.lineThickness, this.posY-Entity.lineThickness, this.width+Entity.lineThickness, this.height+Entity.lineThickness);
 		context.stroke();
 	}
 	static updateCanvasSize(canvasWidth, canvasHeight) {
