@@ -14,13 +14,25 @@ export default class Entity {
 		this.speedY = 0;
 		this.width = width;
 		this.height = height;
+		this.collision = {
+			topLeft: [posX, posY],
+			topRight: [posX + width, posY],
+			bottomLeft: [posX, posY + height],
+			bottomRight: [posX + width, posY + height],
+		};
 	}
 
 	update() {
-		this.posX+=this.speedX;
-		this.posY+=this.speedY;
+		this.posX+=this.speedX*Entity.speedMultiplier;
+		this.posY+=this.speedY*Entity.speedMultiplier;
 		this.posX=Math.round(this.posX*100)/100;
 		this.posY=Math.round(this.posY*100)/100;
+		this.collision = {
+			topLeft: [this.posX, this.posY],
+			topRight: [this.posX + this.width, this.posY],
+			bottomLeft: [this.posX, this.posY + this.height],
+			bottomRight: [this.posX + this.width, this.posY + this.height],
+		};
 	}
 
 	checkBorderCollision(){
