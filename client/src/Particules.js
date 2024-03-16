@@ -3,7 +3,7 @@ import Client_Entity from './client_entity.js';
 export class Particules extends Client_Entity {
 	static width = 5;
 	static height = 5;
-	static defaultSpeed = 8;
+	static defaultSpeed = 1;
 	static bufferParticules = 30;
 	static particules = [];
 	constructor(posX, posY) {
@@ -19,7 +19,6 @@ export class Particules extends Client_Entity {
 				getRandomInt(Client_Entity.canvasHeight)
 			);
 		}
-		console.log(this.particules);
 	}
 
 	render(context) {
@@ -43,8 +42,8 @@ export class Particules extends Client_Entity {
 
 	update() {
 		//super.update(); //Pas nécessaire.
-		this.posX += this.speedX * Client_Entity.speedMultiplier;
-		this.posY += this.speedY * Client_Entity.speedMultiplier;
+		this.posX += Math.round(this.speedX * (Client_Entity.speedMultiplier*3)*100)/100;
+		this.posY += Math.round(this.speedY * (Client_Entity.speedMultiplier*3)*100)/100;
 		if (this.posX < 0) {
 			this.respawn();
 		}
