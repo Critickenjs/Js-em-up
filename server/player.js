@@ -7,7 +7,7 @@ export default class Player extends Entity {
 	static height = 50;
 
 	//Movement
-	static accelerationMultiplier = 1.5;
+	static accelerationMultiplier = 1.8;
 	static inertiaMultiplier = 1.2; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
 	static defaultSpeed = 3;
@@ -15,7 +15,7 @@ export default class Player extends Entity {
 	//Lifes
 	static defaultNumberOfLife = 3;
 	static teamLifes=Player.defaultNumberOfLife;
-	
+	 
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;
 
@@ -56,15 +56,28 @@ export default class Player extends Entity {
 	}
 
 	update(keysPressed) {
+		this.updateShots();
 		this.speedX = 0;
 		this.speedY = 0;
-		this.deceleration();
-        this.acceleration(keysPressed);
-       	super.update();
-		this.checkBorderCollision();
-		if (keysPressed.Space || keysPressed.MouseDown) {
-			this.shootWithRecharge();//this.gotPerforationBonus());
+		if (this.alive) {
+			//Movements
+			this.deceleration();
+			this.acceleration(keysPressed);
+			super.update();
+			
+			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
+			this.timerBeforeShots--;
+			if (this.timerBeforeShots < 0) {
+				this.timerBeforeShots = 0;
+			}
+			//Shooting?
+			if (keysPressed.Space || keysPressed.MouseDown) {
+				this.shootWithRecharge();//this.gotPerforationBonus());
+			}
+
 		}
+		//Player utilise sa propre fonction borderCollision et pas celle de Entity à cause de ses accélérations
+		this.checkBorderCollision();
 	}
 
 	updateShots() {
@@ -77,7 +90,6 @@ export default class Player extends Entity {
 	}
 
 	shootWithRecharge(perforationBonus = false) {
-		//this.shoot(perforationBonus);
 		if (this.timerBeforeShots <= 0) {
 			this.shoot(perforationBonus);
 			this.timerBeforeShots = Player.maxTimeBeforeShooting;
@@ -89,7 +101,7 @@ export default class Player extends Entity {
 		this.shots.push(
 			new Shot(
 				this.posX + this.width,
-				this.posY + this.height / 3,
+				this.posY + (this.height / 2) - (Shot.height/2),
 				true,
 				Player.bulletSpeed,
 				perforationBonus
@@ -200,8 +212,6 @@ export default class Player extends Entity {
 	deceleration() {
 		this.accelerationX = this.decelerate(this.accelerationX);
 		this.accelerationY = this.decelerate(this.accelerationY);
-		console.log("acceleration : "+this.accelerationX+"&"+this.accelerationY);
-		
 	}
 
 	decelerate(acceleration) {

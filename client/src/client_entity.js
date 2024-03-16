@@ -2,8 +2,8 @@ import Entity from "../../server/entity.js";
 
 export default class Client_Entity {
 	//Canvas
-	static canvasWidth = 0;
-	static canvasHeight = 0;
+	static canvasWidth = 800;
+	static canvasHeight = 800;
 
 	//Particules
 	static speedMultiplier = 1;

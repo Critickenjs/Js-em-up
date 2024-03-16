@@ -6,6 +6,7 @@ import Client_Player from './client_player.js';
 import preloadAssets from './preLoadAssets.js';
 import { Particules } from './Particules.js';
 import Entity from '../../server/entity.js';
+import Client_Shot from './client_shot.js';
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -35,14 +36,16 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
-let canvasServerWidth=1200;
-let canvasServerHeight=1200;
+let canvasServerWidth=800;
+let canvasServerHeight=800;
 
 const socket = io();
 
 socket.on('canvas',(tab) => {
 	canvasServerWidth=tab[0];
 	canvasServerHeight=tab[1];
+	Client_Entity.canvasHeight = canvasServerWidth;
+	Client_Entity.canvasWidth = canvasServerHeight;
 });
 
 //Canvas
@@ -67,13 +70,13 @@ function resampleCanvas() {
 	Client_Entity.canvasWidth = canvas.width;
 }
 
+Particules.init();
+
 const players = new Map();
 let ids = [];
-Client_Entity.canvasHeight = canvas.height;
-Client_Entity.canvasWidth = canvas.width;
-console.log(canvas.width, canvas.height);
+/*console.log(canvas.width, canvas.height);
 console.log(Client_Entity.canvasWidth, Client_Entity.canvasHeight);
-Particules.init();
+*/
 
 const keys = new KeysListener(window);
 keys.init();
@@ -82,6 +85,7 @@ socket.on('playerKeys', () => {
 	socket.emit('keys', keys.keysPressed);
 });
 
+/*
 socket.on('update', updatedPlayers => {
 	//players.push(new Client_Entity(player.posX,player.posY))
 	//players[i]=new Entity(entity.posX,entity.posY);
@@ -92,9 +96,26 @@ socket.on('update', updatedPlayers => {
 		);
 		ids.push(updatedPlayers[i].id);
 	}
-
-	Particules.updateAll();
 	removeDeconnectedPlayers();
+});*/
+
+socket.on('game', game => {
+	//Update players
+	for (let i = 0; i < game.players.length; i++) {
+		players.set(
+			game.players[i].id,
+			new Client_Player(game.players[i].posX, game.players[i].posY)
+		);
+		ids.push(game.players[i].id);
+	}
+	removeDeconnectedPlayers();
+	
+	//Update Shots
+	Client_Shot.shots=[];
+	console.log(game.shots.length);
+	for (let i = 0; i < game.shots.length; i++) {
+		Client_Shot.shots.push(new Client_Shot(game.shots[i].posX,game.shots[i].posY,game.shots[i].isFromAPlayer,game.shots[i].perforation));
+	}
 });
 
 function removeDeconnectedPlayers() {
@@ -127,7 +148,13 @@ canvas.addEventListener('mouseup', function () {
 
 //Gêre l'affichage du jeu
 function render() {
+	//Reset Canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	
+	//Render Particules Behind
+	Particules.renderAll(context);
+
+	//Render players
 	const iterator = players.entries();
 	let entry;
 	for (let i = 0; i < players.size; i++) {
@@ -136,8 +163,18 @@ function render() {
 			entry.value[1].render(context);
 		}
 	}
-	Particules.renderAll(context);
+	for (let i = 0; i < Client_Shot.shots.length; i++) {
+		Client_Shot.shots[i].render(context);
+	}
+
+	//Looping
 	requestAnimationFrame(render);
 }
 
 requestAnimationFrame(render);
+
+setInterval(updateParticules, 10);
+
+function updateParticules(){	
+	Particules.updateAll();
+}
