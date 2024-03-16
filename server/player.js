@@ -30,7 +30,20 @@ export default class Player extends Entity {
 		this.deceleration();
         this.acceleration(keysPressed);
        	super.update();
-		
+		if(this.posX<0){
+			this.posX=0;
+		}else if (this.posX>Entity.canvasWidth){
+			this.posX=Entity.canvasWidth;
+			this.speedX=0;
+			this.accelerationX=0;
+		}
+		if(this.posY<0){
+			this.posY=0;
+		}else if (this.posY>Entity.canvasHeight){
+			this.posY=Entity.canvasHeight;
+			this.speedY=0;
+			this.accelerationY=0;
+		}
 	}
 
     accelerateLeft(acceleration, distance = 0.1) {
