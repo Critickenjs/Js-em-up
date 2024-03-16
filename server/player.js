@@ -1,6 +1,7 @@
 import Entity from './entity.js';
 
 export default class Player extends Entity {
+	//Declarations
 	static width = 50;
 	static height = 50;
 
@@ -9,6 +10,16 @@ export default class Player extends Entity {
 	static inertiaMultiplier = 1.2; //Lié à l'accéleration : si inertia==accelration alors c'est comme si on désactivait l'accélération et qu'on revenait au déplacement d'avant
 	static maxAcceleration = 8;
 	static defaultSpeed = 3;
+
+	//Lifes
+	static defaultNumberOfLife = 3;
+	static teamLifes=Player.defaultNumberOfLife;
+	
+	//Bullets
+	static bulletSpeed = Shot.defaultSpeed;
+
+	//Players
+	static players = new Map();
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -131,5 +142,28 @@ export default class Player extends Entity {
 			this.speedX = Player.defaultSpeed;
 			this.accelerationX = this.accelerateRight(this.accelerationX);
 		}
+	}
+
+	static resetTeamLives() {
+		Player.teamLifes = Player.defaultNumberOfLife;
+	}
+
+	static addToTeamLives(n) {
+		Player.teamLifes += n;
+	}
+
+	static atLeast1PlayerAlive(){
+		const iterator = Player.players.entries();
+    
+        let entry;
+        for(let i=0; i<map.size; i++){
+            entry = iterator.next();
+            if(entry.value!=null){
+                if(entry.value[1].alive){
+					return true;
+				}
+            }
+        }
+		return false;
 	}
 }

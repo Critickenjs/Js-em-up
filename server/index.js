@@ -25,13 +25,11 @@ httpServer.listen(port, () => {
 
 const game = new Game();
 
-const players = new Map();
-
 const io = new IOServer(httpServer);
 io.on('connection',socket => {
 	console.log(`New connexion from client :${socket.id}/`);
 	let player = new Player(0,0);
-	players.set(socket.id,player);
+	Player.players.set(socket.id,player);
 	socket.emit('canvas',[Entity.canvasWidth,Entity.canvasHeight]);
 	socket.on('keys',(keysPressed) => {
 		player.update(keysPressed);
@@ -40,7 +38,7 @@ io.on('connection',socket => {
 	})
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
-		players.delete(socket.id);
+		Player.players.delete(socket.id);
 	})
 })
 
@@ -48,15 +46,15 @@ io.on('connection',socket => {
 function update() {
 	io.emit('playerKeys');
 	sendPlayers();
-	game.updatePlayers(players);
+	game.updatePlayers(Player.players);
 }
 
 function sendPlayers(){
 	const coordinates = [];
-	const iterator = players.entries();
+	const iterator = Player.players.entries();
 
 	let entry;
-	for(let i=0; i<players.size; i++){
+	for(let i=0; i<Player.players.size; i++){
 		entry = iterator.next();
 		if(entry.value!=null){
 			coordinates.push({"id":entry.value[0],"posX":entry.value[1].posX,"posY":entry.value[1].posY});
