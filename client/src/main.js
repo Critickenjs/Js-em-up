@@ -35,7 +35,7 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
-let canvasServerWidth=1200;
+let canvasServerWidth=600;
 let canvasServerHeight=600;
 
 const socket = io();

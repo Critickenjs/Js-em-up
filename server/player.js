@@ -21,37 +21,36 @@ export default class Player extends Entity {
 
 		this.accelerationX = 0;
 		this.accelerationY = 0;
-<<<<<<< HEAD
-=======
-		this.pomme = 0;
->>>>>>> 99b938d90519ae2b0c1e2c8241b67f78e73e06ac
 	}
 
 	update(keysPressed) {
 		this.speedX = 0;
 		this.speedY = 0;
 		this.deceleration();
-<<<<<<< HEAD
         this.acceleration(keysPressed);
        	super.update();
+		this.checkBorderCollision();
+	}
+
+	checkBorderCollision(){
 		if(this.posX<0){
 			this.posX=0;
-		}else if (this.posX>Entity.canvasWidth){
-			this.posX=Entity.canvasWidth;
+			this.speedX=0;
+			this.accelerationX=0;
+		}else if (this.posX>Entity.canvasWidth-this.width){
+			this.posX=Entity.canvasWidth-this.width;
 			this.speedX=0;
 			this.accelerationX=0;
 		}
 		if(this.posY<0){
 			this.posY=0;
-		}else if (this.posY>Entity.canvasHeight){
-			this.posY=Entity.canvasHeight;
+			this.speedY=0;
+			this.accelerationY=0;
+		}else if (this.posY>Entity.canvasHeight-this.height){
+			this.posY=Entity.canvasHeight-this.height;
 			this.speedY=0;
 			this.accelerationY=0;
 		}
-=======
-		this.acceleration(keysPressed);
-		super.update();
->>>>>>> 99b938d90519ae2b0c1e2c8241b67f78e73e06ac
 	}
 
 	accelerateLeft(acceleration, distance = 0.1) {
@@ -105,27 +104,12 @@ export default class Player extends Entity {
 	}
 
 	decelerate(acceleration) {
-<<<<<<< HEAD
         if (acceleration < 0) {
 			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000) / 1000;
             if(acceleration>-0.05) acceleration=0;
 		} else if (acceleration > 0) {
 			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier)) *1000) / 1000;
             if(acceleration<0.05) acceleration=0;
-=======
-		if (acceleration < 0) {
-			acceleration =
-				Math.round(
-					(acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000
-				) / 1000;
-			if (acceleration > -0.1) acceleration = 0;
-		} else if (acceleration > 0) {
-			acceleration =
-				Math.round(
-					(acceleration - 1 / (10 * Player.inertiaMultiplier)) * 1000
-				) / 1000;
-			if (acceleration < 0.1) acceleration = 0;
->>>>>>> 99b938d90519ae2b0c1e2c8241b67f78e73e06ac
 		}
 		return acceleration;
 	}
@@ -133,7 +117,7 @@ export default class Player extends Entity {
 	keyBoardMovement(keysPressed) {
 		if (keysPressed.ArrowDown) {
 			this.speedY = Player.defaultSpeed;
-			this.accelerationY = this.accelerateDown(this.accelerationX);
+			this.accelerationY = this.accelerateDown(this.accelerationY);
 		}
 		if (keysPressed.ArrowUp) {
 			this.speedY = -Player.defaultSpeed;

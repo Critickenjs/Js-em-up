@@ -1,7 +1,7 @@
 export default class Entity {
 
-	static canvasWidth=500;
-	static canvasHeight=500;
+	static canvasWidth=600;//1200
+	static canvasHeight=600;
 
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
@@ -17,5 +17,22 @@ export default class Entity {
 		this.posY+=this.speedY;
 		this.posX=Math.round(this.posX*100)/100;
 		this.posY=Math.round(this.posY*100)/100;
+	}
+
+	checkBorderCollision(){
+		if(this.posX<0){
+			this.posX=0;
+			this.speedX=0;
+		}else if (this.posX>Entity.canvasWidth-this.width){
+			this.posX=Entity.canvasWidth-this.width;
+			this.speedX=0;
+		}
+		if(this.posY<0){
+			this.posY=0;
+			this.speedY=0;
+		}else if (this.posY>Entity.canvasHeight-this.height){
+			this.posY=Entity.canvasHeight-this.height;
+			this.speedY=0;
+		}
 	}
 }
