@@ -120,7 +120,7 @@ export default class Game{
             entry = iterator.next();
             if(entry.value!=null){
                 const player = entry.value[1];
-                if(player.alive) this.gameData.players.push({"id":entry.value[0],"posX":player.posX,"posY":player.posY,"score":player.score});
+                if(player.alive) this.gameData.players.push({"id":entry.value[0],"posX":player.posX,"posY":player.posY,"score":player.score,"invincible":player.invincible});
                 for(let i=0; i<player.shots.length;i++){
                     if(player.shots[i].active) this.gameData.shots.push({"posX":player.shots[i].posX,"posY":player.shots[i].posY,"isFromAPlayer":true,"perforation":player.shots[i].perforation});
                 }

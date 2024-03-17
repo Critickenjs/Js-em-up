@@ -112,7 +112,7 @@ socket.on('game', gameData => {
 	for (let i = 0; i < gameData .players.length; i++) {
 		players.set(
 			gameData .players[i].id,
-			new Client_Player(gameData.players[i].posX, gameData.players[i].posY, gameData.players[i].pseudo)
+			new Client_Player(gameData.players[i].posX, gameData.players[i].posY, gameData.players[i].pseudo, gameData.players[i].invincible)
 		);
 		ids.push(gameData .players[i].id);
 	}
