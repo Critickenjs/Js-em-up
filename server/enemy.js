@@ -174,6 +174,7 @@ export default class Enemy extends Entity {
 			for (let s = 0; s < this.shots.length; s++) {
 				if (this.shots[s].active) {
 					if (this.shots[s].isCollidingWith(player)) {
+						console.log("EnnemyShot("+this.shots[s].posX+":"+this.shots[s].posY+") collide With a player.");
 						this.shots[s].active = false;
 						if (player.alive) player.die();
 					}

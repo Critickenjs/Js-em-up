@@ -81,7 +81,9 @@ export default class Game{
     update() {
         this.resetData();
         this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
+        this.checkPlayerRespawn();
         this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
+       
         //WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
         this.allDead = this.wavesManager.wavesUpdates(this.players,this.gameData.entitySpeedMultiplier); 
         if (this.allDead) {
@@ -140,5 +142,27 @@ export default class Game{
             }
         }
         
+    }
+
+    checkPlayerRespawn(){
+        const iterator = this.players.entries();
+        let entry;
+        for(let i=0; i<this.players.size; i++){
+            entry = iterator.next();
+            if(entry.value!=null){
+                if(!entry.value[1].alive){
+                    console.log("TT"+entry.value[1].timerBeforeRespawn);
+                    if (entry.value[1].timerBeforeRespawn <= 0) {
+                        entry.value[1].respawn();
+                        console.log("TTAFTER"+entry.value[1].timerBeforeRespawn);
+                        this.teamLifes--;
+                        console.log("RESPAWNING");
+                    }else{
+                        entry.value[1].timerBeforeRespawn--;
+                    }
+                }
+                
+            }
+        }
     }
 }
