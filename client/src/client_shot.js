@@ -13,6 +13,7 @@ export default class Client_Shot extends Client_Entity {
 	}
 
 	render(context) {
+		super.render(context);
 		context.beginPath();
 		if(this.isFromAPlayer){
 			context.fillStyle = 'green';

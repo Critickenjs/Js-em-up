@@ -17,11 +17,13 @@ export default class Client_Entity {
 	}
 
 	render(context) {
-		context.beginPath();
-		context.lineWidth = Entity.lineThickness;
-		context.strokeStyle = 'red';
-		context.rect(this.posX-Entity.lineThickness, this.posY-Entity.lineThickness, this.width+Entity.lineThickness, this.height+Entity.lineThickness);
-		context.stroke();
+		if(Client_Entity.showCollisions){
+			context.beginPath();
+			context.lineWidth = Client_Entity.lineThickness;
+			context.strokeStyle = 'red';
+			context.rect(this.posX-Client_Entity.lineThickness, this.posY-Client_Entity.lineThickness, this.width+Client_Entity.lineThickness, this.height+Client_Entity.lineThickness);
+			context.stroke();
+		}
 	}
 	static updateCanvasSize(canvasWidth, canvasHeight) {
 		Client_Entity.canvasWidth = canvasWidth;

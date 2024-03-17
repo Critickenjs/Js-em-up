@@ -1,3 +1,5 @@
+import Client_Entity from "./client_entity.js";
+
 export default class KeysListener {
 	constructor(element) {
 		this.element = element;
@@ -28,6 +30,9 @@ export default class KeysListener {
 				}
 				if (event.key == ' ') {
 					this.keysPressed.Space = true;
+				}
+				if (event.key == 'c' || event.key == 'C') {
+					Client_Entity.showCollisions=!Client_Entity.showCollisions;
 				}
 		});
 

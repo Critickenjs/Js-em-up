@@ -6,7 +6,6 @@ import {Server as IOServer} from 'socket.io';
 import Entity from './entity.js';
 import Player from './player.js';
 import Game from './game.js';
-import WavesManager from './wavesManager.js';
 
 const app = express();
 addWebpackMiddleware(app);
@@ -14,7 +13,7 @@ const httpServer = http.createServer(app);
 
 app.use(express.static('client'));
 app.get('*', (req, res) => {
-	res.send('' + fs.readFileSync('client/public/index.html'));
+	res.send('' + fs.readFileSync('client/public/index.html',"utf8"));
 });
 
 const port = process.env.PORT || 8000;

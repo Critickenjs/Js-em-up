@@ -8,6 +8,7 @@ import { Particules } from './Particules.js';
 import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Game from './client_game.js';
+import Client_Enemy from './client_enemy.js';
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -15,7 +16,7 @@ const assets = [
 	'./public/res/images/ice.png',
 	'./public/res/images/shield.png',
 	'./public/res/images/shield2.png',
-	'./public/res/images/monster.png',
+	'./public/res/images/enemy.png',
 	'./public/res/images/spaceship.png',
 	'./public/res/images/asteroid1.png',
 	'./public/res/images/asteroid2.png',
@@ -81,8 +82,6 @@ let ids = [];
 console.log(Client_Entity.canvasWidth, Client_Entity.canvasHeight);
 */
 
-const ennemys = [];
-
 const keys = new KeysListener(window);
 keys.init();
 socket.on('playerKeys', () => {
@@ -113,7 +112,7 @@ socket.on('game', gameData => {
 	for (let i = 0; i < gameData .players.length; i++) {
 		players.set(
 			gameData .players[i].id,
-			new Client_Player(gameData .players[i].posX, gameData .players[i].posY)
+			new Client_Player(gameData.players[i].posX, gameData.players[i].posY, gameData.players[i].pseudo)
 		);
 		ids.push(gameData .players[i].id);
 	}
@@ -121,11 +120,15 @@ socket.on('game', gameData => {
 	
 	//Update Shots
 	Client_Shot.shots=[];
-	for (let i = 0; i < gameData .shots.length; i++) {
+	for (let i = 0; i < gameData.shots.length; i++) {
 		Client_Shot.shots.push(new Client_Shot(gameData.shots[i].posX,gameData.shots[i].posY,gameData.shots[i].isFromAPlayer,gameData.shots[i].perforation));
 	}
 
 	//Update enemys
+	Client_Enemy.enemys=[];
+	for (let i = 0; i < gameData.enemys.length; i++) {
+		Client_Enemy.enemys.push(new Client_Enemy(gameData.enemys[i].posX,gameData.enemys[i].posY,gameData.enemys[i].type,gameData.enemys[i].lifes));
+	}
 });
 
 function removeDeconnectedPlayers() {
@@ -175,6 +178,9 @@ function render() {
 	}
 	for (let i = 0; i < Client_Shot.shots.length; i++) {
 		Client_Shot.shots[i].render(context);
+	}
+	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
+		Client_Enemy.enemys[i].render(context);
 	}
 
 	//Looping

@@ -23,7 +23,6 @@ export class Particules extends Client_Entity {
 	}
 
 	render(context) {
-		super.render(context); //Pas nécessaire.
 		context.beginPath();
 		context.fillStyle = 'yellow';
 		context.fillRect(this.posX, this.posY, this.width, this.height);

@@ -39,7 +39,6 @@ export default class Enemy extends Entity {
 
 	//metre à jour l'ennemi
 	update(waveManager,entitySpeedMultiplier) {
-		this.posX += this.speedX;
 		super.update(entitySpeedMultiplier);
 		if (this.posX < 0 - this.width) {
 			this.fate(waveManager);

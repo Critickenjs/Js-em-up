@@ -21,7 +21,7 @@ export default class WavesManager {
 	constructor() {
 		this.difficulty = 1;
 		this.waveNumber = 1;
-		this.Enemys = [];
+		this.enemys = [];
 		this.waveMaxNumberOfEnemys=5;
 		this.waveNumberOfEnemysSpawned=0;
 	}
@@ -38,19 +38,19 @@ export default class WavesManager {
 			i < WavesManager.EnemyBuffer * this.difficulty;
 			i++
 		) {
-			this.Enemys[i] = new Enemy(
-				Entity.canvasWidth + getRandomInt(WavesManager.maxRandomSpawnDistance) +
-					WavesManager.spawnDistance,
+			this.enemys[i] = new Enemy(
+				Entity.canvasWidth /*+ getRandomInt(WavesManager.maxRandomSpawnDistance) +
+					WavesManager.spawnDistance*/,
 				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) + Enemy.spawnOffset,
 				this.difficulty
 				);
-			this.Enemys[i].index = i;
+			this.enemys[i].index = i;
 			this.waveNumberOfEnemysSpawned++;
 			if (
 				this.waveNumberOfEnemysSpawned >
 				this.waveMaxNumberOfEnemys
 			) {
-				this.Enemys[i].die();
+				this.enemys[i].die();
 			}
 		}
 		console.log(
@@ -64,11 +64,9 @@ export default class WavesManager {
 
 	//Appelle la vague suivante
 	nextWave() {
-		Entity.speedMultiplier;
 		this.waveNumber++;
 		this.waveNumberOfEnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
-		Entity.addToSpeed(0.01 * this.difficulty);
 		console.log(
 			'Vague n°' +
 				this.waveNumber +
@@ -83,8 +81,8 @@ export default class WavesManager {
 				this.waveNumber / 2) *
 				WavesManager.waveMultiplier) |
 			0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
-		for (let a = 0; a < this.Enemys.length; a++) {
-			this.Enemys[a].fate(this);
+		for (let a = 0; a < this.enemys.length; a++) {
+			this.enemys[a].fate(this);
 		}
 	}
 
@@ -102,14 +100,14 @@ export default class WavesManager {
             entry = iterator.next();
             if(entry.value!=null){
                 const player = entry.value[1];
-				for (let a = 0; a < this.Enemys.length; a++) {
-					this.Enemys[a].EnemyShotsCollideWithPlayer(player);
-					if (!this.Enemys[a].isDead && (player.alive && !player.invincible)) {
-						if (this.Enemys[a].isCollidingWith(player)) {
+				for (let a = 0; a < this.enemys.length; a++) {
+					this.enemys[a].EnemyShotsCollideWithPlayer(player);
+					if (!this.enemys[a].isDead && (player.alive && !player.invincible)) {
+						if (this.enemys[a].isCollidingWith(player)) {
 							player.die();
-							this.Enemys[a].fate(this);
+							this.enemys[a].fate(this);
 						}
-						player.playerShotsCollideWithEnemy(this.Enemys[a]);
+						player.playerShotsCollideWithEnemy(this.enemys[a]);
 					}
 				}
             }
@@ -120,11 +118,11 @@ export default class WavesManager {
 	//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
 	updateAllEnemy(entitySpeedMultiplier){
 		let allDead = true;
-		for (let a = 0; a < this.Enemys.length; a++) {
-			this.Enemys[a].updateShots(entitySpeedMultiplier);
-			if (!this.Enemys[a].isDead) {
+		for (let a = 0; a < this.enemys.length; a++) {
+			this.enemys[a].updateShots(entitySpeedMultiplier);
+			if (!this.enemys[a].isDead) {
 				allDead = false;
-				this.Enemys[a].update(entitySpeedMultiplier);
+				this.enemys[a].update(this,entitySpeedMultiplier);
 			}
 		}
 		return allDead;
