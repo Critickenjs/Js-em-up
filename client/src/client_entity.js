@@ -21,7 +21,7 @@ export default class Client_Entity {
 			context.beginPath();
 			context.lineWidth = Client_Entity.lineThickness;
 			context.strokeStyle = 'red';
-			context.rect(this.posX-Client_Entity.lineThickness, this.posY-Client_Entity.lineThickness, this.width+Client_Entity.lineThickness, this.height+Client_Entity.lineThickness);
+			context.rect(this.posX, this.posY, this.width, this.height);
 			context.stroke();
 		}
 	}
