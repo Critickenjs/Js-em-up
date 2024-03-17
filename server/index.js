@@ -35,7 +35,7 @@ io.on('connection',socket => {
 
 	socket.emit('canvas',[Entity.canvasWidth,Entity.canvasHeight]);
 	socket.on('keys',(keysPressed) => {
-
+		//On met à jour le joueur avec les nouvelles keys.
 		player.update(keysPressed, game.gameData.entitySpeedMultiplier);
 	})
 	socket.on('disconnect', () => {

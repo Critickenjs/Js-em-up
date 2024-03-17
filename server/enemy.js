@@ -3,7 +3,7 @@ import Shot from './shot.js';
 import { getRandomInt, getRandomIntWithMin } from './utils.js';
 import WavesManager from './wavesManager.js';
 
-export default class Ennemy extends Entity {
+export default class Enemy extends Entity {
 	//Les variables de gameplay
 	static width = 40;
 	static height = 40;
@@ -14,7 +14,7 @@ export default class Ennemy extends Entity {
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 
 	constructor(posX, posY, difficulty) {
-		super(posX, posY, Ennemy.width, Ennemy.height);
+		super(posX, posY, Enemy.width, Enemy.height);
 		this.index = -1;
 		this.isDead = false;
 		this.type = 'red';
@@ -74,8 +74,8 @@ export default class Ennemy extends Entity {
 			return true;
 		} else if (this.type == 'darkred') {
 			this.image.src = './public/res/images/asteroid' + (getRandomInt(4) + 1) + '.png';
-			this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
-			this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
+			this.height = (Enemy.height * (this.lifes / 1.3)) | 0;
+			this.width = (Enemy.width * (this.lifes / 1.3)) | 0;
 			this.posX += this.width / 3;
 			this.posY += this.height / 3;
 		}
@@ -86,8 +86,8 @@ export default class Ennemy extends Entity {
 	// ou respawn (si la manche en cours n'est pas finie et qu'il reste des ennemies à faire apparaître).
 	fate(waveManager) {
 		if (
-			waveManager.waveNumberOfEnnemysSpawned <
-			waveManager.waveMaxNumberOfEnnemys
+			waveManager.waveNumberOfEnemysSpawned <
+			waveManager.waveMaxNumberOfEnemys
 		) {
 			this.respawn(waveManager);
 		} else {
@@ -96,13 +96,13 @@ export default class Ennemy extends Entity {
 	}
 
 	respawn(wavesManager) {
-		wavesManager.waveNumberOfEnnemysSpawned++;
+		wavesManager.waveNumberOfEnemysSpawned++;
 		this.reset();
 	}
 
 	reset(){
 		this.isDead = false;
-		this.type = Ennemy.types[getRandomInt(Ennemy.types.length)];
+		this.type = Enemy.types[getRandomInt(Enemy.types.length)];
 		this.applyType();
 		this.posX =
 			Entity.canvasWidth   +
@@ -111,12 +111,12 @@ export default class Ennemy extends Entity {
 		if (this.type == 'darkred') {
 			this.posY =
 				getRandomInt(
-					Entity.canvasHeight - Ennemy.height * this.lifes - Ennemy.spawnOffset
-				) + Ennemy.spawnOffset;
+					Entity.canvasHeight - Enemy.height * this.lifes - Enemy.spawnOffset
+				) + Enemy.spawnOffset;
 		} else {
 			this.posY =
-				getRandomInt(Entity.canvasHeight - Ennemy.height - Ennemy.spawnOffset) +
-				Ennemy.spawnOffset;
+				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) +
+				Enemy.spawnOffset;
 		}
 	}
 
@@ -126,8 +126,8 @@ export default class Ennemy extends Entity {
 	// Les orange se déplacent aussi e ndiagonale mais plus lentement, par contre ils tirent des projectiles mortel pour le joueur.
 	// Les darkred vont lentement tout droits, ils sont plus gros que les red mais sont plus résistant.
 	applyType() {
-		this.height = Ennemy.height;
-		this.width = Ennemy.width;
+		this.height = Enemy.height;
+		this.width = Enemy.width;
 		this.lifes = 1;
 		switch (this.type) {
 			case 'red':
@@ -141,16 +141,16 @@ export default class Ennemy extends Entity {
 				this.value = 7;
 				break;
 			case 'orange':
-				this.height = Ennemy.height * 1.5;
-				this.width = Ennemy.width * 1.5;
+				this.height = Enemy.height * 1.5;
+				this.width = Enemy.width * 1.5;
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = getRandomIntWithMin(-1, 1);
 				this.value = 10;
 				break;
 			case 'darkred':
 				this.lifes = 3;
-				this.height = (Ennemy.height * (this.lifes / 1.3)) | 0;
-				this.width = (Ennemy.width * (this.lifes / 1.3)) | 0;
+				this.height = (Enemy.height * (this.lifes / 1.3)) | 0;
+				this.width = (Enemy.width * (this.lifes / 1.3)) | 0;
 				this.speedX = -1;
 				this.speedY = 0;
 				this.value = 15;
@@ -164,13 +164,13 @@ export default class Ennemy extends Entity {
 				this.posX,
 				this.posY + this.height / 3,
 				false,
-				-Ennemy.bulletSpeed
+				-Enemy.bulletSpeed
 			)
 		);
 	}
 
 	//Collisions du joueur contre les tirs ennemis
-	ennemyShotsCollideWithPlayer(player) {
+	EnemyShotsCollideWithPlayer(player) {
 		if (!player.invincible) {
 			for (let s = 0; s < this.shots.length; s++) {
 				if (this.shots[s].active) {

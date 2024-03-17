@@ -4,9 +4,6 @@ export default class Client_Entity {
 	//Canvas
 	static canvasWidth = 800;
 	static canvasHeight = 800;
-
-	//Particules
-	static speedMultiplier = 1;
 	
 	//Showing collisions
 	static showCollisions = false;

@@ -7,6 +7,7 @@ import preloadAssets from './preLoadAssets.js';
 import { Particules } from './Particules.js';
 import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
+import Client_Game from './client_game.js';
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -80,6 +81,8 @@ let ids = [];
 console.log(Client_Entity.canvasWidth, Client_Entity.canvasHeight);
 */
 
+const ennemys = [];
+
 const keys = new KeysListener(window);
 keys.init();
 socket.on('playerKeys', () => {
@@ -105,22 +108,24 @@ socket.on('update', updatedPlayers => {
 	removeDeconnectedPlayers();
 });*/
 
-socket.on('game', game => {
+socket.on('game', gameData => {
 	//Update players
-	for (let i = 0; i < game.players.length; i++) {
+	for (let i = 0; i < gameData .players.length; i++) {
 		players.set(
-			game.players[i].id,
-			new Client_Player(game.players[i].posX, game.players[i].posY)
+			gameData .players[i].id,
+			new Client_Player(gameData .players[i].posX, gameData .players[i].posY)
 		);
-		ids.push(game.players[i].id);
+		ids.push(gameData .players[i].id);
 	}
 	removeDeconnectedPlayers();
 	
 	//Update Shots
 	Client_Shot.shots=[];
-	for (let i = 0; i < game.shots.length; i++) {
-		Client_Shot.shots.push(new Client_Shot(game.shots[i].posX,game.shots[i].posY,game.shots[i].isFromAPlayer,game.shots[i].perforation));
+	for (let i = 0; i < gameData .shots.length; i++) {
+		Client_Shot.shots.push(new Client_Shot(gameData.shots[i].posX,gameData.shots[i].posY,gameData.shots[i].isFromAPlayer,gameData.shots[i].perforation));
 	}
+
+	//Update enemys
 });
 
 function removeDeconnectedPlayers() {

@@ -79,16 +79,15 @@ export default class Game{
 
     
     update() {
-        this.io.emit('playerKeys');
-        this.updatePlayersAndPlayerShots();
+        this.resetData();
+        this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
+        this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
         this.io.emit('game',this.gameData);
-
         //WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
         this.allDead = this.wavesManager.wavesUpdates(this.players,this.gameData.entitySpeedMultiplier); 
-
         if (this.allDead) {
             //Si la vague est finie, on passe à la prochaine.
-            //wavesManager.nextWave();
+            this.wavesManager.nextWave();
             /*if (WavesManager.waveNumber % (WavesManager.difficultyMax + 1 - WavesManager.difficulty) == 0) {
                 Power.powers.push(
                     new Power(
@@ -97,32 +96,47 @@ export default class Game{
                     )
                 );
             }*/
+            this.refreshWaves();
+        }else{
+            this.refreshEnnemiesAndEnemyShots();
         }
     }
 
-    updatePlayersAndPlayerShots(){
-        this.gameData.players=[];
-        this.gameData.shots=[];
+    resetData(){
+        this.gameData.players = [];  //{"id":'',"posX":x,"posY:y","score":0}
+        this.gameData.Enemys = [];  //{"posX":x,"posY:y","type":'red',"lifes":1}
+        this.gameData.powers = [];  //{"posX":x,"posY:y","type":'life'}   
+        this.gameData.shots = [];  //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false} 
+    }
+
+    refreshPlayersAndPlayerShots(){
         const iterator = this.players.entries();
-    
         let entry;
         for(let i=0; i<this.players.size; i++){
             entry = iterator.next();
             if(entry.value!=null){
                 const player = entry.value[1];
-                this.gameData.players.push({"id":entry.value[0],"posX":player.posX,"posY":player.posY,"score":player.score});
+                if(player.alive) this.gameData.players.push({"id":entry.value[0],"posX":player.posX,"posY":player.posY,"score":player.score});
                 for(let i=0; i<player.shots.length;i++){
-                    this.gameData.shots.push({"posX":player.shots[i].posX,"posY":player.shots[i].posY,"isFromAPlayer":true,"perforation":player.shots[i].perforation});
+                    if(player.shots[i].active) this.gameData.shots.push({"posX":player.shots[i].posX,"posY":player.shots[i].posY,"isFromAPlayer":true,"perforation":player.shots[i].perforation});
                 }
             }
         }
     }
 
-    updateWaves(number){
-        this.wavesNumber=number;
+    refreshWaves(){
+        this.gameData.wavesNumber=this.wavesManager.waveNumber;
     }
 
-    updateEnnemies(){
+    refreshEnnemiesAndEnemyShots(){
+        let Enemys = this.wavesManager.Enemys;
+        let refreshed = this.gameData.Enemys;
+        for(let i=0; i<Enemys.length;i++){
+            if(Enemys[i].alive) refreshed.push({"posX":Enemys[i].posX,"posY":Enemys[i].posY,"type":Enemys[i].type,"lifes":Enemys[i].lifes});
+            for(let s=0; s<Enemys[i].shots.length;s++){
+                if(Enemys[i].shots[s].active) this.gameData.shots.push({"posX":Enemys[i].shots[s].posX,"posY":Enemys[i].shots[s].posY,"isFromAPlayer":false,"perforation":Enemys[i].shots[s].perforation});
+            }
+        }
         
     }
 }

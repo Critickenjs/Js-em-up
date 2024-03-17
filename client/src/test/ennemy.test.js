@@ -1,18 +1,18 @@
-import { Ennemy } from '../ennemy.js';
+import { Enemy } from '../Enemy.js';
 import { WavesManager } from '../wavesManager.js';
 import assert from 'node:assert/strict';
 import { describe, it, beforeEach } from 'node:test';
 
-describe('Ennemy', () => {
-	let ennemy;
+describe('Enemy', () => {
+	let Enemy;
 
 	beforeEach(() => {
-		ennemy = new Ennemy();
+		Enemy = new Enemy();
 
 		it('should respawn with correct properties', () => {
 			// Mocking getRandomInt function
-			const originalGetRandomInt = Ennemy.getRandomInt;
-			Ennemy.getRandomInt = jest.fn().mockReturnValue(0);
+			const originalGetRandomInt = Enemy.getRandomInt;
+			Enemy.getRandomInt = jest.fn().mockReturnValue(0);
 
 			// Mocking canvas properties
 			canvas.width = 100;
@@ -22,68 +22,68 @@ describe('Ennemy', () => {
 			WavesManager.maxRandomSpawnDistance = 10;
 			WavesManager.spawnDistance = 20;
 
-			ennemy.respawn();
-			console.log(ennemy);
+			Enemy.respawn();
+			console.log(Enemy);
 
-			assert.strictEqual(ennemy.isDead, false);
-			assert.ok(ennemy.type);
-			assert.strictEqual(ennemy.posX, 120);
-			assert.strictEqual(ennemy.posY, 20);
+			assert.strictEqual(Enemy.isDead, false);
+			assert.ok(Enemy.type);
+			assert.strictEqual(Enemy.posX, 120);
+			assert.strictEqual(Enemy.posY, 20);
 
 			// Restoring mocked functions and properties
-			Ennemy.getRandomInt = originalGetRandomInt;
+			Enemy.getRandomInt = originalGetRandomInt;
 		});
 
 		it('should respawn with correct posY when type is darkred', () => {
 			// Mocking getRandomInt function
-			const originalGetRandomInt = Ennemy.getRandomInt;
-			Ennemy.getRandomInt = jest.fn().mockReturnValue(0);
+			const originalGetRandomInt = Enemy.getRandomInt;
+			Enemy.getRandomInt = jest.fn().mockReturnValue(0);
 
 			// Mocking canvas properties
 			canvas.height = 200;
 
-			// Mocking Ennemy properties
-			Ennemy.height = 10;
-			Ennemy.lifes = 2;
-			Ennemy.spawnOffset = 5;
+			// Mocking Enemy properties
+			Enemy.height = 10;
+			Enemy.lifes = 2;
+			Enemy.spawnOffset = 5;
 
-			ennemy.type = 'darkred';
-			ennemy.respawn();
+			Enemy.type = 'darkred';
+			Enemy.respawn();
 
-			assert.strictEqual(ennemy.posY, 5);
+			assert.strictEqual(Enemy.posY, 5);
 
 			// Restoring mocked functions and properties
-			Ennemy.getRandomInt = originalGetRandomInt;
+			Enemy.getRandomInt = originalGetRandomInt;
 		});
 
 		it('should respawn with correct posY when type is not darkred', () => {
 			// Mocking getRandomInt function
-			const originalGetRandomInt = Ennemy.getRandomInt;
-			Ennemy.getRandomInt = jest.fn().mockReturnValue(0);
+			const originalGetRandomInt = Enemy.getRandomInt;
+			Enemy.getRandomInt = jest.fn().mockReturnValue(0);
 
 			// Mocking canvas properties
 			canvas.height = 200;
 
-			// Mocking Ennemy properties
-			Ennemy.height = 10;
-			Ennemy.spawnOffset = 5;
+			// Mocking Enemy properties
+			Enemy.height = 10;
+			Enemy.spawnOffset = 5;
 
-			ennemy.type = 'other';
-			ennemy.respawn();
+			Enemy.type = 'other';
+			Enemy.respawn();
 
-			assert.strictEqual(ennemy.posY, 5);
+			assert.strictEqual(Enemy.posY, 5);
 
 			// Restoring mocked functions and properties
-			Ennemy.getRandomInt = originalGetRandomInt;
+			Enemy.getRandomInt = originalGetRandomInt;
 		});
 
-		it('should increment waveNumberOfEnnemysSpawned', () => {
+		it('should increment waveNumberOfEnemysSpawned', () => {
 			// Mocking WavesManager properties
-			WavesManager.waveNumberOfEnnemysSpawned = 0;
+			WavesManager.waveNumberOfEnemysSpawned = 0;
 
-			ennemy.respawn();
+			Enemy.respawn();
 
-			assert.strictEqual(WavesManager.waveNumberOfEnnemysSpawned, 1);
+			assert.strictEqual(WavesManager.waveNumberOfEnemysSpawned, 1);
 		});
 	});
 });

@@ -6,6 +6,7 @@ export class Particules extends Client_Entity {
 	static defaultSpeed = 1;
 	static bufferParticules = 30;
 	static particules = [];
+	static entitySpeedMultiplier = 1;
 	constructor(posX, posY) {
 		super(posX, posY, Particules.width, Particules.height);
 		this.speedX = -Particules.defaultSpeed;
@@ -22,7 +23,7 @@ export class Particules extends Client_Entity {
 	}
 
 	render(context) {
-		//super.render(context); //Pas nécessaire.
+		super.render(context); //Pas nécessaire.
 		context.beginPath();
 		context.fillStyle = 'yellow';
 		context.fillRect(this.posX, this.posY, this.width, this.height);
@@ -41,9 +42,8 @@ export class Particules extends Client_Entity {
 	}
 
 	update() {
-		//super.update(); //Pas nécessaire.
-		this.posX += Math.round(this.speedX * (Client_Entity.speedMultiplier*3)*100)/100;
-		this.posY += Math.round(this.speedY * (Client_Entity.speedMultiplier*3)*100)/100;
+		this.posX += Math.round(this.speedX * (Particules.entitySpeedMultiplier*3)*100)/100;
+		this.posY += Math.round(this.speedY * (Particules.entitySpeedMultiplier*3)*100)/100;
 		if (this.posX < 0) {
 			this.respawn();
 		}
