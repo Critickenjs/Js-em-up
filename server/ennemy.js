@@ -13,7 +13,7 @@ export default class Ennemy extends Entity {
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
 
-	constructor(posX, posY) {
+	constructor(posX, posY, difficulty) {
 		super(posX, posY, Ennemy.width, Ennemy.height);
 		this.index = -1;
 		this.isDead = false;
@@ -22,15 +22,15 @@ export default class Ennemy extends Entity {
 		this.value = 10;
 		this.applyType();
 		this.shots = [];
-		this.shootTimer = (100 + 60 / WavesManager.difficulty) | 0;
+		this.shootTimer = (100 + 60 / difficulty) | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
 	}
 
 
 	//Mettre à jour les tirs causés par l'ennemi.
-	updateShots() {
+	updateShots(entitySpeedMultiplier) {
 		for (let i = 0; i < this.shots.length; i++) {
-			this.shots[i].update();
+			this.shots[i].update(entitySpeedMultiplier);
 			if (this.shots[i].posX < 0) {
 				this.shots.shift();
 			}
@@ -38,11 +38,11 @@ export default class Ennemy extends Entity {
 	}
 
 	//metre à jour l'ennemi
-	update() {
+	update(waveManager,entitySpeedMultiplier) {
 		this.posX += this.speedX;
-		super.update();
+		super.update(entitySpeedMultiplier);
 		if (this.posX < 0 - this.width) {
-			this.fate();
+			this.fate(waveManager);
 			//Pour permettre la perte de points en cas d'ennemis qui aurait réussi à passer les joueurs, c'est ici
 			//Mais pour cela il faudrait créer les joueurs en static dans joueur plutot qu'en dur dans main.
 		}
@@ -66,11 +66,11 @@ export default class Ennemy extends Entity {
 
 	// La fonction se lance en cas de contact avec une balle d'un joueur.
 	// Donne la possibilité aux ennemis d'avoirs plusieurs points de vie et de ne pas mourir instantanément.
-	getHurt() {
+	getHurt(waveManager) {
 		//Retourne true si l'ennemi meurt et false sinon.'
 		this.lifes--;
 		if (this.lifes <= 0) {
-			this.fate();
+			this.fate(waveManager);
 			return true;
 		} else if (this.type == 'darkred') {
 			this.image.src = './public/res/images/asteroid' + (getRandomInt(4) + 1) + '.png';
@@ -84,18 +84,23 @@ export default class Ennemy extends Entity {
 
 	// Détermine si l'ennemi meurt (se met en attentte de la prochaine manche)
 	// ou respawn (si la manche en cours n'est pas finie et qu'il reste des ennemies à faire apparaître).
-	fate() {
+	fate(waveManager) {
 		if (
-			WavesManager.waveNumberOfEnnemysSpawned <
-			WavesManager.waveMaxNumberOfEnnemys
+			waveManager.waveNumberOfEnnemysSpawned <
+			waveManager.waveMaxNumberOfEnnemys
 		) {
-			this.respawn();
+			this.respawn(waveManager);
 		} else {
 			this.die();
 		}
 	}
 
-	respawn() {
+	respawn(wavesManager) {
+		wavesManager.waveNumberOfEnnemysSpawned++;
+		this.reset();
+	}
+
+	reset(){
 		this.isDead = false;
 		this.type = Ennemy.types[getRandomInt(Ennemy.types.length)];
 		this.applyType();
@@ -113,7 +118,6 @@ export default class Ennemy extends Entity {
 				getRandomInt(Entity.canvasHeight - Ennemy.height - Ennemy.spawnOffset) +
 				Ennemy.spawnOffset;
 		}
-		WavesManager.waveNumberOfEnnemysSpawned++;
 	}
 
 	// Applique les particularités et différences entre chaque types d'ennemis.

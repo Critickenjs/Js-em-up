@@ -14,7 +14,7 @@ export default class Player extends Entity {
 
 	//Lifes
 	static defaultNumberOfLife = 3;
-	static teamLifes=Player.defaultNumberOfLife;
+	//static teamLifes=Player.defaultNumberOfLife;
 	 
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;
@@ -25,7 +25,7 @@ export default class Player extends Entity {
 	
 
 	//Players
-	static players = new Map();
+	//static players = new Map();
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -55,15 +55,15 @@ export default class Player extends Entity {
 
 	}
 
-	update(keysPressed) {
-		this.updateShots();
+	update(keysPressed, entitySpeedMultiplier) {
+		this.updateShots(entitySpeedMultiplier);
 		this.speedX = 0;
 		this.speedY = 0;
 		if (this.alive) {
 			//Movements
 			this.deceleration();
 			this.acceleration(keysPressed);
-			super.update();
+			super.update(entitySpeedMultiplier);
 			
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			this.timerBeforeShots--;
@@ -80,9 +80,9 @@ export default class Player extends Entity {
 		this.checkBorderCollision();
 	}
 
-	updateShots() {
+	updateShots(entitySpeedMultiplier) {
 		for (let i = 0; i < this.shots.length; i++) {
-			this.shots[i].update();
+			this.shots[i].update(entitySpeedMultiplier);
 			if (this.shots[i].posX > Entity.canvasWidth) {
 				this.shots.shift();
 			}
@@ -119,8 +119,8 @@ export default class Player extends Entity {
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 	}
 
-	respawn() {
-		Player.teamLifes--;
+	respawn(game) {
+		game.teamLifes--;
 		this.alive = true;
 		this.becomeInvincible(
 			(Player.maxTimeForInvincibility) | 0 // / WavesManager.difficulty
@@ -242,28 +242,5 @@ export default class Player extends Entity {
 			this.speedX = Player.defaultSpeed;
 			this.accelerationX = this.accelerateRight(this.accelerationX);
 		}
-	}
-
-	static resetTeamLives() {
-		Player.teamLifes = Player.defaultNumberOfLife;
-	}
-
-	static addToTeamLives(n) {
-		Player.teamLifes += n;
-	}
-
-	static atLeast1PlayerAlive(){
-		const iterator = Player.players.entries();
-    
-        let entry;
-        for(let i=0; i<map.size; i++){
-            entry = iterator.next();
-            if(entry.value!=null){
-                if(entry.value[1].alive){
-					return true;
-				}
-            }
-        }
-		return false;
 	}
 }

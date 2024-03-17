@@ -12,7 +12,7 @@ export default class Shot extends Entity {
 		this.isFromPlayer = isFromPlayer;
 	}
 
-	update() {
-		super.update();
+	update(entitySpeedMultiplier) {
+		super.update(entitySpeedMultiplier);
 	}
 }

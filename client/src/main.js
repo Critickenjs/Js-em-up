@@ -118,7 +118,6 @@ socket.on('game', game => {
 	
 	//Update Shots
 	Client_Shot.shots=[];
-	console.log(game.shots.length);
 	for (let i = 0; i < game.shots.length; i++) {
 		Client_Shot.shots.push(new Client_Shot(game.shots[i].posX,game.shots[i].posY,game.shots[i].isFromAPlayer,game.shots[i].perforation));
 	}
