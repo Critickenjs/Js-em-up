@@ -186,10 +186,12 @@ function render() {
 	//Render Particules Behind
 	Particules.renderAll(context);
 
+	//Afficher les ennemis
 	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
 		Client_Enemy.enemys[i].render(context);
 	}
 
+	//Afficher tous les tirs
 	for (let i = 0; i < Client_Shot.shots.length; i++) {
 		Client_Shot.shots[i].render(context);
 	}
