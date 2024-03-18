@@ -8,6 +8,8 @@ import { Particules } from './Particules.js';
 import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Enemy from './client_enemy.js';
+import HomePage from './homePageView.js';
+import GameView from './gameView.js';
 import Client_Power from './client_power.js';
 
 
@@ -55,9 +57,9 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
-
-
+;
 export default canvas;
+
 
 //met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
