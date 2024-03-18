@@ -3,37 +3,18 @@ import { getRandomInt } from './utils.js';
 import Player from './player.js';
 import WavesManager from './wavesManager.js';
 export default class Power extends Entity {
-	static radius = 40;
+	static width=40;
+    static height=40;
 	static speed = 6;
-	static types = ['life']; //'rapidFire'
-	static powers = [];
-	constructor(
-		posX,
-		posY,
+	static types = ['life'];
+	constructor( posX, posY, 
 		type = Power.types[getRandomInt(Power.types.length)]
 	) {
-		super(posX, posY, Power.radius, Power.radius);
+		super(posX, posY, Power.width, Power.height);
 		this.speedX = -Power.speed;
 		this.speedY = 0;
 		this.active = true;
 		this.type = type;
-		switch (this.type) {
-			case 'invincible':
-				this.image.src = './public/res/images/bonusShield.png';
-				break;
-			case 'life':
-				this.image.src = './public/res/images/bonusLife.png';
-				break;
-			case 'ScoreMultiplierBonus':
-				this.image.src = './public/res/images/bonusArrows.png';
-				break;
-			case 'ice':
-				this.image.src = './public/res/images/ice.png';
-				break;
-			case 'perforation':
-				this.image.src = './public/res/images/bonusArrows.png';
-				break;
-		}
 	}
 
 	update() {

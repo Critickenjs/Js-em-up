@@ -2,14 +2,19 @@ import GameData from "./gameData.js";
 import Player from "./player.js";
 import Entity from "./entity.js";
 import WavesManager from "./wavesManager.js";
+import Power from './power.js';
 
 export default class Game{
+
+    static difficultyMax = 4;
+
 	constructor(io,difficulty) {
         this.io=io;
         this.difficulty=difficulty;
         this.wavesManager = new WavesManager();
         this.gameData = new GameData();
         this.players = new Map();
+        this.powers = [];
         this.teamLifes = Player.defaultNumberOfLife;
         this.isInGame = true;
         this.time = 0;
@@ -54,13 +59,13 @@ export default class Game{
                 entry = iterator.next();
                 if(entry.value!=null){
                     if(entry.value[1].alive){
-                        entry.value[1].score+=1; // WavesManager.difficulty
+                        entry.value[1].score+=this.difficulty;
                     }
                 }
             }
             this.time++;
             //Vitesse du jeu augmente au fur et à mesure
-            this.addToSpeed(0.001); // WavesManager.difficulty
+            this.addToSpeed(0.001*this.difficulty);
             this.io.emit('time',time);
         }
     }
@@ -91,14 +96,14 @@ export default class Game{
             this.wavesManager.nextWave();
             this.addToSpeed(0.01 * this.difficulty);
 		
-            /*if (WavesManager.waveNumber % (WavesManager.difficultyMax + 1 - WavesManager.difficulty) == 0) {
-                Power.powers.push(
+            if (this.wavesManager.waveNumber % (Game.difficultyMax + 1 - this.difficulty) == 0) {
+                this.powers.push(
                     new Power(
-                        canvas.width,
-                        getRandomInt(canvas.height - Power.radius * 2) + Power.radius
+                        Entity.canvasWidth,
+                        getRandomInt(Entity.canvasHeight - Power.radius * 2) + Power.radius
                     )
                 );
-            }*/
+            }
             this.refreshWaves();
         }else{
             this.refreshEnnemiesAndEnemyShots();
@@ -152,7 +157,7 @@ export default class Game{
             if(entry.value!=null){
                 if(!entry.value[1].alive){
                     if (entry.value[1].timerBeforeRespawn <= 0) {
-                        entry.value[1].respawn();
+                        entry.value[1].respawn(this.difficulty);
                         this.teamLifes--;
                     }else{
                         entry.value[1].timerBeforeRespawn--;

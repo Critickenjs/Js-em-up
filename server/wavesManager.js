@@ -5,15 +5,11 @@ import { getRandomInt } from './utils.js';
 export default class WavesManager {
 	//Difficulty
 	static difficultyMax = 4;
-	//static difficulty = 0;
 	
 	// Nombre max d'ennemis pouvant apparaitre à l'écran. A ajuster en fonction des lags.
 	static EnemyBuffer = 5;
 
 	//Waves
-	//static waveMaxNumberOfEnemys = 5;
-	//static waveNumberOfEnemysSpawned = 0;
-	//static waveNumber = 1;
 	static waveMultiplier = 1;
 	static maxRandomSpawnDistance = 400;
 	static spawnDistance = 100;
