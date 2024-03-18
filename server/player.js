@@ -120,11 +120,15 @@ export default class Player extends Entity {
 		this.alive = false;
 	}
 
-	respawn() {
+	respawn(difficulty) {
 		this.alive = true;
+<<<<<<< HEAD
+		this.becomeInvincible((Player.maxTimeForInvincibility+300/difficulty) | 0);
+=======
 		this.becomeInvincible(
 			Player.maxTimeForInvincibility | 0 // / WavesManager.difficulty
 		);
+>>>>>>> 46adb9ed70f8507f948dfd97117580ac0a534ef2
 		this.posY = Entity.canvasHeight / 2;
 		this.posX = 100;
 		this.speedX = 0;

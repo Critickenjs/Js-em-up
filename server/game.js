@@ -1,26 +1,32 @@
-import GameData from './gameData.js';
-import Player from './player.js';
-import Entity from './entity.js';
-import WavesManager from './wavesManager.js';
+import GameData from "./gameData.js";
+import Player from "./player.js";
+import Entity from "./entity.js";
+import WavesManager from "./wavesManager.js";
+import Power from './power.js';
+import {getRandomInt} from './utils.js';
 
-export default class Game {
-	constructor(io, difficulty) {
-		this.io = io;
-		this.difficulty = difficulty;
-		this.wavesManager = new WavesManager();
-		this.gameData = new GameData();
-		this.players = new Map();
-		this.teamLifes = Player.defaultNumberOfLife;
-		this.isInGame = true;
-		this.time = 0;
-		this.allDead = false;
+export default class Game{
+
+    static difficultyMax = 4;
+
+	constructor(io,difficulty) {
+        this.io=io;
+        this.difficulty=difficulty;
+        this.wavesManager = new WavesManager();
+        this.gameData = new GameData();
+        this.players = new Map();
+        this.powers = [];
+        this.teamLifes = Player.defaultNumberOfLife;
+        this.isInGame = true;
+        this.time = 0;
+        this.allDead=false;
 	}
 
-	init() {
-		setInterval(this.update.bind(this), 1000 / 60);
-		setInterval(this.updateHUD, 1000);
-		this.wavesManager.firstWave(Entity.canvasWidth, Entity.canvasHeight);
-	}
+    init(){    
+        setInterval(this.update.bind(this), 1000 / 60);
+        setInterval(this.updateHUD, 1000);
+        this.wavesManager.firstWave(this.difficulty);
+    }
 
 	resetTeamLives() {
 		this.teamLifes = Player.defaultNumberOfLife;
@@ -44,23 +50,32 @@ export default class Game {
 		return false;
 	}
 
-	//Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
-	updateHUD() {
-		if (this.isInGame) {
-			const iterator = this.players.entries();
-			let entry;
-			for (let i = 0; i < this.players.size; i++) {
-				entry = iterator.next();
-				if (entry.value != null) {
-					if (entry.value[1].alive) {
-						entry.value[1].score += 1; // WavesManager.difficulty
-					}
-				}
-			}
-			this.time++;
-			//Vitesse du jeu augmente au fur et à mesure
-			this.addToSpeed(0.001); // WavesManager.difficulty
-			this.io.emit('time', time);
+    
+    //Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
+    updateHUD() {
+        if (this.isInGame) {
+            const iterator = this.players.entries();
+            let entry;
+            for(let i=0; i<this.players.size; i++){
+                entry = iterator.next();
+                if(entry.value!=null){
+                    if(entry.value[1].alive){
+                        entry.value[1].score+=this.difficulty;
+                    }
+                }
+            }
+            this.time++;
+            //Vitesse du jeu augmente au fur et à mesure
+            this.addToSpeed(0.001*this.difficulty);
+            this.io.emit('time',time);
+        }
+    }
+
+    
+	addToSpeed(modifyer){
+		this.gameData.entitySpeedMultiplier=Math.round((this.gameData.entitySpeedMultiplier+modifyer)*1000)/1000
+		if(this.gameData.entitySpeedMultiplier>Entity.speedMultiplierMAX){
+			this.gameData.entitySpeedMultiplier=Entity.speedMultiplierMAX;
 		}
 	}
 
@@ -73,40 +88,33 @@ export default class Game {
 		}
 	}
 
-	setSpeed(newSpeed) {
-		this.gameData.entitySpeedMultiplier = Math.round(newSpeed * 1000) / 1000;
-	}
-
-	update() {
-		this.resetData();
-		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
-		this.checkPlayerRespawn();
-		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
-
-		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
-		this.allDead = this.wavesManager.wavesUpdates(
-			this.players,
-			this.gameData.entitySpeedMultiplier
-		);
-		if (this.allDead) {
-			//Si la vague est finie, on passe à la prochaine.
-			this.wavesManager.nextWave();
-			this.addToSpeed(0.01 * this.difficulty);
-
-			/*if (WavesManager.waveNumber % (WavesManager.difficultyMax + 1 - WavesManager.difficulty) == 0) {
-                Power.powers.push(
+    
+    update() {
+        this.resetData();
+        this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
+        this.checkPlayerRespawn();
+        this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
+       
+        //WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
+        this.allDead = this.wavesManager.wavesUpdates(this.players,this.gameData.entitySpeedMultiplier); 
+        if (this.allDead) {
+            //Si la vague est finie, on passe à la prochaine.
+            this.wavesManager.nextWave(this.difficulty);
+            this.addToSpeed(0.01 * this.difficulty);
+		
+            if (this.wavesManager.waveNumber % (Game.difficultyMax + 1 - this.difficulty) == 0) {
+                this.powers.push(
                     new Power(
-                        canvas.width,
-                        getRandomInt(canvas.height - Power.radius * 2) + Power.radius
+                        Entity.canvasWidth,  getRandomInt(Entity.canvasHeight - Power.radius * 2) + Power.radius
                     )
                 );
-            }*/
-			this.refreshWaves();
-		} else {
-			this.refreshEnnemiesAndEnemyShots();
-		}
-		this.io.emit('game', this.gameData);
-	}
+            }
+            this.refreshWaves();
+        }else{
+            this.refreshEnnemiesAndEnemyShots();
+        }
+        this.io.emit('game',this.gameData);
+    }
 
 	resetData() {
 		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0}
@@ -178,7 +186,7 @@ export default class Game {
             if(entry.value!=null){
                 if(!entry.value[1].alive){
                     if (entry.value[1].timerBeforeRespawn <= 0) {
-                        entry.value[1].respawn();
+                        entry.value[1].respawn(this.difficulty);
                         this.teamLifes--;
                     }else{
                         entry.value[1].timerBeforeRespawn--;
