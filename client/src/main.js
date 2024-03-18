@@ -11,9 +11,6 @@ import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
 import GameView from './gameView.js';
-import HomePage from './homePageView.js';
-import GameOver from './gameOverView.js';
-import GameView from './gameView.js';
 import Client_Power from './client_power.js';
 
 

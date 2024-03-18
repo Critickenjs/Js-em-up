@@ -1,4 +1,4 @@
-import View from './homePageView.js';
+import View from './view.js';
 export default class HomePage extends View {
 	username;
 	constructor(element) {
