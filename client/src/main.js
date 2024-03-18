@@ -9,6 +9,8 @@ import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
+import HomePage from './homePageView.js';
+import GameView from './gameView.js';
 
 
 
@@ -56,9 +58,11 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
-
-
+let isInGame = false;
+const homePage = new HomePage(document.querySelector('.HomePage'));
+const gameView = new GameView(document.querySelector('.gameView'));
 export default canvas;
+gameView.hide();
 
 //met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
