@@ -11,7 +11,10 @@ import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
 import GameView from './gameView.js';
-
+import HomePage from './homePageView.js';
+import GameOver from './gameOverView.js';
+import GameView from './gameView.js';
+import Client_Power from './client_power.js';
 
 
 const assets = [
@@ -87,9 +90,6 @@ let time = 0;
 
 const players = new Map();
 let ids = [];
-/*console.log(canvas.width, canvas.height);
-console.log(Client_Entity.canvasWidth, Client_Entity.canvasHeight);
-*/
 
 const keys = new KeysListener(window);
 keys.init();
@@ -121,25 +121,6 @@ document.querySelector('#checkmouse').addEventListener('click', () => {
 	}
 });
 
-
-
-
-
-
-/*
-socket.on('update', updatedPlayers => {
-	//players.push(new Client_Entity(player.posX,player.posY))
-	//players[i]=new Entity(entity.posX,entity.posY);
-	for (let i = 0; i < updatedPlayers.length; i++) {
-		players.set(
-			updatedPlayers[i].id,
-			new Client_Player(updatedPlayers[i].posX, updatedPlayers[i].posY)
-		);
-		ids.push(updatedPlayers[i].id);
-	}
-	removeDeconnectedPlayers();
-});*/
-
 socket.on('game', gameData => {
 	//Update players
 	for (let i = 0; i < gameData.players.length; i++) {
@@ -155,6 +136,18 @@ socket.on('game', gameData => {
 		ids.push(gameData.players[i].id);
 	}
 	removeDeconnectedPlayers();
+
+	Client_Power = [];
+	for (let i = 0; i < gameData.powers.length; i++) {
+		Client_Power.powers.push(
+			new Client_Power(
+				gameData.powers[i].posX,
+				gameData.powers[i].posY,
+				gameData.powers[i].type
+			)
+		);
+	}
+
 
 	//Update Shots
 	Client_Shot.shots = [];
@@ -227,6 +220,11 @@ function render() {
 	//Afficher tous les tirs
 	for (let i = 0; i < Client_Shot.shots.length; i++) {
 		Client_Shot.shots[i].render(context);
+	}
+
+	//Afficher tous les tirs
+	for (let i = 0; i < Client_Power.powers.length; i++) {
+		Client_Power.powers[i].render(context);
 	}
 
 	//Render players

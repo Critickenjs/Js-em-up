@@ -1,6 +1,5 @@
 import Entity from './entity.js';
 import Shot from './shot.js';
-import WavesManager from './wavesManager.js';
 
 export default class Player extends Entity {
 	//Declarations
@@ -15,7 +14,7 @@ export default class Player extends Entity {
 
 	//Lifes
 	static defaultNumberOfLife = 3;
-
+	 
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;
 
@@ -23,7 +22,7 @@ export default class Player extends Entity {
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibility = 300;
 	static maxTimeBeforeRespawn = 100;
-
+	
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
 		this.width = Player.width;
@@ -63,24 +62,26 @@ export default class Player extends Entity {
 			this.deceleration();
 			this.acceleration(keysPressed);
 			super.update(entitySpeedMultiplier);
-
+			
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
-
+			
 			if (this.timerBeforeShots > 0) {
 				this.timerBeforeShots--;
 			}
 			//Shooting?
 			if (keysPressed.Space || keysPressed.MouseDown) {
-				this.shootWithRecharge(); //this.gotPerforationBonus());
+				this.shootWithRecharge();//this.gotPerforationBonus());
 			}
 
 			if (this.invincible) {
 				if (this.timerBeforeLosingInvincibility < 0) {
 					this.invincible = false;
-				} else {
+				}else{
 					this.timerBeforeLosingInvincibility--;
 				}
 			}
+
+
 		}
 		//Player utilise sa propre fonction borderCollision et pas celle de Entity à cause de ses accélérations
 		this.checkBorderCollision();
@@ -99,6 +100,7 @@ export default class Player extends Entity {
 		if (this.timerBeforeShots <= 0) {
 			this.timerBeforeShots = Player.maxTimeBeforeShooting;
 			this.shoot(perforationBonus);
+			
 		}
 	}
 
@@ -107,7 +109,7 @@ export default class Player extends Entity {
 		this.shots.push(
 			new Shot(
 				this.posX + this.width,
-				this.posY + this.height / 2 - Shot.height / 2,
+				this.posY + (this.height / 2) - (Shot.height/2),
 				true,
 				Player.bulletSpeed,
 				perforationBonus
@@ -122,9 +124,7 @@ export default class Player extends Entity {
 
 	respawn(difficulty) {
 		this.alive = true;
-		this.becomeInvincible(
-			Player.maxTimeForInvincibility | 0 // / WavesManager.difficulty
-		);
+		this.becomeInvincible((Player.maxTimeForInvincibility+300/difficulty) | 0);
 		this.posY = Entity.canvasHeight / 2;
 		this.posX = 100;
 		this.speedX = 0;
@@ -132,45 +132,45 @@ export default class Player extends Entity {
 		this.accelerationX = 0;
 		this.accelerationY = 0;
 		this.timerBeforeShots = 0;
-		//La réapparition devient de plus en plus long quand on meurt.
-		this.maxTimeBeforeRespawn =
-			(this.maxTimeBeforeRespawn * (Math.round((1 + 0.1) * 100) / 100)) | 0; //TODO 1 + WavesManager.difficulty / 10
-		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+		//La réapparition devient de plus en plus long quand on meurt. 
+		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * (Math.round((1 + difficulty/10) * 100) / 100)) | 0;
+		this.timerBeforeRespawn=this.maxTimeBeforeRespawn;
 	}
+
 
 	becomeInvincible(duration) {
 		this.invincible = true;
 		this.timerBeforeLosingInvincibility = duration;
 	}
 
-	checkBorderCollision() {
-		if (this.posX < 0) {
-			this.posX = 0;
-			this.speedX = 0;
-			this.accelerationX = 0;
-		} else if (this.posX > Entity.canvasWidth - this.width) {
-			this.posX = Entity.canvasWidth - this.width;
-			this.speedX = 0;
-			this.accelerationX = 0;
+	checkBorderCollision(){
+		if(this.posX<0){
+			this.posX=0;
+			this.speedX=0;
+			this.accelerationX=0;
+		}else if (this.posX>Entity.canvasWidth-this.width){
+			this.posX=Entity.canvasWidth-this.width;
+			this.speedX=0;
+			this.accelerationX=0;
 		}
-		if (this.posY < 0) {
-			this.posY = 0;
-			this.speedY = 0;
-			this.accelerationY = 0;
-		} else if (this.posY > Entity.canvasHeight - this.height) {
-			this.posY = Entity.canvasHeight - this.height;
-			this.speedY = 0;
-			this.accelerationY = 0;
+		if(this.posY<0){
+			this.posY=0;
+			this.speedY=0;
+			this.accelerationY=0;
+		}else if (this.posY>Entity.canvasHeight-this.height){
+			this.posY=Entity.canvasHeight-this.height;
+			this.speedY=0;
+			this.accelerationY=0;
 		}
 	}
 
 	//Collisions des tirs du joueurs avec les ennemis
-	playerShotsCollideWithEnemy(wavesManager, enemy) {
+	playerShotsCollideWithEnemy(waveManager, enemy) {
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
 				if (this.shots[s].isCollidingWith(enemy)) {
 					this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
-					if (enemy.getHurt(wavesManager)) {
+					if (enemy.getHurt(waveManager)) {
 						this.addScorePointOnEnemyKill(enemy);
 					}
 				}
@@ -181,6 +181,7 @@ export default class Player extends Entity {
 	addScorePointOnEnemyKill(enemy) {
 		this.score += enemy.value;
 	}
+
 
 	accelerateLeft(acceleration, distance = 0.1) {
 		acceleration =
@@ -231,18 +232,12 @@ export default class Player extends Entity {
 	}
 
 	decelerate(acceleration) {
-		if (acceleration < 0) {
-			acceleration =
-				Math.round(
-					(acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000
-				) / 1000;
-			if (acceleration > -0.05) acceleration = 0;
+        if (acceleration < 0) {
+			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000) / 1000;
+            if(acceleration>-0.05) acceleration=0;
 		} else if (acceleration > 0) {
-			acceleration =
-				Math.round(
-					(acceleration - 1 / (10 * Player.inertiaMultiplier)) * 1000
-				) / 1000;
-			if (acceleration < 0.05) acceleration = 0;
+			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier)) *1000) / 1000;
+            if(acceleration<0.05) acceleration=0;
 		}
 		return acceleration;
 	}
