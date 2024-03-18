@@ -2,7 +2,6 @@ import View from './gameView.js';
 
 export default class GameOver extends View {
 	constructor(element) {
-		super(element);
 		this.element = element;
 	}
 	show() {
