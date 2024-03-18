@@ -9,6 +9,10 @@ import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
+import HomePage from './homePageView.js';
+import GameOver from './gameOverView.js';
+import GameView from './gameView.js';
+
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -40,6 +44,7 @@ preloadAssets(assets, sounds, () => {
 
 let canvasServerWidth = 800;
 let canvasServerHeight = 800;
+let isingame = false;
 
 const socket = io();
 
@@ -53,6 +58,10 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
+const homePage = new HomePage(document.querySelector('.homePage'));
+const gameOver = new GameOver(document.querySelector('.gameOver'));
+const game = new GameView(document.querySelector('.game'));
+
 export default canvas;
 
 //met à jour dynamiquement la taille du canvas
@@ -92,6 +101,30 @@ socket.on('playerKeys', () => {
 socket.on('time', newTime => {
 	time = newTime;
 });
+
+document.querySelector('.HomePage').addEventListener('submit', event => {
+	event.preventDefault();
+	isInGame = true;
+	homePage.Play();
+	gameView.show();
+	WavesManager.difficulty = getDifficultyValue();
+	wavesManager.firstWave(window.innerWidth, window.innerHeight);
+	player.pseudo = homePage.username;
+	player.resetTeamLivesNumber();
+});
+
+document.querySelector('#checkmouse').addEventListener('click', () => {
+	if (keys.keysPressed.MouseMode) {
+		keys.keysPressed.MouseDown = false;
+	} else {
+		keys.keysPressed.MouseMode = true;
+	}
+});
+
+
+
+
+
 
 /*
 socket.on('update', updatedPlayers => {
@@ -217,3 +250,24 @@ setInterval(updateParticules, 10);
 function updateParticules() {
 	Particules.updateAll();
 }
+
+document.querySelector('#restartButton2').addEventListener('click', () => {
+	scoreBoard.hide();
+	restartGame();
+	gameView.show();
+});
+
+document.querySelector('#restartButton').addEventListener('click', () => {
+	restartGame();
+	gameView.show();
+});
+
+function restartGame() {
+	gameOver.restartGame();
+	player.restart();
+	gameView.show();
+	isInGame = true;
+	wavesManager.firstWave();
+	time = 0;
+}
+
