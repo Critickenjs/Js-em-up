@@ -191,7 +191,11 @@ function render() {
 		Client_Enemy.enemys[i].render(context);
 	}
 
+<<<<<<< HEAD
 	//Afficher tous les tirs
+=======
+	//Afficher les tirs
+>>>>>>> 94eeb2b2625a06b58ae247538832e69c88658d21
 	for (let i = 0; i < Client_Shot.shots.length; i++) {
 		Client_Shot.shots[i].render(context);
 	}

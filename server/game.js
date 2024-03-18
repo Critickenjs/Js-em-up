@@ -170,6 +170,7 @@ export default class Game {
 		}
 	}
 
+<<<<<<< HEAD
 	checkPlayerRespawn() {
 		const iterator = this.players.entries();
 		let entry;
@@ -187,4 +188,24 @@ export default class Game {
 			}
 		}
 	}
+=======
+    checkPlayerRespawn(){
+        const iterator = this.players.entries();
+        let entry;
+        for(let i=0; i<this.players.size; i++){
+            entry = iterator.next();
+            if(entry.value!=null){
+                if(!entry.value[1].alive){
+                    if (entry.value[1].timerBeforeRespawn <= 0) {
+                        entry.value[1].respawn();
+                        this.teamLifes--;
+                    }else{
+                        entry.value[1].timerBeforeRespawn--;
+                    }
+                }
+                
+            }
+        }
+    }
+>>>>>>> 94eeb2b2625a06b58ae247538832e69c88658d21
 }

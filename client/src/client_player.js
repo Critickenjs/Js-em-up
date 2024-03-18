@@ -17,6 +17,7 @@ export default class Client_Player extends Client_Entity {
 	render(context) {
 		super.render(context);
 		context.beginPath();
+<<<<<<< HEAD
 		context.drawImage(
 			this.image,
 			this.posX,
@@ -32,6 +33,11 @@ export default class Client_Player extends Client_Entity {
 				this.width * 1.5,
 				this.height * 1.5
 			);
+=======
+		context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
+		if(this.invincible){
+			context.drawImage(this.imageShield, this.posX-this.width/4, this.posY-this.height/4, this.width*1.5, this.height*1.5);
+>>>>>>> 94eeb2b2625a06b58ae247538832e69c88658d21
 		}
 	}
 }

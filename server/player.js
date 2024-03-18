@@ -165,12 +165,20 @@ export default class Player extends Entity {
 	}
 
 	//Collisions des tirs du joueurs avec les ennemis
+<<<<<<< HEAD
 	playerShotsCollideWithEnemy(wavesManager, enemy) {
+=======
+	playerShotsCollideWithEnemy(waveManager, enemy) {
+>>>>>>> 94eeb2b2625a06b58ae247538832e69c88658d21
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
 				if (this.shots[s].isCollidingWith(enemy)) {
 					this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
+<<<<<<< HEAD
 					if (enemy.getHurt(wavesManager)) {
+=======
+					if (enemy.getHurt(waveManager)) {
+>>>>>>> 94eeb2b2625a06b58ae247538832e69c88658d21
 						this.addScorePointOnEnemyKill(enemy);
 					}
 				}
@@ -182,6 +190,10 @@ export default class Player extends Entity {
 		this.score += enemy.value;
 	}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 94eeb2b2625a06b58ae247538832e69c88658d21
 	accelerateLeft(acceleration, distance = 0.1) {
 		acceleration =
 			acceleration -
