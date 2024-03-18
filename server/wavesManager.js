@@ -3,9 +3,6 @@ import Enemy from './enemy.js';
 import { getRandomInt } from './utils.js';
 
 export default class WavesManager {
-	//Difficulty
-	static difficultyMax = 4;
-	
 	// Nombre max d'ennemis pouvant apparaitre à l'écran. A ajuster en fonction des lags.
 	static EnemyBuffer = 5;
 
@@ -15,7 +12,6 @@ export default class WavesManager {
 	static spawnDistance = 100;
 
 	constructor() {
-		this.difficulty = 1;
 		this.waveNumber = 1;
 		this.enemys = [];
 		this.waveMaxNumberOfEnemys=5;
@@ -23,23 +19,17 @@ export default class WavesManager {
 	}
 
 	//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
-	firstWave() {
+	firstWave(difficulty) {
 		this.waveNumber = 1;
-		this.waveMaxNumberOfEnemys =
-			((WavesManager.EnemyBuffer * this.difficulty) / 2 + 1) | 0;
+		this.waveMaxNumberOfEnemys = ((WavesManager.EnemyBuffer * difficulty) / 2 + 1) | 0;
 		this.waveNumberOfEnemysSpawned = 0;
 		Entity.speedMultiplier = Entity.speedMultiplierDefault;
 		for (
-			let i = 0;
-			i < WavesManager.EnemyBuffer * this.difficulty;
-			i++
+			let i = 0; i < WavesManager.EnemyBuffer * difficulty; i++
 		) {
 			this.enemys[i] = new Enemy(
-				Entity.canvasWidth /*+ getRandomInt(WavesManager.maxRandomSpawnDistance) +
-					WavesManager.spawnDistance*/,
-				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) + Enemy.spawnOffset,
-				this.difficulty
-				);
+				Entity.canvasWidth + getRandomInt(WavesManager.maxRandomSpawnDistance) + WavesManager.spawnDistance,
+				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) + Enemy.spawnOffset, difficulty);
 			this.enemys[i].index = i;
 			this.waveNumberOfEnemysSpawned++;
 			if (
@@ -59,7 +49,7 @@ export default class WavesManager {
 	}
 
 	//Appelle la vague suivante
-	nextWave() {
+	nextWave(difficulty) {
 		this.waveNumber++;
 		this.waveNumberOfEnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
@@ -72,8 +62,8 @@ export default class WavesManager {
 		);
 		this.waveMaxNumberOfEnemys =
 			((3 +
-				this.difficulty +
-				getRandomInt(this.difficulty) +
+				difficulty +
+				getRandomInt(difficulty) +
 				this.waveNumber / 2) *
 				WavesManager.waveMultiplier) |
 			0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).

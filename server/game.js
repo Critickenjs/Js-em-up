@@ -3,6 +3,7 @@ import Player from "./player.js";
 import Entity from "./entity.js";
 import WavesManager from "./wavesManager.js";
 import Power from './power.js';
+import {getRandomInt} from './utils.js';
 
 export default class Game{
 
@@ -24,7 +25,7 @@ export default class Game{
     init(){    
         setInterval(this.update.bind(this), 1000 / 60);
         setInterval(this.updateHUD, 1000);
-        this.wavesManager.firstWave(Entity.canvasWidth, Entity.canvasHeight);
+        this.wavesManager.firstWave(this.difficulty);
     }
 
     resetTeamLives() {
@@ -93,14 +94,13 @@ export default class Game{
         this.allDead = this.wavesManager.wavesUpdates(this.players,this.gameData.entitySpeedMultiplier); 
         if (this.allDead) {
             //Si la vague est finie, on passe à la prochaine.
-            this.wavesManager.nextWave();
+            this.wavesManager.nextWave(this.difficulty);
             this.addToSpeed(0.01 * this.difficulty);
 		
             if (this.wavesManager.waveNumber % (Game.difficultyMax + 1 - this.difficulty) == 0) {
                 this.powers.push(
                     new Power(
-                        Entity.canvasWidth,
-                        getRandomInt(Entity.canvasHeight - Power.radius * 2) + Power.radius
+                        Entity.canvasWidth,  getRandomInt(Entity.canvasHeight - Power.radius * 2) + Power.radius
                     )
                 );
             }
