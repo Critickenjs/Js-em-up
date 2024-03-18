@@ -106,7 +106,6 @@ export default class Game{
             this.addToSpeed(0.01 * this.difficulty);
 		
             if (this.wavesManager.waveNumber % (Game.difficultyMax + 1 - this.difficulty) == 0) {
-                console.log("NEW POWER-UP");
 				this.powers.push(
                     new Power(
                         Entity.canvasWidth,  getRandomInt(Entity.canvasHeight - Power.height)
@@ -161,9 +160,18 @@ export default class Game{
 			if (this.powers[i].posX < 0 - Power.width) {
 				this.powers.shift();
 			}
+			if(this.powers[i].active){
+				const iterator = this.players.entries();
+        		let entry;
+        		for(let i=0; i<this.players.size; i++){
+            		entry = iterator.next();
+            		if(entry.value!=null && entry.value[1].alive){
+                		this.powers[i].powerCollideWithPlayer(entry.value[1]);
+            		}
+        		}
+			}
 		}
 	}
-	/*Power.powers[i].powerCollideWithPlayer(player);*/
 
 	refreshWaves() {
 		this.gameData.wavesNumber = this.wavesManager.waveNumber;
