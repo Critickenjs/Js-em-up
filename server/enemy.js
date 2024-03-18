@@ -99,11 +99,11 @@ export default class Enemy extends Entity {
 	reset() {
 		this.isDead = false;
 		this.type = Enemy.types[getRandomInt(Enemy.types.length)];
-		this.applyType();
 		this.posX =
 			Entity.canvasWidth +
 			getRandomInt(WavesManager.maxRandomSpawnDistance) +
 			WavesManager.spawnDistance;
+		this.applyType();
 		if (this.type == 'darkred') {
 			this.posY =
 				getRandomInt(
@@ -144,6 +144,7 @@ export default class Enemy extends Entity {
 				this.value = 10;
 				break;
 			case 'darkred':
+				this.posX=Entity.canvasWidth+getRandomInt(WavesManager.maxRandomSpawnDistance);
 				this.lifes = 3;
 				this.height = (Enemy.height * (this.lifes / 1.3)) | 0;
 				this.width = (Enemy.width * (this.lifes / 1.3)) | 0;

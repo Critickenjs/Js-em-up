@@ -7,8 +7,7 @@ export default class Power extends Entity {
     static height=40;
 	static speed = 6;
 	static types = ['life'];
-	constructor( posX, posY, 
-		type = Power.types[getRandomInt(Power.types.length)]
+	constructor( posX, posY, type = Power.types[getRandomInt(Power.types.length)]
 	) {
 		super(posX, posY, Power.width, Power.height);
 		this.speedX = -Power.speed;
@@ -17,18 +16,8 @@ export default class Power extends Entity {
 		this.type = type;
 	}
 
-	update() {
-		super.update();
-		if (this.posX < 0 - Power.radius) {
-			Power.powers.shift();
-		}
-	}
-
-	static updateAll(player) {
-		for (let i = 0; i < Power.powers.length; i++) {
-			Power.powers[i].powerCollideWithPlayer(player);
-			Power.powers[i].update();
-		}
+	update(entitySpeedMultiplier) {
+		super.update(entitySpeedMultiplier);
 	}
 
 	powerCollideWithPlayer(player) {

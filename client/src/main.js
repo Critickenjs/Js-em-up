@@ -7,11 +7,7 @@ import preloadAssets from './preLoadAssets.js';
 import { Particules } from './Particules.js';
 import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
-import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
-import HomePage from './homePageView.js';
-import GameOver from './gameOverView.js';
-import GameView from './gameView.js';
 import Client_Power from './client_power.js';
 
 
@@ -133,7 +129,7 @@ socket.on('game', gameData => {
 	}
 	removeDeconnectedPlayers();
 
-	Client_Power = [];
+	Client_Power.powers = [];
 	for (let i = 0; i < gameData.powers.length; i++) {
 		Client_Power.powers.push(
 			new Client_Power(

@@ -1,8 +1,8 @@
 import Client_Entity from './client_entity.js';
 export default class Client_Power extends Client_Entity {
 	
-	static width = 20;
-	static height = 5;
+	static width = 40;
+	static height = 40;
 
 	static powers=[];
 

@@ -8,8 +8,8 @@ export default class WavesManager {
 
 	//Waves
 	static waveMultiplier = 1;
-	static maxRandomSpawnDistance = 400;
-	static spawnDistance = 100;
+	static maxRandomSpawnDistance = 600;
+	static spawnDistance = 200;
 
 	constructor() {
 		this.waveNumber = 1;

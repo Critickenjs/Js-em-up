@@ -96,6 +96,8 @@ export default class Game{
         this.checkPlayerRespawn();
         this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
        
+		this.updateAllPowers();
+
         //WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
         this.allDead = this.wavesManager.wavesUpdates(this.players,this.gameData.entitySpeedMultiplier); 
         if (this.allDead) {
@@ -104,9 +106,10 @@ export default class Game{
             this.addToSpeed(0.01 * this.difficulty);
 		
             if (this.wavesManager.waveNumber % (Game.difficultyMax + 1 - this.difficulty) == 0) {
-                this.powers.push(
+                console.log("NEW POWER-UP");
+				this.powers.push(
                     new Power(
-                        Entity.canvasWidth,  getRandomInt(Entity.canvasHeight - Power.radius * 2) + Power.radius
+                        Entity.canvasWidth,  getRandomInt(Entity.canvasHeight - Power.height)
                     )
                 );
             }
@@ -151,6 +154,16 @@ export default class Game{
 			}
 		}
 	}
+
+	updateAllPowers() {
+		for (let i = 0; i < this.powers.length; i++) {
+			this.powers[i].update(this.gameData.entitySpeedMultiplier);
+			if (this.powers[i].posX < 0 - Power.width) {
+				this.powers.shift();
+			}
+		}
+	}
+	/*Power.powers[i].powerCollideWithPlayer(player);*/
 
 	refreshWaves() {
 		this.gameData.wavesNumber = this.wavesManager.waveNumber;
