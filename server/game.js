@@ -151,12 +151,9 @@ export default class Game{
             entry = iterator.next();
             if(entry.value!=null){
                 if(!entry.value[1].alive){
-                    console.log("TT"+entry.value[1].timerBeforeRespawn);
                     if (entry.value[1].timerBeforeRespawn <= 0) {
                         entry.value[1].respawn();
-                        console.log("TTAFTER"+entry.value[1].timerBeforeRespawn);
                         this.teamLifes--;
-                        console.log("RESPAWNING");
                     }else{
                         entry.value[1].timerBeforeRespawn--;
                     }

@@ -20,7 +20,7 @@ export default class Client_Player extends Client_Entity {
 		context.beginPath();
 		context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
 		if(this.invincible){
-			context.drawImage(this.imageShield, this.posX-this.width, this.posY-this.height, this.width*2, this.height*2);
+			context.drawImage(this.imageShield, this.posX-this.width/4, this.posY-this.height/4, this.width*1.5, this.height*1.5);
 		}
 	}
 }

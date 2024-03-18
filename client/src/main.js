@@ -167,6 +167,16 @@ function render() {
 	//Render Particules Behind
 	Particules.renderAll(context);
 
+	//Afficher les ennemis
+	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
+		Client_Enemy.enemys[i].render(context);
+	}
+
+	//Afficher les tirs
+	for (let i = 0; i < Client_Shot.shots.length; i++) {
+		Client_Shot.shots[i].render(context);
+	}
+
 	//Render players
 	const iterator = players.entries();
 	let entry;
@@ -175,12 +185,6 @@ function render() {
 		if (entry.value != null) {
 			entry.value[1].render(context);
 		}
-	}
-	for (let i = 0; i < Client_Shot.shots.length; i++) {
-		Client_Shot.shots[i].render(context);
-	}
-	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
-		Client_Enemy.enemys[i].render(context);
 	}
 
 	//Looping

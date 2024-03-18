@@ -119,7 +119,6 @@ export default class Player extends Entity {
 
 	//Tue le joueur, augmente le timer avant sa réapparition
 	die() {
-		console.log("DIE");
 		this.alive = false;
 	}
 
@@ -169,18 +168,23 @@ export default class Player extends Entity {
 	}
 
 	//Collisions des tirs du joueurs avec les ennemis
-	playerShotsCollideWithEnemy(enemy) {
+	playerShotsCollideWithEnemy(waveManager, enemy) {
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
 				if (this.shots[s].isCollidingWith(enemy)) {
 					this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
-					if (enemy.getHurt()) {
+					if (enemy.getHurt(waveManager)) {
 						this.addScorePointOnEnemyKill(enemy);
 					}
 				}
 			}
 		}
 	}
+
+	addScorePointOnEnemyKill(enemy) {
+		this.score += enemy.value;
+	}
+
 
 	accelerateLeft(acceleration, distance = 0.1) {
 		acceleration =

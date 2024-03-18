@@ -26,7 +26,6 @@ export default class Enemy extends Entity {
 		this.timeBeforeNextShoot = this.shootTimer;
 	}
 
-
 	//Mettre à jour les tirs causés par l'ennemi.
 	updateShots(entitySpeedMultiplier) {
 		for (let i = 0; i < this.shots.length; i++) {
@@ -38,7 +37,7 @@ export default class Enemy extends Entity {
 	}
 
 	//metre à jour l'ennemi
-	update(waveManager,entitySpeedMultiplier) {
+	update(waveManager, entitySpeedMultiplier) {
 		super.update(entitySpeedMultiplier);
 		if (this.posX < 0 - this.width) {
 			this.fate(waveManager);
@@ -72,7 +71,6 @@ export default class Enemy extends Entity {
 			this.fate(waveManager);
 			return true;
 		} else if (this.type == 'darkred') {
-			this.image.src = './public/res/images/asteroid' + (getRandomInt(4) + 1) + '.png';
 			this.height = (Enemy.height * (this.lifes / 1.3)) | 0;
 			this.width = (Enemy.width * (this.lifes / 1.3)) | 0;
 			this.posX += this.width / 3;
@@ -174,7 +172,6 @@ export default class Enemy extends Entity {
 			for (let s = 0; s < this.shots.length; s++) {
 				if (this.shots[s].active) {
 					if (this.shots[s].isCollidingWith(player)) {
-						console.log("EnnemyShot("+this.shots[s].posX+":"+this.shots[s].posY+") collide With a player.");
 						this.shots[s].active = false;
 						if (player.alive) player.die();
 					}
