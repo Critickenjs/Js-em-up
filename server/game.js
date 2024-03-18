@@ -159,17 +159,18 @@ export default class Game{
 			this.powers[i].update(this.gameData.entitySpeedMultiplier);
 			if (this.powers[i].posX < 0 - Power.width) {
 				this.powers.shift();
-			}
-			if(this.powers[i].active){
+			}else if(this.powers[i].active){
 				const iterator = this.players.entries();
         		let entry;
         		for(let i=0; i<this.players.size; i++){
             		entry = iterator.next();
             		if(entry.value!=null && entry.value[1].alive){
-                		this.powers[i].powerCollideWithPlayer(entry.value[1]);
+                		this.powers[i].powerCollideWithPlayer(this,entry.value[1]);
             		}
         		}
 			}
+			
+			
 		}
 	}
 
