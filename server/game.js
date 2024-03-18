@@ -92,6 +92,7 @@ export default class Game{
     update() {
         this.resetData();
         this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
+		this.refreshPowers();
         this.checkPlayerRespawn();
         this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
        
@@ -174,6 +175,14 @@ export default class Game{
 						isFromAPlayer: false,
 						perforation: enemys[i].shots[s].perforation,
 					});
+			}
+		}
+	}
+
+	refreshPowers(){
+		for(let i = 0; i<this.powers.length; i++){
+			if(this.powers[i].active){
+				this.gameData.powers[i]={"posX":this.powers[i].posX,"posY":this.powers[i].posY,"type":this.powers[i].type};
 			}
 		}
 	}

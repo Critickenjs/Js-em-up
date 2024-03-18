@@ -24,7 +24,7 @@ httpServer.listen(port, () => {
 
 
 const io = new IOServer(httpServer);
-const game = new Game(io,1);
+const game = new Game(io,4);
 game.init();
 
 io.on('connection',socket => {
