@@ -9,10 +9,14 @@ import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
+<<<<<<< HEAD
 import HomePage from './homePageView.js';
 import GameOver from './gameOverView.js';
 import GameView from './gameView.js';
 import Client_Power from './client_power.js';
+=======
+
+>>>>>>> e97c7098b86cf2235c6125156742a989f838ce65
 
 
 const assets = [
@@ -59,9 +63,7 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
-const homePage = new HomePage(document.querySelector('.homePage'));
-const gameOver = new GameOver(document.querySelector('.gameOver'));
-const game = new GameView(document.querySelector('.game'));
+
 
 export default canvas;
 
