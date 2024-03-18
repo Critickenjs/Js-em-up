@@ -14,16 +14,57 @@
 </head>
 
 <body>
-	<div id="root">
-		<div class="box game">
-		<p class="hud lifes">Lifes: <span id="lifesValue">1</span></p>
-		<p class="hud waves">Waves: <span id="wavesValue">1</span></p>
-		<p class="hud time">Time: <span id="timeValue">0</span></p>
-		<p class="hud score">Score: <span id="scoreValue"> 0 </span> (x<span id="scoreBonusValue"> 1 </span>)</p>
-		<canvas class="gameCanvas"> </canvas>
+	<div class="HomePage active">
+		<div class="login-container">
+			<h2>CONNECTION</h2>
+			<div class="container">
+				<form>
+					<input type="text" maxlength="7" placeholder="Username" />
+					<div class="difficulty">
+						<label for="difficulty">Difficulté:</label>
+						<select id="difficulty" name="difficulty">
+							<option value=1>Facile</option>
+							<option value=2>Moyen</option>
+							<option value=3>Difficile</option>
+							<option value=4>Impossible</option>
+						</select>
+						<label class="switch">
+							Contrôles à la souris
+							<input type="checkbox" id="checkmouse" name="checkmouse">
+							<span class="slider"></span>
+						</label>
+
+					</div>
+					<button type="submit">Jouer</button>
+				</form>
+			</div>
 		</div>
 	</div>
-		
+	<div class="box gameOver">
+		<h1>Game Over</h1>
+		<p>Score: <span id="scoreValue">0</span></p>
+		<div><button id="restartButton" class="restartButton">Rejouer</button>
+			<button class="scoreboardButton">Voir le tableau des scores</button>
+		</div>
+
+
+	</div>
+	<div class="box scoreboard">
+		<h1>Tableau des scores</h1>
+		<ul id="scoreList">
+		</ul>
+		<div><button class="restartButton" id="restartButton2">Rejouer</button></div>
+	</div>
+	<div id="root">
+		<div class="box game">
+			<p class="hud lifes">Lifes: <span id="lifesValue">1</span></p>
+			<p class="hud waves">Waves: <span id="wavesValue">1</span></p>
+			<p class="hud time">Time: <span id="timeValue">0</span></p>
+			<p class="hud score">Score: <span id="scoreValue"> 0 </span> (x<span id="scoreBonusValue"> 1 </span>)</p>
+			<canvas class="gameCanvas"> </canvas>
+		</div>
+	</div>
+
 </body>
 
 </html>
