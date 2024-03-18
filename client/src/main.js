@@ -58,11 +58,9 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
-let isInGame = false;
-const homePage = new HomePage(document.querySelector('.HomePage'));
-const gameView = new GameView(document.querySelector('.gameView'));
+;
 export default canvas;
-gameView.hide();
+
 
 //met à jour dynamiquement la taille du canvas
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
