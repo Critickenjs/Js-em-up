@@ -1,10 +1,9 @@
 export default class Entity {
+	static canvasWidth = 800; //1600
+	static canvasHeight = 800; //800
 
-	static canvasWidth=800;//1600
-	static canvasHeight=800;//800
-
-	static speedMultiplierDefault=0.8;
-	static speedMultiplierMAX=2;
+	static speedMultiplierDefault = 0.8;
+	static speedMultiplierMAX = 2;
 
 	constructor(posX, posY, width, height) {
 		this.posX = posX;
@@ -22,10 +21,10 @@ export default class Entity {
 	}
 
 	update(entitySpeedMultiplier) {
-		this.posX+=this.speedX*entitySpeedMultiplier;
-		this.posY+=this.speedY*entitySpeedMultiplier;
-		this.posX=Math.round(this.posX*100)/100;
-		this.posY=Math.round(this.posY*100)/100;
+		this.posX += this.speedX * entitySpeedMultiplier;
+		this.posY += this.speedY * entitySpeedMultiplier;
+		this.posX = Math.round(this.posX * 100) / 100;
+		this.posY = Math.round(this.posY * 100) / 100;
 		this.collision = {
 			topLeft: [this.posX, this.posY],
 			topRight: [this.posX + this.width, this.posY],
@@ -34,24 +33,23 @@ export default class Entity {
 		};
 	}
 
-	checkBorderCollision(){
-		if(this.posX<0){
-			this.posX=0;
-			this.speedX=0;
-		}else if (this.posX>Entity.canvasWidth-this.width){
-			this.posX=Entity.canvasWidth-this.width;
-			this.speedX=0;
+	checkBorderCollision() {
+		if (this.posX < 0) {
+			this.posX = 0;
+			this.speedX = 0;
+		} else if (this.posX > Entity.canvasWidth - this.width) {
+			this.posX = Entity.canvasWidth - this.width;
+			this.speedX = 0;
 		}
-		if(this.posY<0){
-			this.posY=0;
-			this.speedY=0;
-		}else if (this.posY>Entity.canvasHeight-this.height){
-			this.posY=Entity.canvasHeight-this.height;
-			this.speedY=0;
+		if (this.posY < 0) {
+			this.posY = 0;
+			this.speedY = 0;
+		} else if (this.posY > Entity.canvasHeight - this.height) {
+			this.posY = Entity.canvasHeight - this.height;
+			this.speedY = 0;
 		}
 	}
 
-	
 	isCollidingWith(entity) {
 		if (this.width * this.height < entity.width * entity.height) {
 			return this.isThisEntityInsideThisOther(entity);
