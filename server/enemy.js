@@ -83,8 +83,7 @@ export default class Enemy extends Entity {
 	// ou respawn (si la manche en cours n'est pas finie et qu'il reste des ennemies à faire apparaître).
 	fate(waveManager) {
 		if (
-			waveManager.waveNumberOfEnemysSpawned <
-			waveManager.waveMaxNumberOfEnemys
+			waveManager.waveNumberOfEnemysSpawned < waveManager.waveMaxNumberOfEnemys
 		) {
 			this.respawn(waveManager);
 		} else {
@@ -97,12 +96,12 @@ export default class Enemy extends Entity {
 		this.reset();
 	}
 
-	reset(){
+	reset() {
 		this.isDead = false;
 		this.type = Enemy.types[getRandomInt(Enemy.types.length)];
 		this.applyType();
 		this.posX =
-			Entity.canvasWidth   +
+			Entity.canvasWidth +
 			getRandomInt(WavesManager.maxRandomSpawnDistance) +
 			WavesManager.spawnDistance;
 		if (this.type == 'darkred') {

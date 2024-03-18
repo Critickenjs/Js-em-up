@@ -14,8 +14,8 @@ export default class WavesManager {
 	constructor() {
 		this.waveNumber = 1;
 		this.enemys = [];
-		this.waveMaxNumberOfEnemys=5;
-		this.waveNumberOfEnemysSpawned=0;
+		this.waveMaxNumberOfEnemys = 5;
+		this.waveNumberOfEnemysSpawned = 0;
 	}
 
 	//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
@@ -32,10 +32,7 @@ export default class WavesManager {
 				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) + Enemy.spawnOffset, difficulty);
 			this.enemys[i].index = i;
 			this.waveNumberOfEnemysSpawned++;
-			if (
-				this.waveNumberOfEnemysSpawned >
-				this.waveMaxNumberOfEnemys
-			) {
+			if (this.waveNumberOfEnemysSpawned > this.waveMaxNumberOfEnemys) {
 				this.enemys[i].die();
 			}
 		}
@@ -73,43 +70,42 @@ export default class WavesManager {
 	}
 
 	//Gêre le mise à jour des vagues
-	wavesUpdates(players,entitySpeedMultiplier) {
+	wavesUpdates(players, entitySpeedMultiplier) {
 		this.updateEnnemiesToPlayersInteractions(players);
 		//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
 		return this.updateAllEnemy(entitySpeedMultiplier);
 	}
 
-	updateEnnemiesToPlayersInteractions(playerMap){
+	updateEnnemiesToPlayersInteractions(playerMap) {
 		const iterator = playerMap.entries();
-        let entry;
-        for(let i=0; i<playerMap.size; i++){
-            entry = iterator.next();
-            if(entry.value!=null){
+		let entry;
+		for (let i = 0; i < playerMap.size; i++) {
+			entry = iterator.next();
+			if (entry.value != null) {
 				for (let a = 0; a < this.enemys.length; a++) {
 					this.enemys[a].EnemyShotsCollideWithPlayer(entry.value[1]);
-					if (!this.enemys[a].isDead){
-						entry.value[1].playerShotsCollideWithEnemy(this,this.enemys[a]);
-						if(entry.value[1].alive && !entry.value[1].invincible){
+					if (!this.enemys[a].isDead) {
+						entry.value[1].playerShotsCollideWithEnemy(this, this.enemys[a]);
+						if (entry.value[1].alive && !entry.value[1].invincible) {
 							if (this.enemys[a].isCollidingWith(entry.value[1])) {
-									entry.value[1].die();
-									this.enemys[a].fate(this);
+								entry.value[1].die();
+								this.enemys[a].fate(this);
 							}
 						}
 					}
 				}
-            }
-        }
+			}
+		}
 	}
 
-	
 	//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
-	updateAllEnemy(entitySpeedMultiplier){
+	updateAllEnemy(entitySpeedMultiplier) {
 		let allDead = true;
 		for (let a = 0; a < this.enemys.length; a++) {
 			this.enemys[a].updateShots(entitySpeedMultiplier);
 			if (!this.enemys[a].isDead) {
 				allDead = false;
-				this.enemys[a].update(this,entitySpeedMultiplier);
+				this.enemys[a].update(this, entitySpeedMultiplier);
 			}
 		}
 		return allDead;

@@ -9,6 +9,10 @@ import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Game from './client_game.js';
 import Client_Enemy from './client_enemy.js';
+import HomePage from './homePageView.js';
+import GameOver from './gameOverView.js';
+import GameView from './gameView.js';
+
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -38,14 +42,15 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
-let canvasServerWidth=800;
-let canvasServerHeight=800;
+let canvasServerWidth = 800;
+let canvasServerHeight = 800;
+let isingame = false;
 
 const socket = io();
 
-socket.on('canvas',(tab) => {
-	canvasServerWidth=tab[0];
-	canvasServerHeight=tab[1];
+socket.on('canvas', tab => {
+	canvasServerWidth = tab[0];
+	canvasServerHeight = tab[1];
 	Client_Entity.canvasHeight = canvasServerWidth;
 	Client_Entity.canvasWidth = canvasServerHeight;
 });
@@ -53,6 +58,10 @@ socket.on('canvas',(tab) => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
+const homePage = new HomePage(document.querySelector('.homePage'));
+const gameOver = new GameOver(document.querySelector('.gameOver'));
+const game = new GameView(document.querySelector('.game'));
+
 export default canvas;
 
 //met à jour dynamiquement la taille du canvas
@@ -62,11 +71,11 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	if(canvas.width!=canvasServerWidth){
-		canvas.width=canvasServerWidth;
+	if (canvas.width != canvasServerWidth) {
+		canvas.width = canvasServerWidth;
 	}
-	if(canvas.height!=canvasServerHeight){
-		canvas.height=canvasServerHeight;
+	if (canvas.height != canvasServerHeight) {
+		canvas.height = canvasServerHeight;
 	}
 	Client_Entity.canvasHeight = canvas.height;
 	Client_Entity.canvasWidth = canvas.width;
@@ -90,8 +99,32 @@ socket.on('playerKeys', () => {
 });
 
 socket.on('time', newTime => {
-	time=newTime;
+	time = newTime;
 });
+
+document.querySelector('.HomePage').addEventListener('submit', event => {
+	event.preventDefault();
+	isInGame = true;
+	homePage.Play();
+	gameView.show();
+	WavesManager.difficulty = getDifficultyValue();
+	wavesManager.firstWave(window.innerWidth, window.innerHeight);
+	player.pseudo = homePage.username;
+	player.resetTeamLivesNumber();
+});
+
+document.querySelector('#checkmouse').addEventListener('click', () => {
+	if (keys.keysPressed.MouseMode) {
+		keys.keysPressed.MouseDown = false;
+	} else {
+		keys.keysPressed.MouseMode = true;
+	}
+});
+
+
+
+
+
 
 /*
 socket.on('update', updatedPlayers => {
@@ -109,25 +142,44 @@ socket.on('update', updatedPlayers => {
 
 socket.on('game', gameData => {
 	//Update players
-	for (let i = 0; i < gameData .players.length; i++) {
+	for (let i = 0; i < gameData.players.length; i++) {
 		players.set(
-			gameData .players[i].id,
-			new Client_Player(gameData.players[i].posX, gameData.players[i].posY, gameData.players[i].pseudo, gameData.players[i].invincible)
+			gameData.players[i].id,
+			new Client_Player(
+				gameData.players[i].posX,
+				gameData.players[i].posY,
+				gameData.players[i].pseudo,
+				gameData.players[i].invincible
+			)
 		);
-		ids.push(gameData .players[i].id);
+		ids.push(gameData.players[i].id);
 	}
 	removeDeconnectedPlayers();
-	
+
 	//Update Shots
-	Client_Shot.shots=[];
+	Client_Shot.shots = [];
 	for (let i = 0; i < gameData.shots.length; i++) {
-		Client_Shot.shots.push(new Client_Shot(gameData.shots[i].posX,gameData.shots[i].posY,gameData.shots[i].isFromAPlayer,gameData.shots[i].perforation));
+		Client_Shot.shots.push(
+			new Client_Shot(
+				gameData.shots[i].posX,
+				gameData.shots[i].posY,
+				gameData.shots[i].isFromAPlayer,
+				gameData.shots[i].perforation
+			)
+		);
 	}
 
 	//Update enemys
-	Client_Enemy.enemys=[];
+	Client_Enemy.enemys = [];
 	for (let i = 0; i < gameData.enemys.length; i++) {
-		Client_Enemy.enemys.push(new Client_Enemy(gameData.enemys[i].posX,gameData.enemys[i].posY,gameData.enemys[i].type,gameData.enemys[i].lifes));
+		Client_Enemy.enemys.push(
+			new Client_Enemy(
+				gameData.enemys[i].posX,
+				gameData.enemys[i].posY,
+				gameData.enemys[i].type,
+				gameData.enemys[i].lifes
+			)
+		);
 	}
 });
 
@@ -163,7 +215,7 @@ canvas.addEventListener('mouseup', function () {
 function render() {
 	//Reset Canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	
+
 	//Render Particules Behind
 	Particules.renderAll(context);
 
@@ -172,7 +224,7 @@ function render() {
 		Client_Enemy.enemys[i].render(context);
 	}
 
-	//Afficher les tirs
+	//Afficher tous les tirs
 	for (let i = 0; i < Client_Shot.shots.length; i++) {
 		Client_Shot.shots[i].render(context);
 	}
@@ -195,6 +247,27 @@ requestAnimationFrame(render);
 
 setInterval(updateParticules, 10);
 
-function updateParticules(){	
+function updateParticules() {
 	Particules.updateAll();
 }
+
+document.querySelector('#restartButton2').addEventListener('click', () => {
+	scoreBoard.hide();
+	restartGame();
+	gameView.show();
+});
+
+document.querySelector('#restartButton').addEventListener('click', () => {
+	restartGame();
+	gameView.show();
+});
+
+function restartGame() {
+	gameOver.restartGame();
+	player.restart();
+	gameView.show();
+	isInGame = true;
+	wavesManager.firstWave();
+	time = 0;
+}
+
