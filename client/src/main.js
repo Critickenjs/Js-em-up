@@ -38,14 +38,14 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
-let canvasServerWidth=800;
-let canvasServerHeight=800;
+let canvasServerWidth = 800;
+let canvasServerHeight = 800;
 
 const socket = io();
 
-socket.on('canvas',(tab) => {
-	canvasServerWidth=tab[0];
-	canvasServerHeight=tab[1];
+socket.on('canvas', tab => {
+	canvasServerWidth = tab[0];
+	canvasServerHeight = tab[1];
 	Client_Entity.canvasHeight = canvasServerWidth;
 	Client_Entity.canvasWidth = canvasServerHeight;
 });
@@ -62,11 +62,11 @@ canvasResizeObserver.observe(canvas);
 function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
-	if(canvas.width!=canvasServerWidth){
-		canvas.width=canvasServerWidth;
+	if (canvas.width != canvasServerWidth) {
+		canvas.width = canvasServerWidth;
 	}
-	if(canvas.height!=canvasServerHeight){
-		canvas.height=canvasServerHeight;
+	if (canvas.height != canvasServerHeight) {
+		canvas.height = canvasServerHeight;
 	}
 	Client_Entity.canvasHeight = canvas.height;
 	Client_Entity.canvasWidth = canvas.width;
@@ -90,7 +90,7 @@ socket.on('playerKeys', () => {
 });
 
 socket.on('time', newTime => {
-	time=newTime;
+	time = newTime;
 });
 
 /*
@@ -109,25 +109,44 @@ socket.on('update', updatedPlayers => {
 
 socket.on('game', gameData => {
 	//Update players
-	for (let i = 0; i < gameData .players.length; i++) {
+	for (let i = 0; i < gameData.players.length; i++) {
 		players.set(
-			gameData .players[i].id,
-			new Client_Player(gameData.players[i].posX, gameData.players[i].posY, gameData.players[i].pseudo, gameData.players[i].invincible)
+			gameData.players[i].id,
+			new Client_Player(
+				gameData.players[i].posX,
+				gameData.players[i].posY,
+				gameData.players[i].pseudo,
+				gameData.players[i].invincible
+			)
 		);
-		ids.push(gameData .players[i].id);
+		ids.push(gameData.players[i].id);
 	}
 	removeDeconnectedPlayers();
-	
+
 	//Update Shots
-	Client_Shot.shots=[];
+	Client_Shot.shots = [];
 	for (let i = 0; i < gameData.shots.length; i++) {
-		Client_Shot.shots.push(new Client_Shot(gameData.shots[i].posX,gameData.shots[i].posY,gameData.shots[i].isFromAPlayer,gameData.shots[i].perforation));
+		Client_Shot.shots.push(
+			new Client_Shot(
+				gameData.shots[i].posX,
+				gameData.shots[i].posY,
+				gameData.shots[i].isFromAPlayer,
+				gameData.shots[i].perforation
+			)
+		);
 	}
 
 	//Update enemys
-	Client_Enemy.enemys=[];
+	Client_Enemy.enemys = [];
 	for (let i = 0; i < gameData.enemys.length; i++) {
-		Client_Enemy.enemys.push(new Client_Enemy(gameData.enemys[i].posX,gameData.enemys[i].posY,gameData.enemys[i].type,gameData.enemys[i].lifes));
+		Client_Enemy.enemys.push(
+			new Client_Enemy(
+				gameData.enemys[i].posX,
+				gameData.enemys[i].posY,
+				gameData.enemys[i].type,
+				gameData.enemys[i].lifes
+			)
+		);
 	}
 });
 
@@ -163,9 +182,17 @@ canvas.addEventListener('mouseup', function () {
 function render() {
 	//Reset Canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	
+
 	//Render Particules Behind
 	Particules.renderAll(context);
+
+	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
+		Client_Enemy.enemys[i].render(context);
+	}
+
+	for (let i = 0; i < Client_Shot.shots.length; i++) {
+		Client_Shot.shots[i].render(context);
+	}
 
 	//Render players
 	const iterator = players.entries();
@@ -176,12 +203,6 @@ function render() {
 			entry.value[1].render(context);
 		}
 	}
-	for (let i = 0; i < Client_Shot.shots.length; i++) {
-		Client_Shot.shots[i].render(context);
-	}
-	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
-		Client_Enemy.enemys[i].render(context);
-	}
 
 	//Looping
 	requestAnimationFrame(render);
@@ -191,6 +212,6 @@ requestAnimationFrame(render);
 
 setInterval(updateParticules, 10);
 
-function updateParticules(){	
+function updateParticules() {
 	Particules.updateAll();
 }
