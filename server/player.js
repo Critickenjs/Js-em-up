@@ -117,7 +117,6 @@ export default class Player extends Entity {
 
 	//Tue le joueur, augmente le timer avant sa réapparition
 	die() {
-		console.log('DIE');
 		this.alive = false;
 	}
 
