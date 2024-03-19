@@ -8,10 +8,14 @@ export default class Client_Player extends Client_Entity {
 		this.pseudo = pseudo;
 		this.invincible = invincible;
 
+		this.maxAnimationTime = 50;
+		this.animationTime = this.maxAnimationTime;
 		this.image = new Image();
 		this.image.src = './public/res/images/spaceship.png';
 		this.imageShield = new Image();
 		this.imageShield.src = './public/res/images/shield.png';
+		this.imageShield2 = new Image();
+		this.imageShield2.src = './public/res/images/shield2.png';
 	}
 
 	render(context) {
@@ -24,14 +28,32 @@ export default class Client_Player extends Client_Entity {
 			this.width,
 			this.height
 		);
-		if (this.invincible) {
-			context.drawImage(
-				this.imageShield,
-				this.posX - this.width / 4,
-				this.posY - this.height / 4,
-				this.width * 1.5,
-				this.height * 1.5
-			);
+		if (this.invincible >= 0) {
+			if (this.animationTime < 0) {
+				this.animationTime = this.maxAnimationTime;
+			} else {
+				this.animationTime--;
+			}
+			if (this.animationTime > this.maxAnimationTime / 2) {
+				context.drawImage(
+					this.imageShield2,
+					this.posX - this.width / 4,
+					this.posY - this.height / 4,
+					this.width * 1.5,
+					this.height * 1.5
+				);
+			} else {
+				context.drawImage(
+					this.imageShield,
+					this.posX - this.width / 4,
+					this.posY - this.height / 4,
+					this.width * 1.5,
+					this.height * 1.5
+				);
+			}
+
+			console.log('timer invincible : ', this.invincible);
+			console.log('timer animation : ', this.animationTime);
 		}
 	}
 }

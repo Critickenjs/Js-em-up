@@ -14,7 +14,7 @@ export default class Player extends Entity {
 
 	//Lifes
 	static defaultNumberOfLife = 3;
-	 
+
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;
 
@@ -96,7 +96,7 @@ export default class Player extends Entity {
 			}
 			
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
-			
+
 			if (this.timerBeforeShots > 0) {
 				this.timerBeforeShots--;
 			}
@@ -108,12 +108,10 @@ export default class Player extends Entity {
 			if (this.invincible) {
 				if (this.timerBeforeLosingInvincibility < 0) {
 					this.invincible = false;
-				}else{
+				} else {
 					this.timerBeforeLosingInvincibility--;
 				}
 			}
-
-
 		}
 		//Player utilise sa propre fonction borderCollision et pas celle de Entity à cause de ses accélérations
 		this.checkBorderCollision();
@@ -132,7 +130,6 @@ export default class Player extends Entity {
 		if (this.timerBeforeShots <= 0) {
 			this.timerBeforeShots = Player.maxTimeBeforeShooting;
 			this.shoot(perforationBonus);
-			
 		}
 	}
 
@@ -141,7 +138,7 @@ export default class Player extends Entity {
 		this.shots.push(
 			new Shot(
 				this.posX + this.width,
-				this.posY + (this.height / 2) - (Shot.height/2),
+				this.posY + this.height / 2 - Shot.height / 2,
 				true,
 				Player.bulletSpeed,
 				perforationBonus
@@ -156,7 +153,9 @@ export default class Player extends Entity {
 
 	respawn(difficulty) {
 		this.alive = true;
-		this.becomeInvincible((Player.maxTimeForInvincibility+300/difficulty) | 0);
+		this.becomeInvincible(
+			(Player.maxTimeForInvincibility + 300 / difficulty) | 0
+		);
 		this.posY = Entity.canvasHeight / 2;
 		this.posX = 100;
 		this.speedX = 0;
@@ -164,35 +163,34 @@ export default class Player extends Entity {
 		this.accelerationX = 0;
 		this.accelerationY = 0;
 		this.timerBeforeShots = 0;
-		//La réapparition devient de plus en plus long quand on meurt. 
-		this.maxTimeBeforeRespawn = (this.maxTimeBeforeRespawn * (Math.round((1 + difficulty/10) * 100) / 100)) | 0;
-		this.timerBeforeRespawn=this.maxTimeBeforeRespawn;
+		//La réapparition devient de plus en plus long quand on meurt.
+		this.maxTimeBeforeRespawn += 5 * difficulty;
+		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 	}
-
 
 	becomeInvincible(duration) {
 		this.invincible = true;
 		this.timerBeforeLosingInvincibility = duration;
 	}
 
-	checkBorderCollision(){
-		if(this.posX<0){
-			this.posX=0;
-			this.speedX=0;
-			this.accelerationX=0;
-		}else if (this.posX>Entity.canvasWidth-this.width){
-			this.posX=Entity.canvasWidth-this.width;
-			this.speedX=0;
-			this.accelerationX=0;
+	checkBorderCollision() {
+		if (this.posX < 0) {
+			this.posX = 0;
+			this.speedX = 0;
+			this.accelerationX = 0;
+		} else if (this.posX > Entity.canvasWidth - this.width) {
+			this.posX = Entity.canvasWidth - this.width;
+			this.speedX = 0;
+			this.accelerationX = 0;
 		}
-		if(this.posY<0){
-			this.posY=0;
-			this.speedY=0;
-			this.accelerationY=0;
-		}else if (this.posY>Entity.canvasHeight-this.height){
-			this.posY=Entity.canvasHeight-this.height;
-			this.speedY=0;
-			this.accelerationY=0;
+		if (this.posY < 0) {
+			this.posY = 0;
+			this.speedY = 0;
+			this.accelerationY = 0;
+		} else if (this.posY > Entity.canvasHeight - this.height) {
+			this.posY = Entity.canvasHeight - this.height;
+			this.speedY = 0;
+			this.accelerationY = 0;
 		}
 	}
 
@@ -213,7 +211,6 @@ export default class Player extends Entity {
 	addScorePointOnEnemyKill(enemy) {
 		this.score += enemy.value*enemy.difficulty*this.scoreMultiplierBonus;
 	}
-
 
 	accelerateLeft(acceleration, distance = 0.1) {
 		acceleration =
