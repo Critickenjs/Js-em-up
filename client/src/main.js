@@ -115,15 +115,23 @@ document.querySelector('#checkmouse').addEventListener('click', () => {
 socket.on('game', gameData => {
 	//Update players
 	for (let i = 0; i < gameData.players.length; i++) {
-		players.set(
-			gameData.players[i].id,
-			new Client_Player(
-				gameData.players[i].posX,
-				gameData.players[i].posY,
-				gameData.players[i].pseudo,
-				gameData.players[i].invincible
-			)
-		);
+		let player = players.get(gameData.players[i].id);
+		if(player!=null){
+			player.posX=gameData.players[i].posX;
+			player.posY=gameData.players[i].posY,
+			player.pseudo=gameData.players[i].pseudo,
+			player.invincible=gameData.players[i].invincible
+		}else{
+			players.set(
+				gameData.players[i].id,
+				new Client_Player(
+					gameData.players[i].posX,
+					gameData.players[i].posY,
+					gameData.players[i].pseudo,
+					gameData.players[i].invincible
+				)
+			);
+		}
 		ids.push(gameData.players[i].id);
 	}
 	removeDeconnectedPlayers();
