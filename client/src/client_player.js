@@ -9,6 +9,7 @@ export default class Client_Player extends Client_Entity {
 		this.invincible = invincible;
 
 		this.maxAnimationTime = 30;
+		this.minAnimationTime = 10;
 		this.animationTime = this.maxAnimationTime;
 		this.image = new Image();
 		this.image.src = './public/res/images/spaceship.png';
@@ -31,7 +32,6 @@ export default class Client_Player extends Client_Entity {
 		if (this.invincible >= 0) {
 			if(this.animationTime>0){
 				this.animationTime--;
-				console.log(this.invincible,this.maxAnimationTime,this.animationTime);
 				if (this.animationTime > this.maxAnimationTime/2) {
 					context.drawImage(
 						this.imageShield2,
@@ -51,6 +51,7 @@ export default class Client_Player extends Client_Entity {
 				}
 			}else{
 				this.maxAnimationTime=this.invincible/10 | 0;
+				if(this.maxAnimationTime<this.minAnimationTime) this.maxAnimationTime=this.minAnimationTime;
 				this.animationTime=this.maxAnimationTime;
 			}
 		}
