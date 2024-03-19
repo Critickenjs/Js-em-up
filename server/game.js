@@ -1,32 +1,31 @@
-import GameData from "./gameData.js";
-import Player from "./player.js";
-import Entity from "./entity.js";
-import WavesManager from "./wavesManager.js";
+import GameData from './gameData.js';
+import Player from './player.js';
+import Entity from './entity.js';
+import WavesManager from './wavesManager.js';
 import Power from './power.js';
-import {getRandomInt} from './utils.js';
+import { getRandomInt } from './utils.js';
 
-export default class Game{
+export default class Game {
+	static difficultyMax = 4;
 
-    static difficultyMax = 4;
-
-	constructor(io,difficulty) {
-        this.io=io;
-        this.difficulty=difficulty;
-        this.wavesManager = new WavesManager();
-        this.gameData = new GameData();
-        this.players = new Map();
-        this.powers = [];
-        this.teamLifes = Player.defaultNumberOfLife;
-        this.isInGame = true;
-        this.time = 0;
-        this.allDead=false;
+	constructor(io, difficulty) {
+		this.io = io;
+		this.difficulty = difficulty;
+		this.wavesManager = new WavesManager();
+		this.gameData = new GameData();
+		this.players = new Map();
+		this.powers = [];
+		this.teamLifes = Player.defaultNumberOfLife;
+		this.isInGame = true;
+		this.time = 0;
+		this.allDead = false;
 	}
 
-    init(){    
-        setInterval(this.update.bind(this), 1000 / 60);
-        setInterval(this.updateHUD, 1000);
-        this.wavesManager.firstWave(this.difficulty);
-    }
+	init() {
+		setInterval(this.update.bind(this), 1000 / 60);
+		setInterval(this.updateHUD, 1000);
+		this.wavesManager.firstWave(this.difficulty);
+	}
 
 	resetTeamLives() {
 		this.teamLifes = Player.defaultNumberOfLife;
@@ -50,32 +49,23 @@ export default class Game{
 		return false;
 	}
 
-    
-    //Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
-    updateHUD() {
-        if (this.isInGame) {
-            const iterator = this.players.entries();
-            let entry;
-            for(let i=0; i<this.players.size; i++){
-                entry = iterator.next();
-                if(entry.value!=null){
-                    if(entry.value[1].alive){
-                        entry.value[1].score+=this.difficulty;
-                    }
-                }
-            }
-            this.time++;
-            //Vitesse du jeu augmente au fur et à mesure
-            this.addToSpeed(0.001*this.difficulty);
-            this.io.emit('time',time);
-        }
-    }
-
-    
-	addToSpeed(modifyer){
-		this.gameData.entitySpeedMultiplier=Math.round((this.gameData.entitySpeedMultiplier+modifyer)*1000)/1000
-		if(this.gameData.entitySpeedMultiplier>Entity.speedMultiplierMAX){
-			this.gameData.entitySpeedMultiplier=Entity.speedMultiplierMAX;
+	//Ajoute au fur et à mesure des points aux joueurs et ajoute de la vitesse au jeu
+	updateHUD() {
+		if (this.isInGame) {
+			const iterator = this.players.entries();
+			let entry;
+			for (let i = 0; i < this.players.size; i++) {
+				entry = iterator.next();
+				if (entry.value != null) {
+					if (entry.value[1].alive) {
+						entry.value[1].score += this.difficulty;
+					}
+				}
+			}
+			this.time++;
+			//Vitesse du jeu augmente au fur et à mesure
+			this.addToSpeed(0.001 * this.difficulty);
+			this.io.emit('time', time);
 		}
 	}
 
@@ -88,39 +78,55 @@ export default class Game{
 		}
 	}
 
-    
-    update() {
-        this.resetData();
-        this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
+	addToSpeed(modifyer) {
+		this.gameData.entitySpeedMultiplier =
+			Math.round((this.gameData.entitySpeedMultiplier + modifyer) * 1000) /
+			1000;
+		if (this.gameData.entitySpeedMultiplier > Entity.speedMultiplierMAX) {
+			this.gameData.entitySpeedMultiplier = Entity.speedMultiplierMAX;
+		}
+	}
+
+	update() {
+		this.resetData();
+		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
 		this.refreshPowers();
-        this.checkPlayerRespawn();
-        this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
-       
+		this.checkPlayerRespawn();
+		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
+
 		this.updateAllPowers();
 
-        //WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
-        this.allDead = this.wavesManager.wavesUpdates(this.players,this.gameData.entitySpeedMultiplier); 
-        if (this.allDead) {
-            //Si la vague est finie, on passe à la prochaine.
-            this.wavesManager.nextWave(this.difficulty);
-            this.addToSpeed(0.01 * this.difficulty);
-		
-            if (this.wavesManager.waveNumber % (Game.difficultyMax + 1 - this.difficulty) == 0) {
+		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
+		this.allDead = this.wavesManager.wavesUpdates(
+			this.players,
+			this.gameData.entitySpeedMultiplier
+		);
+		if (this.allDead) {
+			//Si la vague est finie, on passe à la prochaine.
+			this.wavesManager.nextWave(this.difficulty);
+			this.addToSpeed(0.01 * this.difficulty);
+
+			if (
+				this.wavesManager.waveNumber %
+					(Game.difficultyMax + 1 - this.difficulty) ==
+				0
+			) {
 				this.powers.push(
-                    new Power(
-                        Entity.canvasWidth,  getRandomInt(Entity.canvasHeight - Power.height)
-                    )
-                );
-            }
-            this.refreshWaves();
-        }else{
-            this.refreshEnnemiesAndEnemyShots();
-        }
-        this.io.emit('game',this.gameData);
-    }
+					new Power(
+						Entity.canvasWidth,
+						getRandomInt(Entity.canvasHeight - Power.height)
+					)
+				);
+			}
+			this.refreshWaves();
+		} else {
+			this.refreshEnnemiesAndEnemyShots();
+		}
+		this.io.emit('game', this.gameData);
+	}
 
 	resetData() {
-		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0}
+		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0,"invincible":4} //Invincible est le timer avant la fin de l'invinciblité
 		this.gameData.enemys = []; //{"posX":x,"posY:y","type":'red',"lifes":1}
 		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
 		this.gameData.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false}
@@ -139,7 +145,7 @@ export default class Game{
 						posX: player.posX,
 						posY: player.posY,
 						score: player.score,
-						invincible: player.invincible,
+						invincible: player.timerBeforeLosingInvincibility,
 					});
 				for (let i = 0; i < player.shots.length; i++) {
 					if (player.shots[i].active)
@@ -159,18 +165,16 @@ export default class Game{
 			this.powers[i].update(this.gameData.entitySpeedMultiplier);
 			if (this.powers[i].posX < 0 - Power.width) {
 				this.powers.shift();
-			}else if(this.powers[i].active){
+			} else if (this.powers[i].active) {
 				const iterator = this.players.entries();
-        		let entry;
-        		for(let i=0; i<this.players.size; i++){
-            		entry = iterator.next();
-            		if(entry.value!=null && entry.value[1].alive){
-                		this.powers[i].powerCollideWithPlayer(this,entry.value[1]);
-            		}
-        		}
+				let entry;
+				for (let i = 0; i < this.players.size; i++) {
+					entry = iterator.next();
+					if (entry.value != null && entry.value[1].alive) {
+						this.powers[i].powerCollideWithPlayer(this, entry.value[1]);
+					}
+				}
 			}
-			
-			
 		}
 	}
 
@@ -201,30 +205,33 @@ export default class Game{
 		}
 	}
 
-	refreshPowers(){
-		for(let i = 0; i<this.powers.length; i++){
-			if(this.powers[i].active){
-				this.gameData.powers[i]={"posX":this.powers[i].posX,"posY":this.powers[i].posY,"type":this.powers[i].type};
+	refreshPowers() {
+		for (let i = 0; i < this.powers.length; i++) {
+			if (this.powers[i].active) {
+				this.gameData.powers[i] = {
+					posX: this.powers[i].posX,
+					posY: this.powers[i].posY,
+					type: this.powers[i].type,
+				};
 			}
 		}
 	}
 
-    checkPlayerRespawn(){
-        const iterator = this.players.entries();
-        let entry;
-        for(let i=0; i<this.players.size; i++){
-            entry = iterator.next();
-            if(entry.value!=null){
-                if(!entry.value[1].alive){
-                    if (entry.value[1].timerBeforeRespawn <= 0) {
-                        entry.value[1].respawn(this.difficulty);
-                        this.teamLifes--;
-                    }else{
-                        entry.value[1].timerBeforeRespawn--;
-                    }
-                }
-                
-            }
-        }
-    }
+	checkPlayerRespawn() {
+		const iterator = this.players.entries();
+		let entry;
+		for (let i = 0; i < this.players.size; i++) {
+			entry = iterator.next();
+			if (entry.value != null) {
+				if (!entry.value[1].alive) {
+					if (entry.value[1].timerBeforeRespawn <= 0) {
+						entry.value[1].respawn(this.difficulty);
+						this.teamLifes--;
+					} else {
+						entry.value[1].timerBeforeRespawn--;
+					}
+				}
+			}
+		}
+	}
 }
