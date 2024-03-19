@@ -16,7 +16,11 @@ export default class Client_Shot extends Client_Entity {
 		super.render(context);
 		context.beginPath();
 		if(this.isFromAPlayer){
-			context.fillStyle = 'green';
+			if(this.perforation){
+				context.fillStyle = 'yellow';
+			}else{
+				context.fillStyle = 'green';
+			}
 		}else{
 			context.fillStyle = 'red';
 		}

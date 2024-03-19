@@ -18,10 +18,15 @@ export default class Player extends Entity {
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;
 
-	//Timer
+	//Timers
 	static maxTimeBeforeShooting = 10;
 	static maxTimeForInvincibility = 300;
 	static maxTimeBeforeRespawn = 100;
+
+	//Powers
+	static maxTimeForScoreMultiplierBonus = 456;
+	static maxTimeIceMalus = 300;
+	static maxTimePerforationBonus = 300;
 	
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -48,9 +53,16 @@ export default class Player extends Entity {
 		this.timerBeforeShots = 0;
 		this.maxTimeBeforeRespawn = 100;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
-
-		//Invincibilty
 		this.timerBeforeLosingInvincibility = Player.maxTimeForInvincibility;
+
+		//Bonus
+		this.timerBeforeLosingIceMalus = 0;
+		this.iceMultiplierMalus = 1;
+
+		this.timerBeforeLosingScoreMultiplierBonus = 0;
+		this.scoreMultiplierBonus = 1;
+
+		this.timerBeforeLosingPerforationBonus = 0;
 	}
 
 	update(keysPressed, entitySpeedMultiplier) {
@@ -62,6 +74,26 @@ export default class Player extends Entity {
 			this.deceleration();
 			this.acceleration(keysPressed);
 			super.update(entitySpeedMultiplier);
+
+			if (this.gotScoreMultiplierBonus()) {
+				this.timerBeforeLosingScoreMultiplierBonus--;
+				if (this.timerBeforeLosingScoreMultiplierBonus < 0) {
+					this.loseScoreMuliplierBonus();
+				}
+			}
+
+			if (this.gotIceMalus()) {
+				console.log("timer ice: ",this.timerBeforeLosingIceMalus);
+				this.timerBeforeLosingIceMalus--;
+				if (this.timerBeforeLosingIceMalus < 0) {
+					this.loseIceMalus();
+				}
+			}
+
+			if (this.gotPerforationBonus()) {
+				console.log("timer perfo: ",this.timerBeforeLosingPerforationBonus);
+				this.timerBeforeLosingPerforationBonus--;
+			}
 			
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 			
@@ -70,7 +102,7 @@ export default class Player extends Entity {
 			}
 			//Shooting?
 			if (keysPressed.Space || keysPressed.MouseDown) {
-				this.shootWithRecharge();//this.gotPerforationBonus());
+				this.shootWithRecharge(this.gotPerforationBonus());//this.gotPerforationBonus());
 			}
 
 			if (this.invincible) {
@@ -179,7 +211,7 @@ export default class Player extends Entity {
 	}
 
 	addScorePointOnEnemyKill(enemy) {
-		this.score += enemy.value;
+		this.score += enemy.value*enemy.difficulty*this.scoreMultiplierBonus;
 	}
 
 
@@ -233,10 +265,10 @@ export default class Player extends Entity {
 
 	decelerate(acceleration) {
         if (acceleration < 0) {
-			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier)) * 1000) / 1000;
+			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier  * this.iceMultiplierMalus)) * 1000) / 1000;
             if(acceleration>-0.05) acceleration=0;
 		} else if (acceleration > 0) {
-			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier)) *1000) / 1000;
+			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier  * this.iceMultiplierMalus)) *1000) / 1000;
             if(acceleration<0.05) acceleration=0;
 		}
 		return acceleration;
@@ -259,5 +291,45 @@ export default class Player extends Entity {
 			this.speedX = Player.defaultSpeed;
 			this.accelerationX = this.accelerateRight(this.accelerationX);
 		}
+	}
+
+	//Duration en tick (60 ticks par seconde)
+	obtainScoreMultiplierBonus(
+		duration,
+		multiplier = getRandomInt(WavesManager.difficulty) + 2
+	) {
+		this.timerBeforeLosingScoreMultiplierBonus = duration;
+		this.scoreMultiplierBonus = multiplier;
+	}
+
+	loseScoreMuliplierBonus() {
+		this.scoreMultiplierBonus = 1;
+	}
+
+	gotScoreMultiplierBonus() {
+		return this.scoreMultiplierBonus != 1;
+	}
+
+	//Duration en tick (60 ticks par seconde)
+	obtainIceMalus(duration, multiplier = 5) {
+		this.iceMultiplierMalus = multiplier;
+		this.timerBeforeLosingIceMalus = duration;
+	}
+
+	loseIceMalus() {
+		this.iceMultiplierMalus = 1;
+	}
+
+	gotIceMalus() {
+		return this.iceMultiplierMalus != 1;
+	}
+
+	//Duration en tick (60 ticks par seconde)
+	obtainPerforationBonus(duration) {
+		this.timerBeforeLosingPerforationBonus = duration;
+	}
+
+	gotPerforationBonus() {
+		return this.timerBeforeLosingPerforationBonus > 0;
 	}
 }

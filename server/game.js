@@ -165,7 +165,7 @@ export default class Game{
         		for(let i=0; i<this.players.size; i++){
             		entry = iterator.next();
             		if(entry.value!=null && entry.value[1].alive){
-                		this.powers[i].powerCollideWithPlayer(this,entry.value[1]);
+                		this.powers[i].powerActivation(this,entry.value[1]);
             		}
         		}
 			}

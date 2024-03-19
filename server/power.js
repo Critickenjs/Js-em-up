@@ -6,7 +6,7 @@ export default class Power extends Entity {
 	static width=40;
     static height=40;
 	static speed = 6;
-	static types = ['invincible','life'];
+	static types = ['ice','perforation','invincible'];//,'scoreMultiplierBonus','life'
 	constructor( posX, posY, type = Power.types[getRandomInt(Power.types.length)]
 	) {
 		super(posX, posY, Power.width, Power.height);
@@ -20,7 +20,7 @@ export default class Power extends Entity {
 		super.update(entitySpeedMultiplier);
 	}
 
-	powerCollideWithPlayer(game,player) {
+	powerActivation(game,player) {
 		if (this.isCollidingWith(player)) {
 			this.active = false;
 			switch (this.type) {
@@ -33,22 +33,22 @@ export default class Power extends Entity {
 				case 'life':
 					game.addToTeamLives(1);
 					break;
-				case 'ScoreMultiplierBonus':
-					/*player.obtainScoreMultiplierBonus(
+				case 'scoreMultiplierBonus':
+					player.obtainScoreMultiplierBonus(
 						Player.maxTimeForScoreMultiplierBonus
-					);*/
+					);
 					break;
 				case 'ice':
-					/*player.obtainIceMalus(
+					player.obtainIceMalus(
 						Player.maxTimeIceMalus +
-							((Player.maxTimeIceMalus / 10) | 0) * WavesManager.difficulty
-					);*/
+							((Player.maxTimeIceMalus / 10) | 0) * game.difficulty
+					);
 					break;
 				case 'perforation':
-					/*player.obtainPerforationBonus(
+					player.obtainPerforationBonus(
 						Player.maxTimePerforationBonus +
-						Player.maxTimePerforationBonus / WavesManager.difficulty
-					);*/
+						Player.maxTimePerforationBonus / game.difficulty
+					);
 					break;
 			}
 		}

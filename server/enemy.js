@@ -129,19 +129,19 @@ export default class Enemy extends Entity {
 			case 'red':
 				this.speedX = -getRandomIntWithMin(2, 3);
 				this.speedY = 0;
-				this.value = 5;
+				this.value = 10;
 				break;
 			case 'purple':
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = 5;
-				this.value = 7;
+				this.value = 12;
 				break;
 			case 'orange':
 				this.height = Enemy.height * 1.5;
 				this.width = Enemy.width * 1.5;
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = getRandomIntWithMin(-1, 1);
-				this.value = 10;
+				this.value = 20;
 				break;
 			case 'darkred':
 				this.posX=Entity.canvasWidth+getRandomInt(WavesManager.maxRandomSpawnDistance);
@@ -150,7 +150,7 @@ export default class Enemy extends Entity {
 				this.width = (Enemy.width * (this.lifes / 1.3)) | 0;
 				this.speedX = -1;
 				this.speedY = 0;
-				this.value = 15;
+				this.value = 25;
 				break;
 		}
 	}
