@@ -8,7 +8,7 @@ export default class Client_Player extends Client_Entity {
 		this.pseudo = pseudo;
 		this.invincible = invincible;
 
-		this.maxAnimationTime = 50;
+		this.maxAnimationTime = 30;
 		this.animationTime = this.maxAnimationTime;
 		this.image = new Image();
 		this.image.src = './public/res/images/spaceship.png';
@@ -29,31 +29,30 @@ export default class Client_Player extends Client_Entity {
 			this.height
 		);
 		if (this.invincible >= 0) {
-			if (this.animationTime < 0) {
-				this.animationTime = this.maxAnimationTime;
-			} else {
+			if(this.animationTime>0){
 				this.animationTime--;
+				console.log(this.invincible,this.maxAnimationTime,this.animationTime);
+				if (this.animationTime > this.maxAnimationTime/2) {
+					context.drawImage(
+						this.imageShield2,
+						this.posX - this.width / 4,
+						this.posY - this.height / 4,
+						this.width * 1.5,
+						this.height * 1.5
+					);
+				} else {
+					context.drawImage(
+						this.imageShield,
+						this.posX - this.width / 4,
+						this.posY - this.height / 4,
+						this.width * 1.5,
+						this.height * 1.5
+					);
+				}
+			}else{
+				this.maxAnimationTime=this.invincible/10 | 0;
+				this.animationTime=this.maxAnimationTime;
 			}
-			if (this.animationTime > this.maxAnimationTime / 2) {
-				context.drawImage(
-					this.imageShield2,
-					this.posX - this.width / 4,
-					this.posY - this.height / 4,
-					this.width * 1.5,
-					this.height * 1.5
-				);
-			} else {
-				context.drawImage(
-					this.imageShield,
-					this.posX - this.width / 4,
-					this.posY - this.height / 4,
-					this.width * 1.5,
-					this.height * 1.5
-				);
-			}
-
-			console.log('timer invincible : ', this.invincible);
-			console.log('timer animation : ', this.animationTime);
 		}
 	}
 }
