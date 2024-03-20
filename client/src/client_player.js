@@ -3,6 +3,8 @@ export default class Client_Player extends Client_Entity {
 	static width = 50;
 	static height = 50;
 
+	static isNot = false;
+
 	constructor(posX, posY, pseudo, invincible) {
 		super(posX, posY, Client_Player.width, Client_Player.height);
 		this.pseudo = pseudo;
@@ -55,5 +57,11 @@ export default class Client_Player extends Client_Entity {
 				this.animationTime=this.maxAnimationTime;
 			}
 		}
+	}
+
+	static showMessage(context,msg, size, color,posX,posY){
+		context.fillStyle=color;
+		context.font = size+" 'Minecraft regular'";
+		context.fillText(msg,posX,posY);
 	}
 }
