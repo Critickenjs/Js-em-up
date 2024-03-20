@@ -83,7 +83,6 @@ export default class Player extends Entity {
 			}
 
 			if (this.gotIceMalus()) {
-				console.log("timer ice: ",this.timerBeforeLosingIceMalus);
 				this.timerBeforeLosingIceMalus--;
 				if (this.timerBeforeLosingIceMalus < 0) {
 					this.loseIceMalus();
@@ -91,7 +90,6 @@ export default class Player extends Entity {
 			}
 
 			if (this.gotPerforationBonus()) {
-				console.log("timer perfo: ",this.timerBeforeLosingPerforationBonus);
 				this.timerBeforeLosingPerforationBonus--;
 			}
 			

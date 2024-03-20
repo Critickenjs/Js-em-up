@@ -94,7 +94,7 @@ socket.on('time', newTime => {
 });
 
 socket.on('initClientEnnemys', ennemysLength => {
-	time = newTime;
+	initEnnemys(ennemysLength);
 });
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
@@ -120,6 +120,9 @@ socket.on('game', gameData => {
 	//Update players
 	for (let i = 0; i < gameData.players.length; i++) {
 		let player = players.get(gameData.players[i].id);
+		if(socket.id==gameData.players[i].id){
+			Client_Player.isNot=false;
+		}
 		if(player!=null){
 			player.posX=gameData.players[i].posX;
 			player.posY=gameData.players[i].posY,
@@ -165,18 +168,28 @@ socket.on('game', gameData => {
 	}
 
 	//Update enemys
-	Client_Enemy.enemys = [];
-	for (let i = 0; i < gameData.enemys.length; i++) {
-		Client_Enemy.enemys.push(
-			new Client_Enemy(
-				gameData.enemys[i].posX,
-				gameData.enemys[i].posY,
-				gameData.enemys[i].type,
-				gameData.enemys[i].lifes
-			)
-		);
+	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
+		if(i<gameData.enemys.length){
+			Client_Enemy.enemys[i].posX=gameData.enemys[i].posX,
+			Client_Enemy.enemys[i].posY=gameData.enemys[i].posY,
+			Client_Enemy.enemys[i].type=gameData.enemys[i].type,
+			Client_Enemy.enemys[i].lifes=gameData.enemys[i].lifes
+			Client_Enemy.enemys[i].rebuild();
+		}else{
+			Client_Enemy.enemys[i].reset();
+		}
+		
 	}
 });
+
+function initEnnemys(length){
+	Client_Enemy.enemys = [];
+	for (let i = 0; i < length; i++) {
+		Client_Enemy.enemys.push(
+			new Client_Enemy(canvas.width,canvas.height,"red",0)
+		);
+	}
+}
 
 function removeDeconnectedPlayers() {
 	const iterator = players.keys();
@@ -186,6 +199,7 @@ function removeDeconnectedPlayers() {
 		if (key.value != null) {
 			if (!isKeyInKeyList(key.value, ids)) {
 				players.delete(key.value);
+				Client_Player.isNot=true;
 			}
 		}
 	}
@@ -237,6 +251,10 @@ function render() {
 		if (entry.value != null) {
 			entry.value[1].render(context);
 		}
+	}
+
+	if(Client_Player.isNot){
+		Client_Player.showMessage(context,"You are dead! Wait to respawn...","32px","white",canvas.width/4,canvas.height/2);
 	}
 
 	//Looping

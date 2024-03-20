@@ -1,3 +1,4 @@
+import Entity from '../../server/entity.js';
 import Client_Entity from './client_entity.js';
 export default class Client_Enemy extends Client_Entity {
 	static width=40;
@@ -10,6 +11,9 @@ export default class Client_Enemy extends Client_Entity {
 		this.type=type;
 		this.lifes=lifes;
 		this.image = new Image();
+	}
+
+	rebuild(){
 		this.image.src = './public/res/images/enemy.png';
 		switch (this.type) {
 			case 'red':
@@ -32,9 +36,18 @@ export default class Client_Enemy extends Client_Entity {
 		}
 	}
 
+	reset(){
+		this.posX=Entity.canvasWidth;
+		this.posY=Entity.canvasHeight;
+		this.type="red";
+		this.lifes=0;
+	}
+
 	render(context) {
-		super.render(context);
-		context.beginPath();
-		context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
+		if(this.lifes>0){
+			super.render(context);
+			context.beginPath();
+			context.drawImage(this.image, this.posX, this.posY, this.width, this.height);
+		}
 	}
 }

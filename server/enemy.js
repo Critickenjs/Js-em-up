@@ -59,6 +59,7 @@ export default class Enemy extends Entity {
 	}
 
 	die() {
+		console.log("AN ennemy died!");
 		this.isDead = true;
 	}
 
