@@ -9,8 +9,6 @@ export default class Game {
 	static difficultyMax = 4;
 
 	constructor(io, difficulty) {
-		//Le message refuse de s'envoyer
-		//io.emit('initClientEnnemys',WavesManager.EnemyBuffer * difficulty);
 		this.io = io;
 		this.difficulty = difficulty;
 		this.wavesManager = new WavesManager();
@@ -25,13 +23,6 @@ export default class Game {
 
 	init() {
 		this.wavesManager.firstWave(this.difficulty);
-		
-		//N'arrive pas à envoyer le message, ou du moins le client ne le reçoit jamais
-		//Pour que le message arrive à destination, il faut forcément l'envoyer dans l'une des méthodes update pour une raison inconnue.
-		//Si on enleve le .bind(this) alors les messages ne s'enverront plus. Il semble donc y avoir un lien.
-		//this.io.emit('initClientEnnemys',this.wavesManager.enemys.length);
-		
-		
 		setInterval(this.update.bind(this), 1000 / 60);
 		setInterval(this.updateHUD.bind(this), 1000);
 	}
@@ -117,8 +108,7 @@ export default class Game {
 
 			if (
 				this.wavesManager.waveNumber %
-					(Game.difficultyMax + 1 - this.difficulty) ==
-				0
+					(Game.difficultyMax + 1 - this.difficulty) == 0
 			) {
 				this.powers.push(
 					new Power(

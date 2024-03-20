@@ -93,6 +93,10 @@ socket.on('time', newTime => {
 	time = newTime;
 });
 
+socket.on('initClientEnnemys', ennemysLength => {
+	time = newTime;
+});
+
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isInGame = true;

@@ -31,6 +31,7 @@ io.on('connection',socket => {
 	console.log(`New connexion from client :${socket.id}/`);
 	let player = new Player(100,Entity.canvasHeight/2);
 	game.players.set(socket.id,player);
+	socket.emit('initClientEnnemys',game.wavesManager.enemys.length);
 
 	socket.emit('canvas',[Entity.canvasWidth,Entity.canvasHeight]);
 	socket.on('keys',(keysPressed) => {
