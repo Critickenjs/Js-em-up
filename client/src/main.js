@@ -162,7 +162,8 @@ socket.on('game', gameData => {
 				gameData.shots[i].posX,
 				gameData.shots[i].posY,
 				gameData.shots[i].isFromAPlayer,
-				gameData.shots[i].perforation
+				gameData.shots[i].perforation,
+				gameData.shots[i].laser
 			)
 		);
 	}

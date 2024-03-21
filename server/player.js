@@ -27,6 +27,7 @@ export default class Player extends Entity {
 	static maxTimeForScoreMultiplierBonus = 456;
 	static maxTimeIceMalus = 300;
 	static maxTimePerforationBonus = 300;
+	static maxTimeLaserBonus = 300;
 	
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -63,6 +64,7 @@ export default class Player extends Entity {
 		this.scoreMultiplierBonus = 1;
 
 		this.timerBeforeLosingPerforationBonus = 0;
+		this.timerBeforeLosingLaserBonus = 0;
 	}
 
 	update(keysPressed, entitySpeedMultiplier) {
@@ -92,6 +94,12 @@ export default class Player extends Entity {
 			if (this.gotPerforationBonus()) {
 				this.timerBeforeLosingPerforationBonus--;
 			}
+
+			if (this.gotLaserBonus()) {
+				this.timerBeforeLosingLaserBonus--;
+				console.log("TIMER LASER : "+this.timerBeforeLosingLaserBonus);
+			}
+			
 			
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 
@@ -100,7 +108,11 @@ export default class Player extends Entity {
 			}
 			//Shooting?
 			if (keysPressed.Space || keysPressed.MouseDown) {
-				this.shootWithRecharge(this.gotPerforationBonus());//this.gotPerforationBonus());
+				if(this.gotLaserBonus()){
+					this.shootLaser();
+				}else{
+					this.shootWithRecharge(this.gotPerforationBonus());
+				}
 			}
 
 			if (this.invincible) {
@@ -142,6 +154,25 @@ export default class Player extends Entity {
 				perforationBonus
 			)
 		);
+	}
+
+	shootLaser() {
+		//UNDEFINED!
+		if(this.shots[this.shots.length-1].laser){
+			this.shots[this.shots.length-1].posX=this.posX + this.width;
+			this.shots[this.shots.length-1].posY=this.posY + this.height / 2 - Shot.height / 2;
+		}else{
+			this.shots.push(
+				new Shot(
+					this.posX + this.width,
+					this.posY + this.height / 2 - Shot.height / 2,
+					true,
+					Player.bulletSpeed,
+					perforationBonus
+				)
+			);
+		}
+		
 	}
 
 	//Tue le joueur, augmente le timer avant sa réapparition
@@ -326,5 +357,15 @@ export default class Player extends Entity {
 
 	gotPerforationBonus() {
 		return this.timerBeforeLosingPerforationBonus > 0;
+	}
+
+	//Duration en tick (60 ticks par seconde)
+	obtainLaserBonus(duration) {
+		console.log("Obtient LASER pour "+duration);
+		this.timerBeforeLosingLaserBonus = duration;
+	}
+
+	gotLaserBonus() {
+		return this.timerBeforeLosingLaserBonus > 0;
 	}
 }

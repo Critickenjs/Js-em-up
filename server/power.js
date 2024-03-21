@@ -6,7 +6,7 @@ export default class Power extends Entity {
 	static width=40;
     static height=40;
 	static speed = 6;
-	static types = ['ice','perforation','invincible'];//,'scoreMultiplierBonus','life'
+	static types = ['laser']//,'ice','perforation','invincible'];//,'scoreMultiplierBonus','life'
 	constructor( posX, posY, type = Power.types[getRandomInt(Power.types.length)]
 	) {
 		super(posX, posY, Power.width, Power.height);
@@ -23,33 +23,40 @@ export default class Power extends Entity {
 	powerActivation(game,player) {
 		if (this.isCollidingWith(player)) {
 			this.active = false;
+			console.log("COLLISION WITH POWER");
 			switch (this.type) {
 				case 'invincible':
 					player.becomeInvincible(
 						Player.maxTimeForInvincibility +
 							Player.maxTimeForInvincibility / game.difficulty
 					);
-					break;
+				break;
 				case 'life':
 					game.addToTeamLives(1);
-					break;
+				break;
 				case 'scoreMultiplierBonus':
 					player.obtainScoreMultiplierBonus(
 						Player.maxTimeForScoreMultiplierBonus
 					);
-					break;
+				break;
 				case 'ice':
 					player.obtainIceMalus(
 						Player.maxTimeIceMalus +
 							((Player.maxTimeIceMalus / 10) | 0) * game.difficulty
 					);
-					break;
+				break;
 				case 'perforation':
 					player.obtainPerforationBonus(
 						Player.maxTimePerforationBonus +
 						Player.maxTimePerforationBonus / game.difficulty
 					);
-					break;
+				break;
+				case 'laser':
+					player.obtainLaserBonus(
+						Player.maxTimeLaserBonus +
+						Player.maxTimeLaserBonus / game.difficulty
+					);
+				break;
 			}
 		}
 	}

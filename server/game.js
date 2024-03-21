@@ -146,13 +146,16 @@ export default class Game {
 						score: player.score,
 						invincible: player.timerBeforeLosingInvincibility,
 					});
+				let shot;
 				for (let i = 0; i < player.shots.length; i++) {
-					if (player.shots[i].active)
+					shot=player.shots[i];
+					if (shot.active)
 						this.gameData.shots.push({
-							posX: player.shots[i].posX,
-							posY: player.shots[i].posY,
+							posX: shot.posX,
+							posY: shot.posY,
 							isFromAPlayer: true,
-							perforation: player.shots[i].perforation,
+							perforation: shot.perforation,
+							laser: shot.laser
 						});
 				}
 			}
