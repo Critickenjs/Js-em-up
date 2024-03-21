@@ -13,6 +13,7 @@ export default class Client_Shot extends Client_Entity {
 		this.laser=laser;
 		if(this.laser){
 			this.width=Client_Entity.canvasWidth;
+			this.height=Client_Shot.height;
 		}
 	}
 

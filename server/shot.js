@@ -12,7 +12,8 @@ export default class Shot extends Entity {
 		this.laser = laserBonus;
 		this.isFromPlayer = isFromPlayer;
 		if(this.laser){
-			this.speedX=0;
+			this.width=Entity.canvasWidth;
+			this.height=Shot.height*5;
 		}
 	}
 

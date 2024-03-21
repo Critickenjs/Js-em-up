@@ -27,7 +27,7 @@ export default class Player extends Entity {
 	static maxTimeForScoreMultiplierBonus = 456;
 	static maxTimeIceMalus = 300;
 	static maxTimePerforationBonus = 300;
-	static maxTimeLaserBonus = 300;
+	static maxTimeLaserBonus = 180;
 	
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -97,7 +97,9 @@ export default class Player extends Entity {
 
 			if (this.gotLaserBonus()) {
 				this.timerBeforeLosingLaserBonus--;
-				console.log("TIMER LASER : "+this.timerBeforeLosingLaserBonus);
+				if(this.timerBeforeLosingLaserBonus ==0){
+					this.shots=[];
+				}
 			}
 			
 			
@@ -105,15 +107,17 @@ export default class Player extends Entity {
 
 			if (this.timerBeforeShots > 0) {
 				this.timerBeforeShots--;
+					
 			}
 			//Shooting?
-			if (keysPressed.Space || keysPressed.MouseDown) {
-				if(this.gotLaserBonus()){
-					this.shootLaser();
-				}else{
+			if(this.gotLaserBonus()){
+				this.shootLaser();
+			}else{
+				if (keysPressed.Space || keysPressed.MouseDown) {
 					this.shootWithRecharge(this.gotPerforationBonus());
 				}
 			}
+			
 
 			if (this.invincible) {
 				if (this.timerBeforeLosingInvincibility < 0) {
@@ -157,8 +161,7 @@ export default class Player extends Entity {
 	}
 
 	shootLaser() {
-		//UNDEFINED!
-		if(this.shots[this.shots.length-1].laser){
+		if(this.shots.length!=0 && this.shots[this.shots.length-1].laser){
 			this.shots[this.shots.length-1].posX=this.posX + this.width;
 			this.shots[this.shots.length-1].posY=this.posY + this.height / 2 - Shot.height / 2;
 		}else{
@@ -167,8 +170,9 @@ export default class Player extends Entity {
 					this.posX + this.width,
 					this.posY + this.height / 2 - Shot.height / 2,
 					true,
-					Player.bulletSpeed,
-					perforationBonus
+					0,
+					true,
+					true
 				)
 			);
 		}
@@ -178,6 +182,9 @@ export default class Player extends Entity {
 	//Tue le joueur, augmente le timer avant sa réapparition
 	die() {
 		this.alive = false;
+		if(this.gotLaserBonus){
+			this.shots=[];
+		}
 	}
 
 	respawn(difficulty) {
@@ -195,6 +202,11 @@ export default class Player extends Entity {
 		//La réapparition devient de plus en plus long quand on meurt.
 		this.maxTimeBeforeRespawn += 5 * difficulty;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
+
+		this.timerBeforeLosingIceMalus=0;
+		this.timerBeforeLosingLaserBonus=0;
+		this.timerBeforeLosingPerforationBonus=0;
+		this.timerBeforeLosingScoreMultiplierBonus=0;
 	}
 
 	becomeInvincible(duration) {
@@ -361,7 +373,6 @@ export default class Player extends Entity {
 
 	//Duration en tick (60 ticks par seconde)
 	obtainLaserBonus(duration) {
-		console.log("Obtient LASER pour "+duration);
 		this.timerBeforeLosingLaserBonus = duration;
 	}
 

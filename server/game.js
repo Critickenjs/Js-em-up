@@ -170,7 +170,7 @@ export default class Game {
 			} else if (this.powers[i].active) {
 				const iterator = this.players.entries();
         		let entry;
-        		for(let i=0; i<this.players.size; i++){
+        		for(let p=0; p<this.players.size; p++){
             		entry = iterator.next();
             		if(entry.value!=null && entry.value[1].alive){
                 		this.powers[i].powerActivation(this,entry.value[1]);
