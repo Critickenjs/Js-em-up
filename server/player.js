@@ -13,7 +13,7 @@ export default class Player extends Entity {
 	static defaultSpeed = 3;
 
 	//Lifes
-	static defaultNumberOfLife = 3;
+	static defaultNumberOfLife = 4;
 
 	//Bullets
 	static bulletSpeed = Shot.defaultSpeed;

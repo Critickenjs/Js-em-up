@@ -15,7 +15,8 @@ export default class Game {
 		this.gameData = new GameData();
 		this.players = new Map();
 		this.powers = [];
-		this.teamLifes = Player.defaultNumberOfLife;
+		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
+		if(this.teamLifes<0) this.teamLifes=0;
 		this.isInGame = true;
 		this.time = 0;
 		this.allDead = false;
