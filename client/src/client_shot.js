@@ -13,15 +13,14 @@ export default class Client_Shot extends Client_Entity {
 		this.laser=laser;
 		if(this.laser){
 			this.width=Client_Entity.canvasWidth;
-			this.height=Client_Shot.height;
 		}
 	}
 
 	render(context) {
 		super.render(context);
 		context.beginPath();
-		if(this.isFromAPlayer && !this.laser){
-			if(this.perforation){
+		if(this.isFromAPlayer){
+			if(this.perforation && !this.laser){
 				context.fillStyle = 'yellow';
 			}else{
 				context.fillStyle = 'green';

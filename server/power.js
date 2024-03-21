@@ -6,7 +6,7 @@ export default class Power extends Entity {
 	static width=40;
     static height=40;
 	static speed = 6;
-	static types = ['laser','ice','perforation','invincible'];//,'scoreMultiplierBonus','life'
+	static types = ['laser']//,'ice','perforation','invincible'];//,'scoreMultiplierBonus','life'
 	constructor( posX, posY, type = Power.types[getRandomInt(Power.types.length)]
 	) {
 		super(posX, posY, Power.width, Power.height);

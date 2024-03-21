@@ -164,6 +164,7 @@ export default class Player extends Entity {
 		if(this.shots.length!=0 && this.shots[this.shots.length-1].laser){
 			this.shots[this.shots.length-1].posX=this.posX + this.width;
 			this.shots[this.shots.length-1].posY=this.posY + this.height / 2 - Shot.height / 2;
+			this.shots[this.shots.length-1].width=Entity.canvasWidth-this.posX;
 		}else{
 			this.shots.push(
 				new Shot(
