@@ -4,13 +4,14 @@ import { io } from 'socket.io-client';
 import Client_Entity from './client_entity.js';
 import Client_Player from './client_player.js';
 import preloadAssets from './preLoadAssets.js';
-import { Particules } from './Particules.js';
+import { Stars } from './stars.js';
 import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
 import GameView from './gameView.js';
 import Client_Power from './client_power.js';
+import { Particules } from './Particules.js';
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -75,6 +76,7 @@ function resampleCanvas() {
 	Client_Entity.canvasWidth = canvas.width;
 }
 
+Stars.init();
 Particules.init();
 
 let time = 0;
@@ -199,6 +201,8 @@ function removeDeconnectedPlayers() {
 		key = iterator.next();
 		if (key.value != null) {
 			if (!isKeyInKeyList(key.value, ids)) {
+				const player = players.get(key.value);
+				Particules.explosion(player.posX,player.posY);
 				players.delete(key.value);
 				Client_Player.isNot=true;
 			}
@@ -226,7 +230,9 @@ function render() {
 	//Reset Canvas
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
-	//Render Particules Behind
+	//Render Stars Behind
+	Stars.renderAll(context);
+
 	Particules.renderAll(context);
 
 	//Afficher les ennemis
@@ -264,9 +270,10 @@ function render() {
 
 requestAnimationFrame(render);
 
-setInterval(updateParticules, 10);
+setInterval(updateStars, 10);
 
-function updateParticules() {
+function updateStars() {
+	Stars.updateAll();
 	Particules.updateAll();
 }
 
