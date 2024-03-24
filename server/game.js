@@ -127,7 +127,7 @@ export default class Game {
 
 	resetData() {
 		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0,"invincible":4} //Invincible est le timer avant la fin de l'invinciblité
-		this.gameData.enemys = []; //{"posX":x,"posY:y","type":'red',"lifes":1}
+		this.gameData.enemys = []; //{"id":'',"posX":x,"posY:y","type":'red',"lifes":1}
 		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
 		this.gameData.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false}
 	}
@@ -191,6 +191,7 @@ export default class Game {
 		for (let i = 0; i < enemys.length; i++) {
 			if (!enemys[i].isDead)
 				refreshed.push({
+					id: i,
 					posX: enemys[i].posX,
 					posY: enemys[i].posY,
 					type: enemys[i].type,

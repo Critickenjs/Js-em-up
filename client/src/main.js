@@ -122,10 +122,8 @@ socket.on('game', gameData => {
 	//Update players
 	for (let i = 0; i < gameData.players.length; i++) {
 		let player = players.get(gameData.players[i].id);
-		if(socket.id==gameData.players[i].id){
-			Client_Player.isNot=false;
-		}
 		if(player!=null){
+			player.isAlive=true;
 			player.posX=gameData.players[i].posX;
 			player.posY=gameData.players[i].posY,
 			player.pseudo=gameData.players[i].pseudo,
@@ -171,7 +169,7 @@ socket.on('game', gameData => {
 	}
 
 	//Update enemys
-	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
+	/*for (let i = 0; i < Client_Enemy.enemys.length; i++) {
 		if(i<gameData.enemys.length){
 			Client_Enemy.enemys[i].posX=gameData.enemys[i].posX,
 			Client_Enemy.enemys[i].posY=gameData.enemys[i].posY,
@@ -181,17 +179,55 @@ socket.on('game', gameData => {
 		}else{
 			Client_Enemy.enemys[i].reset();
 		}
+	}*/
+	
+	// New Update enemys
+	for (let i = 0; i < gameData.enemys.length; i++) {
+		let enemy = Client_Enemy.enemys.get(gameData.enemys[i].id);
 		
+		if(enemy!=null){
+			enemy.alive=true;
+			enemy.posX=gameData.enemys[i].posX;
+			enemy.posY=gameData.enemys[i].posY,
+			enemy.type=gameData.enemys[i].type,
+			enemy.lifes=gameData.enemys[i].lifes
+			enemy.rebuild();
+		}else{
+			Client_Enemy.enemys.set(
+				gameData.enemys[i].id,
+				new Client_Enemy(
+					gameData.enemys[i].posX,
+					gameData.enemys[i].posY,
+					gameData.enemys[i].type,
+					gameData.enemys[i].lifes
+				)
+			);
+			console.log("New ennemy");
+		}
+		ids.push(gameData.enemys[i].id);
 	}
+	const iterator = Client_Enemy.enemys.keys();
+	let key;
+	for (let i = 0; i < Client_Enemy.enemys.size; i++) {
+		key = iterator.next();
+		if (key.value != null) {
+			const enemy = Client_Enemy.enemys.get(key.value);
+			if (!isKeyInKeyList(key.value, ids)&& enemy.lifes>0) {
+				Particules.explosion(enemy.posX,enemy.posY);
+				enemy.reset();
+			}
+		}
+	}
+	
 });
 
 function initEnnemys(length){
-	Client_Enemy.enemys = [];
+	/*Client_Enemy.enemys = [];
 	for (let i = 0; i < length; i++) {
 		Client_Enemy.enemys.push(
 			new Client_Enemy(canvas.width,canvas.height,"red",0)
 		);
-	}
+	}*/
 }
 
 function removeDeconnectedPlayers() {
@@ -201,13 +237,17 @@ function removeDeconnectedPlayers() {
 		key = iterator.next();
 		if (key.value != null) {
 			if (!isKeyInKeyList(key.value, ids)) {
+				
 				const player = players.get(key.value);
-				Particules.explosion(player.posX,player.posY);
-				players.delete(key.value);
-				Client_Player.isNot=true;
+				if(player!=null && player.isAlive){
+					Particules.explosion(player.posX,player.posY);
+					player.isAlive=false;
+				}
+				
 			}
 		}
 	}
+	
 }
 
 function isKeyInKeyList(key, keyList) {
@@ -235,11 +275,6 @@ function render() {
 
 	Particules.renderAll(context);
 
-	//Afficher les ennemis
-	for (let i = 0; i < Client_Enemy.enemys.length; i++) {
-		Client_Enemy.enemys[i].render(context);
-	}
-
 	//Afficher tous les tirs
 	for (let i = 0; i < Client_Shot.shots.length; i++) {
 		Client_Shot.shots[i].render(context);
@@ -251,17 +286,26 @@ function render() {
 	}
 
 	//Render players
+	const iterator_ennemies = Client_Enemy.enemys.entries();
+	let entry_ennemies;
+	for (let i = 0; i < Client_Enemy.enemys.size; i++) {
+		entry_ennemies = iterator_ennemies.next();
+		if (entry_ennemies.value != null) {
+			entry_ennemies.value[1].render(context);
+		}
+	}
+
+	//Render players
 	const iterator = players.entries();
 	let entry;
 	for (let i = 0; i < players.size; i++) {
 		entry = iterator.next();
 		if (entry.value != null) {
 			entry.value[1].render(context);
+			if(!entry.value[1].isAlive){
+				Client_Player.showMessage(context,"You are dead! Wait to respawn...","32px","white",canvas.width/4,canvas.height/2);
+			}
 		}
-	}
-
-	if(Client_Player.isNot){
-		Client_Player.showMessage(context,"You are dead! Wait to respawn...","32px","white",canvas.width/4,canvas.height/2);
 	}
 
 	//Looping

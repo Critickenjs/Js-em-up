@@ -10,7 +10,6 @@ export function getRandomIntWithMin(min, max) {
 }
 
 export function coinFlip() {
-	console.log(getRandomInt(2));
 	if (getRandomInt(2)==0){
 		return true;
 	}else{

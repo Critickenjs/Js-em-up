@@ -4,7 +4,7 @@ export default class Client_Enemy extends Client_Entity {
 	static width=40;
 	static height=40;
 
-	static enemys=[];
+	static enemys=new Map();
 	
 	constructor(posX, posY, type, lifes) {
 		super(posX, posY, Client_Enemy.width, Client_Enemy.height);
