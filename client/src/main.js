@@ -188,9 +188,10 @@ socket.on('game', gameData => {
 		if(enemy!=null){
 			enemy.alive=true;
 			enemy.posX=gameData.enemys[i].posX;
-			enemy.posY=gameData.enemys[i].posY,
-			enemy.type=gameData.enemys[i].type,
-			enemy.lifes=gameData.enemys[i].lifes
+			enemy.posY=gameData.enemys[i].posY;
+			enemy.type=gameData.enemys[i].type;
+			enemy.oldNbLifes=enemy.lifes;
+			enemy.lifes=gameData.enemys[i].lifes;
 			enemy.rebuild();
 		}else{
 			Client_Enemy.enemys.set(
@@ -215,6 +216,9 @@ socket.on('game', gameData => {
 			if (!isKeyInKeyList(key.value, ids)&& enemy.lifes>0) {
 				Particules.explosion(enemy.posX,enemy.posY);
 				enemy.reset();
+			}
+			if(enemy.oldNbLifes>enemy.lifes && enemy.lifes!=0 ){
+				Particules.explosion(enemy.posX,enemy.posY);
 			}
 		}
 	}

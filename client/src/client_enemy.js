@@ -10,6 +10,7 @@ export default class Client_Enemy extends Client_Entity {
 		super(posX, posY, Client_Enemy.width, Client_Enemy.height);
 		this.type=type;
 		this.lifes=lifes;
+		this.oldNbLifes=lifes;
 		this.image = new Image();
 	}
 
