@@ -9,6 +9,7 @@ import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
+import Scoreboard from './scoreboard.js';
 import GameView from './gameView.js';
 import Client_Power from './client_power.js';
 import GameOver from './gameOverView.js';
