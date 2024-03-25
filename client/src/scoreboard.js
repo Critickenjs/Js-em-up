@@ -1,6 +1,6 @@
-import View from './gameView.js';
+import View from './view.js';
 
-export default class GameView extends View {
+export default class Scoreboard extends View {
 	constructor(element) {
 		super(element);
 	}
