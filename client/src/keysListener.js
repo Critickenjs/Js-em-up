@@ -5,12 +5,18 @@ export default class KeysListener {
 		this.element = element;
 		this.keysPressed = {
 			MouseMode: false,
+			MouseDown: false,
 			ArrowUp: false,
 			ArrowDown: false,
 			ArrowLeft: false,
 			ArrowRight: false,
 			Space: false,
-			MouseDown: false,
+			
+			onPhone: false,
+			isOnLandscape: false,
+			alpha: 0,
+			beta:0,
+			gamma:0,
 		};
 	}
 

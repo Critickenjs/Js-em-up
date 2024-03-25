@@ -52,6 +52,8 @@ let isingame = false;
 
 const socket = io();
 
+
+
 socket.on('canvas', tab => {
 	canvasServerWidth = tab[0];
 	canvasServerHeight = tab[1];
@@ -62,10 +64,6 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
-const gameView = new GameView(document.querySelector('.game'));
-const homePage = new HomePage(document.querySelector('.HomePage'));
-const gameOver = new GameOver(document.querySelector('.gameOver'));
-const scoreboard = new Scoreboard(document.querySelector('.scoreboard'));
 export default canvas;
 
 //met à jour dynamiquement la taille du canvas
@@ -83,13 +81,11 @@ function resampleCanvas() {
 	}
 	Client_Entity.canvasHeight = canvas.height;
 	Client_Entity.canvasWidth = canvas.width;
-}
-
-if (isingame == false) {
-	gameView.hide();
-	homePage.show();
-	gameOver.hide();
-	scoreboard.hide();
+	if(window.innerWidth>window.innerHeight){
+		keys.keysPressed.isOnLandscape=true;
+	}else{
+		keys.keysPressed.isOnLandscape=false;
+	}
 }
 
 Stars.init();
@@ -116,20 +112,43 @@ canvas.addEventListener("touchstart",function(e){
 });
 window.addEventListener('deviceorientation', handleOrientation);
 function handleOrientation(event) {
-	const alpha = event.alpha;
-	const beta = event.beta;
-	const gamma = event.gamma;
-	console.log("alpha:"+alpha,"beta:"+beta,"gamma:"+gamma);
+	keys.keysPressed.alpha = event.alpha;
+	keys.keysPressed.beta = event.beta;
+	keys.keysPressed.gamma = event.gamma;
 }
 
+const screen = window.screen;
+
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+	// true for mobile device
+	keys.keysPressed.onPhone=true;
+	if (screen.orientation && screen.orientation.lock) {
+		screen.orientation.lock('landscape');
+		keys.keysPressed.isOnLandscape=true;
+	}else{
+		alert("For a better gameplay, please lock in landscape mode.");
+	}
+  }else{
+	// false for not mobile device
+	keys.keysPressed.onPhone=false;
+  }
 
 socket.on('time', newTime => {
 	time = newTime;
 });
 
-socket.on('initClientEnnemys', ennemysLength => {
-	initEnnemys(ennemysLength);
-});
+
+const gameView = new GameView(document.querySelector('.game'));
+const homePage = new HomePage(document.querySelector('.HomePage'), keys.keysPressed.onPhone);
+const gameOver = new GameOver(document.querySelector('.gameOver'));
+const scoreboard = new Scoreboard(document.querySelector('.scoreboard'));
+
+if (isingame == false) {
+	gameView.hide();
+	homePage.show();
+	gameOver.hide();
+	scoreboard.hide();
+}
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
@@ -197,19 +216,6 @@ socket.on('game', gameData => {
 		);
 	}
 
-	//Update enemys
-	/*for (let i = 0; i < Client_Enemy.enemys.length; i++) {
-		if(i<gameData.enemys.length){
-			Client_Enemy.enemys[i].posX=gameData.enemys[i].posX,
-			Client_Enemy.enemys[i].posY=gameData.enemys[i].posY,
-			Client_Enemy.enemys[i].type=gameData.enemys[i].type,
-			Client_Enemy.enemys[i].lifes=gameData.enemys[i].lifes
-			Client_Enemy.enemys[i].rebuild();
-		}else{
-			Client_Enemy.enemys[i].reset();
-		}
-	}*/
-
 	// New Update enemys
 	for (let i = 0; i < gameData.enemys.length; i++) {
 		let enemy = Client_Enemy.enemys.get(gameData.enemys[i].id);
@@ -262,14 +268,6 @@ socket.on('game', gameData => {
 	gameView.setTime(time);
 });
 
-function initEnnemys(length) {
-	/*Client_Enemy.enemys = [];
-	for (let i = 0; i < length; i++) {
-		Client_Enemy.enemys.push(
-			new Client_Enemy(canvas.width,canvas.height,"red",0)
-		);
-	}*/
-}
 
 function removeDeconnectedPlayers() {
 	const iterator = players.keys();
@@ -357,6 +355,19 @@ function render() {
 			canvas.height / 2
 		);
 	}
+
+	if(keys.keysPressed.onPhone && !keys.keysPressed.isOnLandscape){
+		Client_Player.showMessage(
+			context,
+			'Please use landscape mode.',
+			'24px',
+			'white',
+			10,
+			canvas.height-10
+		);
+	}
+
+	
 
 	//Looping
 	requestAnimationFrame(render);

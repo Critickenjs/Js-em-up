@@ -131,7 +131,7 @@ button{
     background: url(../images/btn1.png) no-repeat;
     background-size: contain;
     border-style: none;
-    margin: auto;
+    margin: 5px;
 }
 
 button:hover{
@@ -193,10 +193,10 @@ div{
     border-radius: 3px;
 }
 
-
 .switch {
     margin: 10px;
 }
+
 
 /*  
   .switch input {
