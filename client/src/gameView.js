@@ -47,4 +47,12 @@ export default class GameView extends View {
 	setTime(time) {
 		this.element.querySelector('.timeValue').textContent = time;
 	}
+
+	showMsgLandscape(){
+		this.element.querySelector('.landscape').style.display='';
+	}
+
+	hideMsgLandscape(){
+		this.element.querySelector('.landscape').style.display='none';
+	}
 }

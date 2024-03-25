@@ -6,6 +6,9 @@ export default class KeysListener {
 		this.keysPressed = {
 			MouseMode: false,
 			MouseDown: false,
+			MouseX: 0,
+			MouseY: 0,
+
 			ArrowUp: false,
 			ArrowDown: false,
 			ArrowLeft: false,

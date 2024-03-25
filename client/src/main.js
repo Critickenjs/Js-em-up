@@ -117,17 +117,16 @@ function handleOrientation(event) {
 	keys.keysPressed.gamma = event.gamma;
 }
 
+canvas.addEventListener('mousemove',function(event){
+	keys.keysPressed.MouseX = Math.round((event.clientX - canvas.getBoundingClientRect().left) * 10)/10;
+    keys.keysPressed.MouseY = Math.round((event.clientY - canvas.getBoundingClientRect().top) * 10)/10;
+})
+
 const screen = window.screen;
 
 if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 	// true for mobile device
 	keys.keysPressed.onPhone=true;
-	if (screen.orientation && screen.orientation.lock) {
-		screen.orientation.lock('landscape');
-		keys.keysPressed.isOnLandscape=true;
-	}else{
-		alert("For a better gameplay, please lock in landscape mode.");
-	}
   }else{
 	// false for not mobile device
 	keys.keysPressed.onPhone=false;
@@ -356,15 +355,14 @@ function render() {
 		);
 	}
 
-	if(keys.keysPressed.onPhone && !keys.keysPressed.isOnLandscape){
-		Client_Player.showMessage(
-			context,
-			'Please use landscape mode.',
-			'24px',
-			'white',
-			10,
-			canvas.height-10
-		);
+	if(keys.keysPressed.onPhone){ //Mettre ici les modifications dues aux téléphones
+
+		if(keys.keysPressed.isOnLandscape){
+			gameView.hideMsgLandscape();
+		}else{
+			gameView.showMsgLandscape();
+		}
+
 	}
 
 	
