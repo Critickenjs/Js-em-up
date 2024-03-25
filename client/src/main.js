@@ -106,6 +106,22 @@ socket.on('playerKeys', () => {
 	ids = [];
 	socket.emit('keys', keys.keysPressed);
 });
+canvas.addEventListener("touchstart",function(e){
+	e.preventDefault();
+	if(keys.keysPressed.MouseDown){
+		keys.keysPressed.MouseDown=false;
+	}else{
+		keys.keysPressed.MouseDown=true;
+	}
+});
+window.addEventListener('deviceorientation', handleOrientation);
+function handleOrientation(event) {
+	const alpha = event.alpha;
+	const beta = event.beta;
+	const gamma = event.gamma;
+	console.log("alpha:"+alpha,"beta:"+beta,"gamma:"+gamma);
+}
+
 
 socket.on('time', newTime => {
 	time = newTime;
@@ -257,7 +273,7 @@ function removeDeconnectedPlayers() {
 				if(player!=null && player.isAlive){
 					soundboard.playSoundPlayerDeath();
 					Particules.explosion(player.posX,player.posY);
-					player.isAlive=false;
+					players.delete(key.value);
 				}
 			}
 		}
@@ -312,21 +328,25 @@ function render() {
 	//Render players
 	const iterator = players.entries();
 	let entry;
+	let isCurrentClientDead =true;
 	for (let i = 0; i < players.size; i++) {
 		entry = iterator.next();
 		if (entry.value != null) {
 			entry.value[1].render(context);
-			if (!entry.value[1].isAlive) {
-				Client_Player.showMessage(
-					context,
-					'You are dead! Wait to respawn...',
-					'32px',
-					'white',
-					canvas.width / 4,
-					canvas.height / 2
-				);
+			if (entry.value[0]==socket.id) {
+				isCurrentClientDead = false;
 			}
 		}
+	}
+	if(isCurrentClientDead){
+		Client_Player.showMessage(
+			context,
+			'You are dead! Wait to respawn...',
+			'32px',
+			'white',
+			canvas.width / 4,
+			canvas.height / 2
+		);
 	}
 
 	//Looping
