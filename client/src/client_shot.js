@@ -4,7 +4,8 @@ export default class Client_Shot extends Client_Entity {
 	static width = 20;
 	static height = 5;
 
-	static effect = 3;
+	static effect_thickness = 3;
+	static effect_opacity = 0.2;
 
 	static shots=[];
 
@@ -31,8 +32,8 @@ export default class Client_Shot extends Client_Entity {
 			context.fillStyle = 'red';
 		}
 		context.fillRect(this.posX, this.posY, this.width, this.height);
-		context.globalAlpha = 0.2; // Réglez l'opacité pour un effet semi-transparent
-		context.fillRect(this.posX-Client_Shot.effect, this.posY-Client_Shot.effect, this.width+Client_Shot.effect*2, this.height+Client_Shot.effect*2); // Dessinez l'effet autour du deuxième rectangle
+		context.globalAlpha = Client_Shot.effect_opacity; // Réglez l'opacité pour un effet semi-transparent
+		context.fillRect(this.posX-Client_Shot.effect_thickness, this.posY-Client_Shot.effect_thickness, this.width+Client_Shot.effect_thickness*2, this.height+Client_Shot.effect_thickness*2); // Dessinez l'effet autour du deuxième rectangle
 		context.globalAlpha=1;
 	}
 }

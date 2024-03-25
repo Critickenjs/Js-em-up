@@ -26,7 +26,7 @@ export default class Player extends Entity {
 	//Powers
 	static maxTimeForScoreMultiplierBonus = 456;
 	static maxTimeIceMalus = 300;
-	static maxTimePerforationBonus = 300;
+	static maxTimePerforationBonus = 324;
 	static maxTimeLaserBonus = 180;
 
 	constructor(posX, posY) {
