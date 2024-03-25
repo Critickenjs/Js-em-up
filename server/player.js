@@ -275,23 +275,31 @@ export default class Player extends Entity {
 	}
 
 	acceleration(keysPressed) {
-		this.keyBoardMovement(keysPressed);
-		this.checkMaxAcceleration();
+		if (keysPressed.onPhone){
+			this.checkMaxAcceleration(2);
+		}else if(keysPressed.MouseMode){
+			this.mouseMovement(keysPressed);
+			this.checkMaxAcceleration(1);
+		}else{
+			this.keyBoardMovement(keysPressed);
+			this.checkMaxAcceleration(1);
+		}
 		this.speedX += this.accelerationX;
 		this.speedY += this.accelerationY;
 	}
 
-	checkMaxAcceleration() {
-		if (this.accelerationX > Player.maxAcceleration) {
-			this.accelerationX = Player.maxAcceleration;
+	checkMaxAcceleration(multiplier=1) {
+		if (this.accelerationX > Player.maxAcceleration*multiplier) {
+			this.accelerationX = Player.maxAcceleration*multiplier;
 		}
-		if (this.accelerationX < -Player.maxAcceleration) {
-			this.accelerationX = -Player.maxAcceleration;
+		else if (this.accelerationX < -Player.maxAcceleration*multiplier) {
+			this.accelerationX = -Player.maxAcceleration*multiplier;
 		}
-		if (this.accelerationY > Player.maxAcceleration) {
-			this.accelerationY = Player.maxAcceleration;
-		} else if (this.accelerationY < -Player.maxAcceleration) {
-			this.accelerationY = -Player.maxAcceleration;
+		if (this.accelerationY > Player.maxAcceleration*multiplier) {
+			this.accelerationY = Player.maxAcceleration*multiplier;
+		}
+		else if (this.accelerationY < -Player.maxAcceleration*multiplier) {
+			this.accelerationY = -Player.maxAcceleration*multiplier;
 		}
 	}
 	deceleration() {
@@ -338,6 +346,57 @@ export default class Player extends Entity {
 			this.accelerationX = this.accelerateRight(this.accelerationX);
 		}
 	}
+
+	
+	mouseMovement(keysPressed) {
+		console.log("mouse Movement : ("+keysPressed.MouseX+"-"+keysPressed.MouseY+")");
+		const vaguely = 10;
+		console.log("Pos X : "+this.posX);
+		console.log("Pos Y : "+this.posY);
+		const distanceX = Math.round(Math.abs(keysPressed.MouseX - this.posX)) / 2000;
+		const distanceY = Math.round(Math.abs(keysPressed.MouseY - this.posY)) / 2000;
+		console.log("Distance X : "+distanceX);
+		console.log("Distance Y : "+distanceY);
+		if (
+			!(
+				this.posX + this.width / 2 > keysPressed.MouseX - vaguely &&
+				this.posX + this.width / 2 < keysPressed.MouseX + vaguely
+			)
+		) {
+			if (this.posX + this.width / 2 > keysPressed.MouseX) {
+				this.speedX = -Player.defaultSpeed;
+				this.accelerationX = this.accelerateLeft(this.accelerationX, distanceX);
+			} else {
+				this.speedX = Player.defaultSpeed;
+				this.accelerationX = this.accelerateRight(
+					this.accelerationX,
+					distanceX
+				);
+			}
+		}
+		if (
+			!(
+				this.posY + this.height / 2 < keysPressed.MouseY + vaguely &&
+				this.posY + this.height / 2 > keysPressed.MouseY - vaguely
+			)
+		) {
+			if (this.posY + this.height / 2 > keysPressed.MouseY) {
+				this.speedY = -Player.defaultSpeed;
+				this.accelerationY = this.accelerateUp(this.accelerationY, distanceY);
+			} else {
+				this.speedY = Player.defaultSpeed;
+				this.accelerationY = this.accelerateDown(this.accelerationY, distanceY);
+			}
+		}
+	}
+
+	gyroscopeMovement(keysPressed) {
+		if(keysPressed.beta != null && keysPressed.gamma != null){
+			this.accelerationY=keysPressed.beta;
+			this.accelerationX=keysPressed.gamma+15;//Pour que le controle soit plus fluide
+		}
+	}
+
 
 	//Duration en tick (60 ticks par seconde)
 	obtainScoreMultiplierBonus(
