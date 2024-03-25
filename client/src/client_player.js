@@ -3,15 +3,20 @@ export default class Client_Player extends Client_Entity {
 	static width = 50;
 	static height = 50;
 
+	
+
 	constructor(posX, posY, pseudo, invincible) {
 		super(posX, posY, Client_Player.width, Client_Player.height);
 		this.pseudo = pseudo;
 		this.invincible = invincible;
 		this.isAlive=false;
 
+		//Animation
 		this.maxAnimationTime = 30;
 		this.minAnimationTime = 10;
 		this.animationTime = this.maxAnimationTime;
+		
+		//Image
 		this.image = new Image();
 		this.image.src = './public/res/images/spaceship.png';
 		this.imageShield = new Image();

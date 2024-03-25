@@ -145,6 +145,7 @@ export default class Game {
 						posX: player.posX,
 						posY: player.posY,
 						score: player.score,
+						pseudo: player.pseudo,
 						invincible: player.timerBeforeLosingInvincibility,
 					});
 				let shot;
