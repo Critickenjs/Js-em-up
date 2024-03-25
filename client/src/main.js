@@ -12,6 +12,9 @@ import HomePage from './homePageView.js';
 import GameView from './gameView.js';
 import Client_Power from './client_power.js';
 import { Particules } from './Particules.js';
+import SoundBoard from './soundBoard.js';
+
+const soundboard = new SoundBoard();
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -244,6 +247,7 @@ function removeDeconnectedPlayers() {
 				
 				const player = players.get(key.value);
 				if(player!=null && player.isAlive){
+					soundboard.playSoundPlayerDeath();
 					Particules.explosion(player.posX,player.posY);
 					player.isAlive=false;
 				}
