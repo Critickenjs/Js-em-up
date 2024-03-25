@@ -16,7 +16,7 @@ export default class Game {
 		this.players = new Map();
 		this.powers = [];
 		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
-		if(this.teamLifes<0) this.teamLifes=0;
+		if (this.teamLifes < 0) this.teamLifes = 0;
 		this.isInGame = true;
 		this.time = 0;
 		this.allDead = false;
@@ -109,7 +109,8 @@ export default class Game {
 
 			if (
 				this.wavesManager.waveNumber %
-					(Game.difficultyMax + 1 - this.difficulty) == 0
+					(Game.difficultyMax + 1 - this.difficulty) ==
+				0
 			) {
 				this.powers.push(
 					new Power(
@@ -145,18 +146,19 @@ export default class Game {
 						posX: player.posX,
 						posY: player.posY,
 						score: player.score,
+						pseudo: player.pseudo,
 						invincible: player.timerBeforeLosingInvincibility,
 					});
 				let shot;
 				for (let i = 0; i < player.shots.length; i++) {
-					shot=player.shots[i];
+					shot = player.shots[i];
 					if (shot.active)
 						this.gameData.shots.push({
 							posX: shot.posX,
 							posY: shot.posY,
 							isFromAPlayer: true,
 							perforation: shot.perforation,
-							laser: shot.laser
+							laser: shot.laser,
 						});
 				}
 			}
@@ -170,13 +172,13 @@ export default class Game {
 				this.powers.shift();
 			} else if (this.powers[i].active) {
 				const iterator = this.players.entries();
-        		let entry;
-        		for(let p=0; p<this.players.size; p++){
-            		entry = iterator.next();
-            		if(entry.value!=null && entry.value[1].alive){
-                		this.powers[i].powerActivation(this,entry.value[1]);
-            		}
-        		}
+				let entry;
+				for (let p = 0; p < this.players.size; p++) {
+					entry = iterator.next();
+					if (entry.value != null && entry.value[1].alive) {
+						this.powers[i].powerActivation(this, entry.value[1]);
+					}
+				}
 			}
 		}
 	}

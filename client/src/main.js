@@ -117,10 +117,7 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	isingame = true;
 	homePage.Play();
 	gameView.show();
-	WavesManager.difficulty = getDifficultyValue();
-	wavesManager.firstWave(window.innerWidth, window.innerHeight);
-	player.pseudo = homePage.username;
-	player.resetTeamLivesNumber();
+	socket.emit('pseudo', homePage.username);
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
