@@ -34,7 +34,17 @@ export default class GameView extends View {
 			.querySelector('.time')
 			.setAttribute('style', 'display : none;');
 	}
+
+	setScore(score) {
+		this.element.querySelector('.scoreValue').textContent = score;
+	}
+	setWaves(waves) {
+		this.element.querySelector('.wavesValue').textContent = waves;
+	}
+	setLifes(lifes) {
+		this.element.querySelector('.lifesValue').textContent = lifes;
+	}
+	setTime(time) {
+		this.element.querySelector('.timeValue').textContent = time;
+	}
 }
-
-
-

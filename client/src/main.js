@@ -235,6 +235,15 @@ socket.on('game', gameData => {
 			}
 		}
 	}
+	for (let i = 0; i < gameData.players.length; i++) {
+		if (gameData.players[i].id == socket.id) {
+			gameView.setScore(gameData.players[i].score);
+		}
+	}
+
+	gameView.setLifes(gameData.teamLifes);
+	gameView.setWaves(gameData.wavesNumber);
+	gameView.setTime(time);
 });
 
 function initEnnemys(length) {
@@ -254,10 +263,10 @@ function removeDeconnectedPlayers() {
 		if (key.value != null) {
 			if (!isKeyInKeyList(key.value, ids)) {
 				const player = players.get(key.value);
-				if(player!=null && player.isAlive){
+				if (player != null && player.isAlive) {
 					soundboard.playSoundPlayerDeath();
-					Particules.explosion(player.posX,player.posY);
-					player.isAlive=false;
+					Particules.explosion(player.posX, player.posY);
+					player.isAlive = false;
 				}
 			}
 		}
