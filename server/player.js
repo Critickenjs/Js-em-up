@@ -28,7 +28,7 @@ export default class Player extends Entity {
 	static maxTimeIceMalus = 300;
 	static maxTimePerforationBonus = 300;
 	static maxTimeLaserBonus = 180;
-	
+
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
 		this.width = Player.width;
@@ -97,27 +97,24 @@ export default class Player extends Entity {
 
 			if (this.gotLaserBonus()) {
 				this.timerBeforeLosingLaserBonus--;
-				if(this.timerBeforeLosingLaserBonus ==0){
-					this.shots=[];
+				if (this.timerBeforeLosingLaserBonus == 0) {
+					this.shots = [];
 				}
 			}
-			
-			
+
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 
 			if (this.timerBeforeShots > 0) {
 				this.timerBeforeShots--;
-					
 			}
 			//Shooting?
-			if(this.gotLaserBonus()){
+			if (this.gotLaserBonus()) {
 				this.shootLaser();
-			}else{
+			} else {
 				if (keysPressed.Space || keysPressed.MouseDown) {
 					this.shootWithRecharge(this.gotPerforationBonus());
 				}
 			}
-			
 
 			if (this.invincible) {
 				if (this.timerBeforeLosingInvincibility < 0) {
@@ -161,11 +158,12 @@ export default class Player extends Entity {
 	}
 
 	shootLaser() {
-		if(this.shots.length!=0 && this.shots[this.shots.length-1].laser){
-			this.shots[this.shots.length-1].posX=this.posX + this.width;
-			this.shots[this.shots.length-1].posY=this.posY + this.height / 2 - Shot.height / 2;
-			this.shots[this.shots.length-1].width=Entity.canvasWidth-this.posX;
-		}else{
+		if (this.shots.length != 0 && this.shots[this.shots.length - 1].laser) {
+			this.shots[this.shots.length - 1].posX = this.posX + this.width;
+			this.shots[this.shots.length - 1].posY =
+				this.posY + this.height / 2 - Shot.height / 2;
+			this.shots[this.shots.length - 1].width = Entity.canvasWidth - this.posX;
+		} else {
 			this.shots.push(
 				new Shot(
 					this.posX + this.width,
@@ -177,14 +175,13 @@ export default class Player extends Entity {
 				)
 			);
 		}
-		
 	}
 
 	//Tue le joueur, augmente le timer avant sa réapparition
 	die() {
 		this.alive = false;
-		if(this.gotLaserBonus){
-			this.shots=[];
+		if (this.gotLaserBonus) {
+			this.shots = [];
 		}
 	}
 
@@ -204,10 +201,10 @@ export default class Player extends Entity {
 		this.maxTimeBeforeRespawn += 5 * difficulty;
 		this.timerBeforeRespawn = this.maxTimeBeforeRespawn;
 
-		this.timerBeforeLosingIceMalus=0;
-		this.timerBeforeLosingLaserBonus=0;
-		this.timerBeforeLosingPerforationBonus=0;
-		this.timerBeforeLosingScoreMultiplierBonus=0;
+		this.timerBeforeLosingIceMalus = 0;
+		this.timerBeforeLosingLaserBonus = 0;
+		this.timerBeforeLosingPerforationBonus = 0;
+		this.timerBeforeLosingScoreMultiplierBonus = 0;
 	}
 
 	becomeInvincible(duration) {
@@ -251,7 +248,7 @@ export default class Player extends Entity {
 	}
 
 	addScorePointOnEnemyKill(enemy) {
-		this.score += enemy.value*enemy.difficulty*this.scoreMultiplierBonus;
+		this.score += enemy.value * enemy.difficulty * this.scoreMultiplierBonus;
 	}
 
 	accelerateLeft(acceleration, distance = 0.1) {
@@ -303,12 +300,22 @@ export default class Player extends Entity {
 	}
 
 	decelerate(acceleration) {
-        if (acceleration < 0) {
-			acceleration = Math.round((acceleration + 1 / (10 * Player.inertiaMultiplier  * this.iceMultiplierMalus)) * 1000) / 1000;
-            if(acceleration>-0.05) acceleration=0;
+		if (acceleration < 0) {
+			acceleration =
+				Math.round(
+					(acceleration +
+						1 / (10 * Player.inertiaMultiplier * this.iceMultiplierMalus)) *
+						1000
+				) / 1000;
+			if (acceleration > -0.05) acceleration = 0;
 		} else if (acceleration > 0) {
-			acceleration = Math.round((acceleration - 1 / (10 * Player.inertiaMultiplier  * this.iceMultiplierMalus)) *1000) / 1000;
-            if(acceleration<0.05) acceleration=0;
+			acceleration =
+				Math.round(
+					(acceleration -
+						1 / (10 * Player.inertiaMultiplier * this.iceMultiplierMalus)) *
+						1000
+				) / 1000;
+			if (acceleration < 0.05) acceleration = 0;
 		}
 		return acceleration;
 	}

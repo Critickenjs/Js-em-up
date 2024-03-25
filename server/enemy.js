@@ -24,6 +24,7 @@ export default class Enemy extends Entity {
 		this.shots = [];
 		this.shootTimer = (100 + 60 / difficulty) | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
+		this.difficulty = difficulty;
 	}
 
 	//Mettre à jour les tirs causés par l'ennemi.
@@ -144,7 +145,9 @@ export default class Enemy extends Entity {
 				this.value = 20;
 				break;
 			case 'darkred':
-				this.posX=Entity.canvasWidth+getRandomInt(WavesManager.maxRandomSpawnDistance);
+				this.posX =
+					Entity.canvasWidth +
+					getRandomInt(WavesManager.maxRandomSpawnDistance);
 				this.lifes = 3;
 				this.height = (Enemy.height * (this.lifes / 1.3)) | 0;
 				this.width = (Enemy.width * (this.lifes / 1.3)) | 0;

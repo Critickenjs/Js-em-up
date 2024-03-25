@@ -7,6 +7,7 @@ export default class GameData {
 		this.powers = []; //{"posX":x,"posY:y","type":'life'}
 		this.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false}
 		this.wavesNumber = 1;
+		this.teamLifes = 1;
 		this.entitySpeedMultiplier = 1;
 	}
 }
