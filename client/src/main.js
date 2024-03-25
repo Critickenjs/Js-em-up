@@ -11,7 +11,9 @@ import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
 import GameView from './gameView.js';
 import Client_Power from './client_power.js';
+import GameOver from './gameOverView.js';
 import { Particules } from './Particules.js';
+import Scoreboard from './scoreboard.js';
 
 const assets = [
 	'./public/res/images/btn1.png',
@@ -57,6 +59,10 @@ socket.on('canvas', tab => {
 //Canvas
 const canvas = document.querySelector('.gameCanvas');
 const context = canvas.getContext('2d');
+const gameView = new GameView(document.querySelector('.game'));
+const homePage = new HomePage(document.querySelector('.HomePage'));
+const gameOver = new GameOver(document.querySelector('.gameOver'));
+const scoreboard = new Scoreboard(document.querySelector('.scoreboard'));
 export default canvas;
 
 //met à jour dynamiquement la taille du canvas
@@ -74,6 +80,13 @@ function resampleCanvas() {
 	}
 	Client_Entity.canvasHeight = canvas.height;
 	Client_Entity.canvasWidth = canvas.width;
+}
+
+if (isingame == false) {
+	gameView.hide();
+	homePage.show();
+	gameOver.hide();
+	scoreboard.hide();
 }
 
 Stars.init();
@@ -101,7 +114,7 @@ socket.on('initClientEnnemys', ennemysLength => {
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
-	isInGame = true;
+	isingame = true;
 	homePage.Play();
 	gameView.show();
 	WavesManager.difficulty = getDifficultyValue();
@@ -122,13 +135,13 @@ socket.on('game', gameData => {
 	//Update players
 	for (let i = 0; i < gameData.players.length; i++) {
 		let player = players.get(gameData.players[i].id);
-		if(player!=null){
-			player.isAlive=true;
-			player.posX=gameData.players[i].posX;
-			player.posY=gameData.players[i].posY,
-			player.pseudo=gameData.players[i].pseudo,
-			player.invincible=gameData.players[i].invincible
-		}else{
+		if (player != null) {
+			player.isAlive = true;
+			player.posX = gameData.players[i].posX;
+			(player.posY = gameData.players[i].posY),
+				(player.pseudo = gameData.players[i].pseudo),
+				(player.invincible = gameData.players[i].invincible);
+		} else {
 			players.set(
 				gameData.players[i].id,
 				new Client_Player(
@@ -180,20 +193,20 @@ socket.on('game', gameData => {
 			Client_Enemy.enemys[i].reset();
 		}
 	}*/
-	
+
 	// New Update enemys
 	for (let i = 0; i < gameData.enemys.length; i++) {
 		let enemy = Client_Enemy.enemys.get(gameData.enemys[i].id);
-		
-		if(enemy!=null){
-			enemy.alive=true;
-			enemy.posX=gameData.enemys[i].posX;
-			enemy.posY=gameData.enemys[i].posY;
-			enemy.type=gameData.enemys[i].type;
-			enemy.oldNbLifes=enemy.lifes;
-			enemy.lifes=gameData.enemys[i].lifes;
+
+		if (enemy != null) {
+			enemy.alive = true;
+			enemy.posX = gameData.enemys[i].posX;
+			enemy.posY = gameData.enemys[i].posY;
+			enemy.type = gameData.enemys[i].type;
+			enemy.oldNbLifes = enemy.lifes;
+			enemy.lifes = gameData.enemys[i].lifes;
 			enemy.rebuild();
-		}else{
+		} else {
 			Client_Enemy.enemys.set(
 				gameData.enemys[i].id,
 				new Client_Enemy(
@@ -203,7 +216,7 @@ socket.on('game', gameData => {
 					gameData.enemys[i].lifes
 				)
 			);
-			console.log("New ennemy");
+			console.log('New ennemy');
 		}
 		ids.push(gameData.enemys[i].id);
 	}
@@ -213,19 +226,18 @@ socket.on('game', gameData => {
 		key = iterator.next();
 		if (key.value != null) {
 			const enemy = Client_Enemy.enemys.get(key.value);
-			if (!isKeyInKeyList(key.value, ids)&& enemy.lifes>0) {
-				Particules.explosion(enemy.posX,enemy.posY);
+			if (!isKeyInKeyList(key.value, ids) && enemy.lifes > 0) {
+				Particules.explosion(enemy.posX, enemy.posY);
 				enemy.reset();
 			}
-			if(enemy.oldNbLifes>enemy.lifes && enemy.lifes!=0 ){
-				Particules.explosion(enemy.posX,enemy.posY);
+			if (enemy.oldNbLifes > enemy.lifes && enemy.lifes != 0) {
+				Particules.explosion(enemy.posX, enemy.posY);
 			}
 		}
 	}
-	
 });
 
-function initEnnemys(length){
+function initEnnemys(length) {
 	/*Client_Enemy.enemys = [];
 	for (let i = 0; i < length; i++) {
 		Client_Enemy.enemys.push(
@@ -241,17 +253,14 @@ function removeDeconnectedPlayers() {
 		key = iterator.next();
 		if (key.value != null) {
 			if (!isKeyInKeyList(key.value, ids)) {
-				
 				const player = players.get(key.value);
-				if(player!=null && player.isAlive){
-					Particules.explosion(player.posX,player.posY);
-					player.isAlive=false;
+				if (player != null && player.isAlive) {
+					Particules.explosion(player.posX, player.posY);
+					player.isAlive = false;
 				}
-				
 			}
 		}
 	}
-	
 }
 
 function isKeyInKeyList(key, keyList) {
@@ -306,8 +315,15 @@ function render() {
 		entry = iterator.next();
 		if (entry.value != null) {
 			entry.value[1].render(context);
-			if(!entry.value[1].isAlive){
-				Client_Player.showMessage(context,"You are dead! Wait to respawn...","32px","white",canvas.width/4,canvas.height/2);
+			if (!entry.value[1].isAlive) {
+				Client_Player.showMessage(
+					context,
+					'You are dead! Wait to respawn...',
+					'32px',
+					'white',
+					canvas.width / 4,
+					canvas.height / 2
+				);
 			}
 		}
 	}
@@ -335,6 +351,20 @@ document.querySelector('#restartButton').addEventListener('click', () => {
 	restartGame();
 	gameView.show();
 });
+
+document
+	.querySelector('.scoreboardButton')
+	.addEventListener('click', async () => {
+		gameOver.hide();
+		scoreBoard.show();
+	});
+
+function getDifficultyValue() {
+	let select = document.getElementById('difficulty');
+	let choice = select.selectedIndex; // Récupération de l'index du <option> choisi
+
+	return parseInt(select.options[choice].value); // Récupération du texte du <option> d'index "choice"
+}
 
 function restartGame() {
 	gameOver.restartGame();
