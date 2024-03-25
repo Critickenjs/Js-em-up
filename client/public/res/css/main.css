@@ -12,6 +12,7 @@ html,
 body {
     margin: 0;
     padding: 0;
+    background-color: #000;
 }
 
 body {
@@ -27,9 +28,11 @@ body {
     justify-content: center;
 }
 
+
+
 canvas {
     height: 100%;
-    top: 0;
+    top:0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,7 +40,22 @@ canvas {
     border: 3px dashed #777;
     z-index: 1;
     background-color: #000;
+}
 
+@media screen and (orientation: portrait) {
+    canvas {
+        width: 100%;
+        height: min-content;
+        margin: auto;
+    }
+}
+
+@media screen and (orientation: landscape) {
+    canvas {
+        height: 100%;
+        width: min-content;
+        margin: auto;
+    }
 }
 
 .hud{
@@ -158,10 +176,9 @@ div{
     z-index: 10;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     /* Les éléments sont empilés verticalement */
 }
-
-
 
 
 .gameOver{
@@ -174,6 +191,10 @@ div{
     background: rgba(44, 62, 80, 0.585);
     align-items: center;
     justify-content: center;
+}
+
+.landscape{
+    display: none;
 }
 
 
