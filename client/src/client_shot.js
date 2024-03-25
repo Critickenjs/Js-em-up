@@ -4,6 +4,8 @@ export default class Client_Shot extends Client_Entity {
 	static width = 20;
 	static height = 5;
 
+	static effect = 3;
+
 	static shots=[];
 
 	constructor(posX, posY, isFromAPlayer, perforation, laser=false) {
@@ -20,7 +22,7 @@ export default class Client_Shot extends Client_Entity {
 		super.render(context);
 		context.beginPath();
 		if(this.isFromAPlayer){
-			if(this.perforation && !this.laser){
+			if(this.perforation || this.laser){
 				context.fillStyle = 'yellow';
 			}else{
 				context.fillStyle = 'green';
@@ -29,5 +31,8 @@ export default class Client_Shot extends Client_Entity {
 			context.fillStyle = 'red';
 		}
 		context.fillRect(this.posX, this.posY, this.width, this.height);
+		context.globalAlpha = 0.2; // Réglez l'opacité pour un effet semi-transparent
+		context.fillRect(this.posX-Client_Shot.effect, this.posY-Client_Shot.effect, this.width+Client_Shot.effect*2, this.height+Client_Shot.effect*2); // Dessinez l'effet autour du deuxième rectangle
+		context.globalAlpha=1;
 	}
 }
