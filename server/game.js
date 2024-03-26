@@ -4,6 +4,9 @@ import Entity from './entity.js';
 import WavesManager from './wavesManager.js';
 import Power from './power.js';
 import { getRandomInt } from './utils.js';
+import DataCSV from './dataCSV.js';
+
+const csvdata = new DataCSV();
 
 export default class Game {
 	static difficultyMax = 4;
