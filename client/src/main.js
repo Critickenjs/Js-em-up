@@ -187,6 +187,8 @@ socket.on('playSound', keySound => {
 	soundboard.playSoundWithKey(keySound);
 });
 
+let score = 0;
+
 socket.on('game', gameData => {
 	//Update players
 	for (let i = 0; i < gameData.players.length; i++) {
@@ -300,8 +302,11 @@ socket.on('game', gameData => {
 		if (gameData.players[i].id == socket.id) {
 			gameView.setScore(gameData.players[i].score);
 			idCurrentClient = i;
+			score = gameData.players[i].score;
+			break;
 		}
 	}
+<<<<<<< HEAD
 	if (gameData.isInGame == false && gameData.teamLifes < 0) {
 		homePage.hide();
 		gameView.hide();
@@ -311,11 +316,33 @@ socket.on('game', gameData => {
 			gameOver.show(gameData.players[idCurrentClient].score);
 		}
 		
+=======
+	if (idCurrentClient === -1) {
+		console.error("Current client's data not found in gameData.players");
+	} else {
+		// Proceed with accessing the current client's data
+		if (gameData.isInGame == false && gameData.teamLifes < 0) {
+			isingame = false;
+			homePage.hide();
+			gameView.hide();
+			socket.emit('gameOver');
+
+		}
+>>>>>>> 7e87b7ea4a9677a6a5b1408ea850884a5d01041d
 	}
 
 	gameView.setLifes(gameData.teamLifes);
 	gameView.setWaves(gameData.wavesNumber);
 	gameView.setTime(time);
+});
+
+socket.on('gameOver', () => {
+	gameView.hide();
+	gameOver.show(score);
+	socket.emit('getScore');
+	socket.on('score', data => {
+		scoreboard.update(data);
+	});
 });
 
 function removeDeconnectedPlayers() {
