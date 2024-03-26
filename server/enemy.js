@@ -7,8 +7,10 @@ export default class Enemy extends Entity {
 	//Les variables de gameplay
 	static width = 40;
 	static height = 40;
-	static types = ['red', 'purple', 'orange', 'darkred'];
+	static types = ['red', 'purple', 'orange', 'darkred']; //'boss' n'est pas à mettre dans la liste
 	static bulletSpeed = Shot.defaultSpeed;
+
+	static bossFrequency = 5;
 
 	//Paramétrage technique
 	static spawnOffset = 45; // pour éviter que les ennemis spawnent aux bords de l'écran et empietent sur le HUD.
@@ -50,7 +52,10 @@ export default class Enemy extends Entity {
 		} else if (this.posY > Entity.canvasHeight - this.height) {
 			this.speedY = -this.speedY;
 		}
-		if (this.type == 'orange' && this.posX < Entity.canvasWidth * 1.2) {
+		if (
+			(this.type == 'orange' || this.type == 'boss') &&
+			this.posX < Entity.canvasWidth * 1.2
+		) {
 			this.timeBeforeNextShoot--;
 			if (this.timeBeforeNextShoot <= 0) {
 				this.shoot();
@@ -94,12 +99,20 @@ export default class Enemy extends Entity {
 
 	respawn(wavesManager) {
 		wavesManager.waveNumberOfEnemysSpawned++;
-		this.reset();
+		if (
+			wavesManager.waveNumber % WavesManager.bossFrequency == 0 &&
+			!wavesManager.hasABoss
+		) {
+			this.reset('boss');
+			wavesManager.hasABoss = true;
+		} else {
+			this.reset();
+		}
 	}
 
-	reset() {
+	reset(type = Enemy.types[getRandomInt(Enemy.types.length)]) {
 		this.isDead = false;
-		this.type = Enemy.types[getRandomInt(Enemy.types.length)];
+		this.type = type;
 		this.posX =
 			Entity.canvasWidth +
 			getRandomInt(WavesManager.maxRandomSpawnDistance) +
@@ -155,6 +168,15 @@ export default class Enemy extends Entity {
 				this.speedY = 0;
 				this.value = 25;
 				break;
+			case 'boss':
+				this.lifes = 50;
+				this.height = Enemy.height * 5;
+				this.width = Enemy.width * 5;
+				this.speedX = -0.9;
+				this.speedY = getRandomIntWithMin(-1, 1);
+				this.value = 50;
+				this.shootTimer = (this.shootTimer / 2) | 0;
+				break;
 		}
 	}
 
@@ -162,7 +184,7 @@ export default class Enemy extends Entity {
 		this.shots.push(
 			new Shot(
 				this.posX,
-				this.posY + this.height / 2 - Shot.height / 2 -5,
+				this.posY + this.height / 2 - Shot.height / 2 - 5,
 				false,
 				-Enemy.bulletSpeed
 			)

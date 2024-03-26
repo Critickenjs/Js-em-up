@@ -16,20 +16,25 @@ export default class WavesManager {
 		this.enemys = [];
 		this.waveMaxNumberOfEnemys = 5;
 		this.waveNumberOfEnemysSpawned = 0;
+		this.hasABoss = false;
 	}
 
 	//Déclenche la 1ère vague. Lancer cette fonction réitialise donc les ennemis.
 	firstWave(difficulty) {
 		this.waveNumber = 1;
-		this.waveMaxNumberOfEnemys = ((WavesManager.EnemyBuffer * difficulty) / 2 + 1) | 0;
+		this.waveMaxNumberOfEnemys =
+			((WavesManager.EnemyBuffer * difficulty) / 2 + 1) | 0;
 		this.waveNumberOfEnemysSpawned = 0;
 		Entity.speedMultiplier = Entity.speedMultiplierDefault;
-		for (
-			let i = 0; i < WavesManager.EnemyBuffer * difficulty; i++
-		) {
+		for (let i = 0; i < WavesManager.EnemyBuffer * difficulty; i++) {
 			this.enemys[i] = new Enemy(
-				Entity.canvasWidth + getRandomInt(WavesManager.maxRandomSpawnDistance) + WavesManager.spawnDistance,
-				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) + Enemy.spawnOffset, difficulty);
+				Entity.canvasWidth +
+					getRandomInt(WavesManager.maxRandomSpawnDistance) +
+					WavesManager.spawnDistance,
+				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) +
+					Enemy.spawnOffset,
+				difficulty
+			);
 			this.enemys[i].index = i;
 			this.waveNumberOfEnemysSpawned++;
 			if (this.waveNumberOfEnemysSpawned > this.waveMaxNumberOfEnemys) {
@@ -47,6 +52,7 @@ export default class WavesManager {
 
 	//Appelle la vague suivante
 	nextWave(difficulty) {
+		this.hasABoss = false;
 		this.waveNumber++;
 		this.waveNumberOfEnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
@@ -58,10 +64,7 @@ export default class WavesManager {
 				' ennemies.'
 		);
 		this.waveMaxNumberOfEnemys =
-			((3 +
-				difficulty +
-				getRandomInt(difficulty) +
-				this.waveNumber / 2) *
+			((3 + difficulty + getRandomInt(difficulty) + this.waveNumber / 2) *
 				WavesManager.waveMultiplier) |
 			0; // | 0 convertit en 'int' (permet d'éviter les chiffres à virgules).
 		for (let a = 0; a < this.enemys.length; a++) {
@@ -83,19 +86,21 @@ export default class WavesManager {
 			entry = iterator.next();
 			if (entry.value != null) {
 				for (let a = 0; a < this.enemys.length; a++) {
-					this.enemys[a].EnemyShotsCollideWithPlayer(game,entry.value[1]);
+					this.enemys[a].EnemyShotsCollideWithPlayer(game, entry.value[1]);
 					if (!this.enemys[a].isDead) {
 						entry.value[1].playerShotsCollideWithEnemy(this, this.enemys[a]);
 						if (!this.enemys[a].isDead) {
 							if (entry.value[1].alive && !entry.value[1].invincible) {
 								if (this.enemys[a].isCollidingWith(entry.value[1])) {
 									entry.value[1].die(game);
-									this.enemys[a].fate(this);
-									game.io.emit('playSound','enemyDeath');
+									if (this.enemys[a].type != 'boss') {
+										this.enemys[a].fate(this);
+										game.io.emit('playSound', 'enemyDeath');
+									}
 								}
 							}
-						}else{
-							game.io.emit('playSound','enemyDeath');
+						} else {
+							game.io.emit('playSound', 'enemyDeath');
 						}
 					}
 				}

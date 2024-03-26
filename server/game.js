@@ -69,6 +69,14 @@ export default class Game {
 				}
 			}
 			this.time++;
+			if (this.time % 8 == 0) {
+				this.powers.push(
+					new Power(
+						Entity.canvasWidth,
+						getRandomInt(Entity.canvasHeight - Power.height)
+					)
+				);
+			}
 			//Vitesse du jeu augmente au fur et à mesure
 			this.addToSpeed(0.001 * this.difficulty);
 			this.io.emit('time', this.time);
@@ -97,7 +105,7 @@ export default class Game {
 		this.resetData();
 		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
 		this.checkPlayerRespawn();
-		
+
 		this.updateAllPowers();
 
 		//WaveUpdate se met à jour tous ce qui est en rapport avec les enemies, notamment les collisions, la mort du jouer, etc...
@@ -180,7 +188,7 @@ export default class Game {
 							isFromAPlayer: true,
 							perforation: shot.perforation,
 							laser: shot.laser,
-							tick: shot.tickActive
+							tick: shot.tickActive,
 						});
 				}
 			}
@@ -201,8 +209,8 @@ export default class Game {
 						if (this.powers[i].isCollidingWith(entry.value[1])) {
 							this.powers[i].active = false;
 							this.powers[i].powerActivation(this, entry.value[1]);
-							this.io.emit('playSound','power');
-						}				
+							this.io.emit('playSound', 'power');
+						}
 					}
 				}
 			}
@@ -241,7 +249,7 @@ export default class Game {
 						isFromAPlayer: false,
 						perforation: enemys[i].shots[s].perforation,
 						laser: false, //enemys[i].shots[s].laser
-						tick: enemys[i].shots[s].tickActive
+						tick: enemys[i].shots[s].tickActive,
 					});
 			}
 		}
