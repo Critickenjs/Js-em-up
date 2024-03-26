@@ -25,6 +25,7 @@ export default class Game {
 		this.allDead = false;
 		this.idIntervalUpdate;
 		this.idIntervalUpdateHUD;
+		this.gameOver = false;
 	}
 
 	init() {
@@ -120,7 +121,7 @@ export default class Game {
 
 			if (
 				this.wavesManager.waveNumber %
-					(Game.difficultyMax + 1 - this.difficulty) ==
+				(Game.difficultyMax + 1 - this.difficulty) ==
 				0
 			) {
 				this.powers.push(
@@ -141,7 +142,9 @@ export default class Game {
 		if (this.teamLifes <= 0 && !this.atLeast1PlayerAlive()) {
 			this.isInGame = false;
 		}
-		this.io.emit('game', this.gameData);
+		if (!this.gameOver) {
+			this.io.emit('game', this.gameData);
+		}
 	}
 
 	resetData() {
@@ -297,6 +300,7 @@ export default class Game {
 		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
 		this.restartGame();
 		this.isInGame = true;
+		this.gameOver = false;
 		this.io.emit('game', this.gameData);
 	}
 }
