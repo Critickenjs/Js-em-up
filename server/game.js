@@ -17,15 +17,17 @@ export default class Game {
 		this.powers = [];
 		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
 		if (this.teamLifes < 0) this.teamLifes = 0;
-		this.isInGame = true;
+		this.isInGame = false;
 		this.time = 0;
 		this.allDead = false;
+		this.idIntervalUpdate;
+		this.idIntervalUpdateHUD;
 	}
 
 	init() {
 		this.wavesManager.firstWave(this.difficulty);
-		setInterval(this.update.bind(this), 1000 / 60);
-		setInterval(this.updateHUD.bind(this), 1000);
+		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
+		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
 	}
 
 	resetTeamLives() {
@@ -39,7 +41,7 @@ export default class Game {
 	atLeast1PlayerAlive() {
 		const iterator = this.players.entries();
 		let entry;
-		for (let i = 0; i < map.size; i++) {
+		for (let i = 0; i < this.players.size; i++) {
 			entry = iterator.next();
 			if (entry.value != null) {
 				if (entry.value[1].alive) {
@@ -95,7 +97,7 @@ export default class Game {
 		
 		this.updateAllPowers();
 
-		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
+		//WaveUpdate se met à jour tous ce qui est en rapport avec les enemies, notamment les collisions, la mort du jouer, etc...
 		this.allDead = this.wavesManager.wavesUpdates(
 			this,
 			this.gameData.entitySpeedMultiplier
@@ -126,6 +128,9 @@ export default class Game {
 		this.refreshLifes();
 		this.refreshIsInGame();
 		console.log(" Vies :"+this.teamLifes);
+		if (this.teamLifes <= 0 && !this.atLeast1PlayerAlive()) {
+			this.isInGame = false;
+		}
 		this.io.emit('game', this.gameData);
 	}
 
@@ -134,6 +139,17 @@ export default class Game {
 		this.gameData.enemys = []; //{"id":'',"posX":x,"posY:y","type":'red',"lifes":1}
 		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
 		this.gameData.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false}
+	}
+
+	restartGame() {
+		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0,"invincible":4} //Invincible est le timer avant la fin de l'invinciblité
+		this.gameData.enemys = []; //{"id":'',"posX":x,"posY:y","type":'red',"lifes":1}
+		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
+		this.gameData.shots = [];
+		this.gameData.wavesNumber = 1;
+		this.gameData.teamLifes = 1;
+		this.gameData.entitySpeedMultiplier = 1;
+		this.gameData.isInGame = true;
 	}
 
 	refreshPlayersAndPlayerShots() {
@@ -249,5 +265,21 @@ export default class Game {
 				}
 			}
 		}
+	}
+	destroy() {
+		clearInterval(this.idIntervalUpdate);
+		clearInterval(this.idIntervalUpdateHUD);
+		this.powers = [];
+		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
+		if (this.teamLifes < 0) this.teamLifes = 0;
+		this.time = 0;
+		this.allDead = false;
+		this.wavesManager = new WavesManager();
+		this.wavesManager.firstWave(this.difficulty);
+		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
+		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
+		this.restartGame();
+		this.isInGame = true;
+		this.io.emit('game', this.gameData);
 	}
 }

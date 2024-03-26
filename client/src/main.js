@@ -165,6 +165,7 @@ console.log('test');
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isingame = true;
+	gameOver.hide();
 	homePage.hide();
 	homePage.Play();
 	gameView.show();
@@ -271,10 +272,16 @@ socket.on('game', gameData => {
 			}
 		}
 	}
+	let intPlayers;
 	for (let i = 0; i < gameData.players.length; i++) {
 		if (gameData.players[i].id == socket.id) {
 			gameView.setScore(gameData.players[i].score);
+			intPlayers = i;
 		}
+	}
+	if (gameData.isInGame == false && gameData.teamLifes < 0) {
+		gameOver.show(gameData.players[intPlayers].score);
+		gameView.hide();
 	}
 
 	gameView.setLifes(gameData.teamLifes);
@@ -393,12 +400,13 @@ function updateStars() {
 }
 
 document.querySelector('#restartButton2').addEventListener('click', () => {
-	scoreBoard.hide();
+	scoreboard.hide();
 	restartGame();
 	gameView.show();
 });
 
 document.querySelector('#restartButton').addEventListener('click', () => {
+	gameOver.hide();
 	restartGame();
 	gameView.show();
 });
@@ -418,10 +426,7 @@ function getDifficultyValue() {
 }
 
 function restartGame() {
-	gameOver.restartGame();
-	player.restart();
-	gameView.show();
-	isInGame = true;
-	wavesManager.firstWave();
-	time = 0;
+	isingame = false;
+	socket.emit('restart');
+	socket.emit('keysrestart', keys.keysPressed);
 }
