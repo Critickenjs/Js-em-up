@@ -165,6 +165,7 @@ console.log('test');
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isingame = true;
+	gameOver.hide();
 	homePage.hide();
 	homePage.Play();
 	gameView.show();
@@ -271,13 +272,15 @@ socket.on('game', gameData => {
 			}
 		}
 	}
+	let intPlayers;
 	for (let i = 0; i < gameData.players.length; i++) {
 		if (gameData.players[i].id == socket.id) {
 			gameView.setScore(gameData.players[i].score);
+			intPlayers = i;
 		}
 	}
 	if (gameData.isInGame == false && gameData.teamLifes < 0) {
-		gameOver.show();
+		gameOver.show(gameData.players[intPlayers].score);
 		gameView.hide();
 	}
 
