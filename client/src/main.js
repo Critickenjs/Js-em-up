@@ -305,7 +305,12 @@ socket.on('game', gameData => {
 	if (gameData.isInGame == false && gameData.teamLifes < 0) {
 		homePage.hide();
 		gameView.hide();
-		gameOver.show(gameData.players[idCurrentClient].score);
+		if(idCurrentClient==-1){
+			gameOver.show('chargement...');
+		}else{
+			gameOver.show(gameData.players[idCurrentClient].score);
+		}
+		
 	}
 
 	gameView.setLifes(gameData.teamLifes);
@@ -392,10 +397,10 @@ function render() {
 	if (isCurrentClientDead) {
 		Client_Player.showMessage(
 			context,
-			'You are dead! Wait to respawn...',
-			'32px',
+			'Vous êtes mort! En attente de réapparition...',
+			'28px',
 			'white',
-			canvas.width / 4,
+			canvas.width / 5,
 			canvas.height / 2
 		);
 	}

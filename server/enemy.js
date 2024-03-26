@@ -22,9 +22,9 @@ export default class Enemy extends Entity {
 		this.type = 'red';
 		this.lifes = 1;
 		this.value = 10;
+		this.shootTimer = (100 + 60 / difficulty) | 0;
 		this.applyType();
 		this.shots = [];
-		this.shootTimer = (100 + 60 / difficulty) | 0;
 		this.timeBeforeNextShoot = this.shootTimer;
 		this.difficulty = difficulty;
 	}
@@ -100,7 +100,7 @@ export default class Enemy extends Entity {
 	respawn(wavesManager) {
 		wavesManager.waveNumberOfEnemysSpawned++;
 		if (
-			wavesManager.waveNumber % WavesManager.bossFrequency == 0 &&
+			wavesManager.waveNumber % Enemy.bossFrequency == 0 &&
 			!wavesManager.hasABoss
 		) {
 			this.reset('boss');
@@ -139,6 +139,7 @@ export default class Enemy extends Entity {
 		this.height = Enemy.height;
 		this.width = Enemy.width;
 		this.lifes = 1;
+		this.shootTimer = (100 + 60 / this.difficulty) | 0;
 		switch (this.type) {
 			case 'red':
 				this.speedX = -getRandomIntWithMin(2, 3);

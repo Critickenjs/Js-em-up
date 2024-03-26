@@ -240,9 +240,11 @@ export default class Player extends Entity {
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
 				if (this.shots[s].isCollidingWith(enemy)) {
-					this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
-					if (enemy.getHurt(waveManager)) {
-						this.addScorePointOnEnemyKill(enemy);
+					if(!(this.shots[s].laser && enemy.type=='boss')){
+						this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
+						if (enemy.getHurt(waveManager)) {
+							this.addScorePointOnEnemyKill(enemy);
+						}
 					}
 				}
 			}
