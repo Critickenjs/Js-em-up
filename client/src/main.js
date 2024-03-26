@@ -52,8 +52,6 @@ let isingame = false;
 
 const socket = io();
 
-
-
 socket.on('canvas', tab => {
 	canvasServerWidth = tab[0];
 	canvasServerHeight = tab[1];
@@ -81,10 +79,10 @@ function resampleCanvas() {
 	}
 	Client_Entity.canvasHeight = canvas.height;
 	Client_Entity.canvasWidth = canvas.width;
-	if(window.innerWidth>window.innerHeight){
-		keys.keysPressed.isOnLandscape=true;
-	}else{
-		keys.keysPressed.isOnLandscape=false;
+	if (window.innerWidth > window.innerHeight) {
+		keys.keysPressed.isOnLandscape = true;
+	} else {
+		keys.keysPressed.isOnLandscape = false;
 	}
 }
 
@@ -102,43 +100,57 @@ socket.on('playerKeys', () => {
 	ids = [];
 	socket.emit('keys', keys.keysPressed);
 });
-canvas.addEventListener("touchstart",function(e){
+canvas.addEventListener('touchstart', function (e) {
 	e.preventDefault();
-	if(keys.keysPressed.MouseDown){
-		keys.keysPressed.MouseDown=false;
-	}else{
-		keys.keysPressed.MouseDown=true;
+	if (keys.keysPressed.MouseDown) {
+		keys.keysPressed.MouseDown = false;
+	} else {
+		keys.keysPressed.MouseDown = true;
 	}
 });
 window.addEventListener('deviceorientation', handleOrientation);
 function handleOrientation(event) {
-	keys.keysPressed.alpha = event.alpha;
-	keys.keysPressed.beta = event.beta;
-	keys.keysPressed.gamma = event.gamma;
+	if (isingame) {
+		keys.keysPressed.alpha = event.alpha;
+		keys.keysPressed.beta = event.beta;
+		keys.keysPressed.gamma = event.gamma;
+	}
 }
 
-canvas.addEventListener('mousemove',function(event){
-	keys.keysPressed.MouseX = Math.round((event.clientX - canvas.getBoundingClientRect().left) * 10)/10;
-    keys.keysPressed.MouseY = Math.round((event.clientY - canvas.getBoundingClientRect().top) * 10)/10;
-})
+canvas.addEventListener('mousemove', function (event) {
+	if (isingame) {
+		keys.keysPressed.MouseX =
+			Math.round((event.clientX - canvas.getBoundingClientRect().left) * 10) /
+			10;
+		keys.keysPressed.MouseY =
+			Math.round((event.clientY - canvas.getBoundingClientRect().top) * 10) /
+			10;
+	}
+});
 
 const screen = window.screen;
 
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+if (
+	/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+		navigator.userAgent
+	)
+) {
 	// true for mobile device
-	keys.keysPressed.onPhone=true;
-  }else{
+	keys.keysPressed.onPhone = true;
+} else {
 	// false for not mobile device
-	keys.keysPressed.onPhone=false;
-  }
+	keys.keysPressed.onPhone = false;
+}
 
 socket.on('time', newTime => {
 	time = newTime;
 });
 
-
 const gameView = new GameView(document.querySelector('.game'));
-const homePage = new HomePage(document.querySelector('.HomePage'), keys.keysPressed.onPhone);
+const homePage = new HomePage(
+	document.querySelector('.HomePage'),
+	keys.keysPressed.onPhone
+);
 const gameOver = new GameOver(document.querySelector('.gameOver'));
 const scoreboard = new Scoreboard(document.querySelector('.scoreboard'));
 
@@ -267,7 +279,6 @@ socket.on('game', gameData => {
 	gameView.setTime(time);
 });
 
-
 function removeDeconnectedPlayers() {
 	const iterator = players.keys();
 	let key;
@@ -278,7 +289,7 @@ function removeDeconnectedPlayers() {
 				const player = players.get(key.value);
 				if (player != null && player.isAlive) {
 					soundboard.playSoundPlayerDeath();
-					Particules.explosion(player.posX,player.posY);
+					Particules.explosion(player.posX, player.posY);
 					players.delete(key.value);
 				}
 			}
@@ -334,17 +345,17 @@ function render() {
 	//Render players
 	const iterator = players.entries();
 	let entry;
-	let isCurrentClientDead =true;
+	let isCurrentClientDead = true;
 	for (let i = 0; i < players.size; i++) {
 		entry = iterator.next();
 		if (entry.value != null) {
 			entry.value[1].render(context);
-			if (entry.value[0]==socket.id) {
+			if (entry.value[0] == socket.id) {
 				isCurrentClientDead = false;
 			}
 		}
 	}
-	if(isCurrentClientDead){
+	if (isCurrentClientDead) {
 		Client_Player.showMessage(
 			context,
 			'You are dead! Wait to respawn...',
@@ -355,17 +366,15 @@ function render() {
 		);
 	}
 
-	if(keys.keysPressed.onPhone){ //Mettre ici les modifications dues aux téléphones
+	if (keys.keysPressed.onPhone) {
+		//Mettre ici les modifications dues aux téléphones
 
-		if(keys.keysPressed.isOnLandscape){
+		if (keys.keysPressed.isOnLandscape) {
 			gameView.hideMsgLandscape();
-		}else{
+		} else {
 			gameView.showMsgLandscape();
 		}
-
 	}
-
-	
 
 	//Looping
 	requestAnimationFrame(render);

@@ -92,6 +92,8 @@ export default class Game {
 		this.resetData();
 		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
 		this.refreshPowers();
+		this.refreshLifes();
+		this.refreshIsInGame();
 		this.checkPlayerRespawn();
 		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
 
@@ -185,6 +187,14 @@ export default class Game {
 
 	refreshWaves() {
 		this.gameData.wavesNumber = this.wavesManager.waveNumber;
+	}
+
+	refreshLifes() {
+		this.gameData.teamLifes = this.teamLifes;
+	}
+
+	refreshIsInGame() {
+		this.gameData.isInGame = this.isInGame;
 	}
 
 	refreshEnnemiesAndEnemyShots() {

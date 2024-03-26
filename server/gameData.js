@@ -9,5 +9,6 @@ export default class GameData {
 		this.wavesNumber = 1;
 		this.teamLifes = 1;
 		this.entitySpeedMultiplier = 1;
+		this.inInGame = false;
 	}
 }
