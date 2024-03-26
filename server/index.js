@@ -47,10 +47,12 @@ io.on('connection', socket => {
 		game.isInGame = true;
 	});
 	socket.on('restart', () => {
+		let players = game.players;
 		game.destroy();
-		player = new Player(100, Entity.canvasHeight / 2);
-		player.pseudo = pseudo;
+		game.players = players;
+		game.players.set(socket.id, player);
 	});
+
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
 		game.players.delete(socket.id);

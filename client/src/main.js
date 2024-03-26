@@ -425,4 +425,5 @@ function getDifficultyValue() {
 function restartGame() {
 	isingame = false;
 	socket.emit('restart');
+	socket.emit('keysrestart', keys.keysPressed);
 }
