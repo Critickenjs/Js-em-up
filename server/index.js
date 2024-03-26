@@ -61,12 +61,22 @@ io.on('connection', socket => {
 		game.isInGame = true;
 	});
 	socket.on('restart', () => {
-		let data = csvdata.loadFromURL('server/data/data.csv');
-		socket.emit('score', data);
 		let players = game.players;
 		game.destroy();
 		game.players = players;
 		game.players.set(socket.id, player);
+
+	});
+	socket.on('gameOver', () => {
+		game.gameOver = true;
+		socket.emit('gameOver');
+	});
+
+	socket.on('getScore', () => {
+		game.players.forEach(player => {
+			csvdata.writeCSV({ [player.pseudo]: player.score });
+		});
+		socket.emit('score', csvdata.loadFromURL('server/data/data.csv'));
 	});
 
 	socket.on('disconnect', () => {
