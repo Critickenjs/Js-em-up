@@ -157,15 +157,14 @@ const scoreboard = new Scoreboard(document.querySelector('.scoreboard'));
 if (isingame == false) {
 	gameView.hide();
 	homePage.show();
-	gameOver.hide();
 	scoreboard.hide();
+	gameOver.hide();
 }
 console.log('test');
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isingame = true;
-	gameOver.hide();
 	homePage.hide();
 	homePage.Play();
 	gameView.show();
@@ -272,16 +271,17 @@ socket.on('game', gameData => {
 			}
 		}
 	}
-	let intPlayers;
+	let idCurrentClient = -1;
 	for (let i = 0; i < gameData.players.length; i++) {
 		if (gameData.players[i].id == socket.id) {
 			gameView.setScore(gameData.players[i].score);
-			intPlayers = i;
+			idCurrentClient = i;
 		}
 	}
 	if (gameData.isInGame == false && gameData.teamLifes < 0) {
-		gameOver.show(gameData.players[intPlayers].score);
+		homePage.hide();
 		gameView.hide();
+		gameOver.show(gameData.players[idCurrentClient].score);
 	}
 
 	gameView.setLifes(gameData.teamLifes);
@@ -401,22 +401,23 @@ function updateStars() {
 
 document.querySelector('#restartButton2').addEventListener('click', () => {
 	scoreboard.hide();
-	restartGame();
-	gameView.show();
-});
-
-document.querySelector('#restartButton').addEventListener('click', () => {
 	gameOver.hide();
 	restartGame();
 	gameView.show();
 });
 
-document
-	.querySelector('.scoreboardButton')
-	.addEventListener('click', async () => {
-		gameOver.hide();
-		scoreBoard.show();
-	});
+document.querySelector('#restartButton').addEventListener('click', () => {
+	scoreboard.hide();
+	gameOver.hide();
+	restartGame();
+	gameView.show();
+});
+
+document.querySelector('.scoreboardButton').addEventListener('click', () => {
+	gameView.hide();
+	gameOver.hide();
+	scoreboard.show();
+});
 
 function getDifficultyValue() {
 	let select = document.getElementById('difficulty');
