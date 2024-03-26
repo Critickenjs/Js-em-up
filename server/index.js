@@ -42,6 +42,7 @@ io.on('connection', socket => {
 	});
 	socket.on('difficulty', difficulty => {
 		game.difficulty = difficulty;
+		game.isInGame = true;
 	});
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);

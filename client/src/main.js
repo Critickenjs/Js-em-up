@@ -276,6 +276,11 @@ socket.on('game', gameData => {
 			gameView.setScore(gameData.players[i].score);
 		}
 	}
+	console.log(gameData.teamLifes + ' ' + gameData.isInGame);
+	if (gameData.isInGame == false && gameData.teamLifes < 0) {
+		gameOver.show();
+		gameView.hide();
+	}
 
 	gameView.setLifes(gameData.teamLifes);
 	gameView.setWaves(gameData.wavesNumber);

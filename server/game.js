@@ -17,7 +17,7 @@ export default class Game {
 		this.powers = [];
 		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
 		if (this.teamLifes < 0) this.teamLifes = 0;
-		this.isInGame = true;
+		this.isInGame = false;
 		this.time = 0;
 		this.allDead = false;
 	}
@@ -39,7 +39,7 @@ export default class Game {
 	atLeast1PlayerAlive() {
 		const iterator = this.players.entries();
 		let entry;
-		for (let i = 0; i < map.size; i++) {
+		for (let i = 0; i < this.players.size; i++) {
 			entry = iterator.next();
 			if (entry.value != null) {
 				if (entry.value[1].alive) {
@@ -99,7 +99,7 @@ export default class Game {
 
 		this.updateAllPowers();
 
-		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
+		//WaveUpdate se met à jour tous ce qui est en rapport avec les enemies, notamment les collisions, la mort du jouer, etc...
 		this.allDead = this.wavesManager.wavesUpdates(
 			this.players,
 			this.gameData.entitySpeedMultiplier
@@ -124,6 +124,9 @@ export default class Game {
 			this.refreshWaves();
 		} else {
 			this.refreshEnnemiesAndEnemyShots();
+		}
+		if (this.teamLifes < 0 && !this.atLeast1PlayerAlive()) {
+			this.isInGame = false;
 		}
 		this.io.emit('game', this.gameData);
 	}
