@@ -160,13 +160,16 @@ if (isingame == false) {
 	gameOver.hide();
 	scoreboard.hide();
 }
+console.log('test');
 
 document.querySelector('.HomePage').addEventListener('submit', event => {
 	event.preventDefault();
 	isingame = true;
+	homePage.hide();
 	homePage.Play();
 	gameView.show();
 	socket.emit('pseudo', homePage.username);
+	socket.emit('difficulty', getDifficultyValue());
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {

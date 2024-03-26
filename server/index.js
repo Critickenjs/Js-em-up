@@ -40,6 +40,9 @@ io.on('connection', socket => {
 		//On met à jour le joueur avec les nouvelles keys.
 		player.update(keysPressed, game.gameData.entitySpeedMultiplier);
 	});
+	socket.on('difficulty', difficulty => {
+		game.difficulty = difficulty;
+	});
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
 		game.players.delete(socket.id);
