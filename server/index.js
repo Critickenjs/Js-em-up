@@ -22,8 +22,9 @@ httpServer.listen(port, () => {
 });
 
 const io = new IOServer(httpServer);
-const game = new Game(io, 4);
+let game = new Game(io, 4);
 game.init();
+let pseudo = '';
 
 io.on('connection', socket => {
 	console.log(`New connexion from client :${socket.id}/`);
@@ -31,6 +32,7 @@ io.on('connection', socket => {
 	game.players.set(socket.id, player);
 	socket.emit('initClientEnnemys', game.wavesManager.enemys.length);
 	socket.on('pseudo', pseudo => {
+		pseudo = pseudo;
 		player.pseudo = pseudo;
 		console.log(`Client ${socket.id} pseudo : ${pseudo}`);
 	});
@@ -43,6 +45,11 @@ io.on('connection', socket => {
 	socket.on('difficulty', difficulty => {
 		game.difficulty = difficulty;
 		game.isInGame = true;
+	});
+	socket.on('restart', () => {
+		game.destroy();
+		player = new Player(100, Entity.canvasHeight / 2);
+		player.pseudo = pseudo;
 	});
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);

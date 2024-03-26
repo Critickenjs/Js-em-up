@@ -276,7 +276,6 @@ socket.on('game', gameData => {
 			gameView.setScore(gameData.players[i].score);
 		}
 	}
-	console.log(gameData.teamLifes + ' ' + gameData.isInGame);
 	if (gameData.isInGame == false && gameData.teamLifes < 0) {
 		gameOver.show();
 		gameView.hide();
@@ -398,12 +397,13 @@ function updateStars() {
 }
 
 document.querySelector('#restartButton2').addEventListener('click', () => {
-	scoreBoard.hide();
+	scoreboard.hide();
 	restartGame();
 	gameView.show();
 });
 
 document.querySelector('#restartButton').addEventListener('click', () => {
+	gameOver.hide();
 	restartGame();
 	gameView.show();
 });
@@ -423,10 +423,6 @@ function getDifficultyValue() {
 }
 
 function restartGame() {
-	gameOver.restartGame();
-	player.restart();
-	gameView.show();
-	isInGame = true;
-	wavesManager.firstWave();
-	time = 0;
+	isingame = false;
+	socket.emit('restart');
 }

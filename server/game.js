@@ -20,12 +20,14 @@ export default class Game {
 		this.isInGame = false;
 		this.time = 0;
 		this.allDead = false;
+		this.idIntervalUpdate;
+		this.idIntervalUpdateHUD;
 	}
 
 	init() {
 		this.wavesManager.firstWave(this.difficulty);
-		setInterval(this.update.bind(this), 1000 / 60);
-		setInterval(this.updateHUD.bind(this), 1000);
+		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
+		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
 	}
 
 	resetTeamLives() {
@@ -125,7 +127,7 @@ export default class Game {
 		} else {
 			this.refreshEnnemiesAndEnemyShots();
 		}
-		if (this.teamLifes < 0 && !this.atLeast1PlayerAlive()) {
+		if (this.teamLifes <= 0 && !this.atLeast1PlayerAlive()) {
 			this.isInGame = false;
 		}
 		this.io.emit('game', this.gameData);
@@ -252,5 +254,19 @@ export default class Game {
 				}
 			}
 		}
+	}
+	destroy() {
+		clearInterval(this.idIntervalUpdate);
+		clearInterval(this.idIntervalUpdateHUD);
+		this.gameData = new GameData();
+		this.powers = [];
+		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
+		if (this.teamLifes < 0) this.teamLifes = 0;
+		this.time = 0;
+		this.allDead = false;
+		this.wavesManager = new WavesManager();
+		this.wavesManager.firstWave(this.difficulty);
+		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
+		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
 	}
 }
