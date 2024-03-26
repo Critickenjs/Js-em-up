@@ -12,10 +12,10 @@ export default class Scoreboard extends View {
 	}
 	update(data) {
 		this.element.querySelector('#scoreList').innerHTML = '';
-		for (const playerName in data) {
+		data.forEach(player => {
 			const li = document.createElement('li');
-			li.textContent = `${playerName} : ${data[playerName]}`;
+			li.textContent = `${player.playerName} : ${player.score}`;
 			this.element.querySelector('#scoreList').appendChild(li);
-		}
+		});
 	}
 }
