@@ -18,5 +18,6 @@ export default class View {
 	 */
 	hide() {
 		this.element.classList.remove('active');
+		this.element.style.display = 'none';
 	}
 }

@@ -91,7 +91,6 @@ export default class Game {
 	update() {
 		this.resetData();
 		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
-		
 		this.checkPlayerRespawn();
 		
 		this.updateAllPowers();
@@ -124,6 +123,8 @@ export default class Game {
 		}
 		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
 		this.refreshPowers();
+		this.refreshLifes();
+		this.refreshIsInGame();
 		console.log(" Vies :"+this.teamLifes);
 		this.io.emit('game', this.gameData);
 	}
@@ -187,6 +188,14 @@ export default class Game {
 
 	refreshWaves() {
 		this.gameData.wavesNumber = this.wavesManager.waveNumber;
+	}
+
+	refreshLifes() {
+		this.gameData.teamLifes = this.teamLifes;
+	}
+
+	refreshIsInGame() {
+		this.gameData.isInGame = this.isInGame;
 	}
 
 	refreshEnnemiesAndEnemyShots() {
