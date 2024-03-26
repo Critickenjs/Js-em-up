@@ -9,11 +9,12 @@ export default class Client_Shot extends Client_Entity {
 
 	static shots=[];
 
-	constructor(posX, posY, isFromAPlayer, perforation, laser=false) {
+	constructor(posX, posY, isFromAPlayer, perforation, laser, tick) {
 		super(posX,posY,Client_Shot.width,Client_Shot.height);
 		this.isFromAPlayer=isFromAPlayer;
 		this.perforation=perforation;
 		this.laser=laser;
+		this.tick=tick;
 		if(this.laser){
 			this.width=Client_Entity.canvasWidth;
 		}

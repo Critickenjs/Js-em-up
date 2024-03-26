@@ -112,7 +112,7 @@ export default class Enemy extends Entity {
 				) + Enemy.spawnOffset;
 		} else {
 			this.posY =
-				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) +
+				getRandomInt(Entity.canvasHeight - this.height - Enemy.spawnOffset) +
 				Enemy.spawnOffset;
 		}
 	}
@@ -138,8 +138,8 @@ export default class Enemy extends Entity {
 				this.value = 12;
 				break;
 			case 'orange':
-				this.height = Enemy.height * 1.5;
-				this.width = Enemy.width * 1.5;
+				this.height = Enemy.height * 1.8;
+				this.width = Enemy.width * 1.8;
 				this.speedX = -getRandomIntWithMin(1, 2);
 				this.speedY = getRandomIntWithMin(-1, 1);
 				this.value = 20;
@@ -162,7 +162,7 @@ export default class Enemy extends Entity {
 		this.shots.push(
 			new Shot(
 				this.posX,
-				this.posY + this.height / 3,
+				this.posY + this.height / 2 - Shot.height / 2 -5,
 				false,
 				-Enemy.bulletSpeed
 			)
@@ -170,13 +170,13 @@ export default class Enemy extends Entity {
 	}
 
 	//Collisions du joueur contre les tirs ennemis
-	EnemyShotsCollideWithPlayer(player) {
+	EnemyShotsCollideWithPlayer(game, player) {
 		if (!player.invincible) {
 			for (let s = 0; s < this.shots.length; s++) {
 				if (this.shots[s].active) {
 					if (this.shots[s].isCollidingWith(player)) {
 						this.shots[s].active = false;
-						if (player.alive) player.die();
+						if (player.alive) player.die(game);
 					}
 				}
 			}

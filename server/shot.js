@@ -11,6 +11,7 @@ export default class Shot extends Entity {
 		this.perforation = perforationBonus;
 		this.laser = laserBonus;
 		this.isFromPlayer = isFromPlayer;
+		this.tickActive = 0;
 		if(this.laser){
 			this.width=Entity.canvasWidth;
 			this.height=Shot.height+15;
@@ -19,5 +20,6 @@ export default class Shot extends Entity {
 
 	update(entitySpeedMultiplier) {
 		super.update(entitySpeedMultiplier);
+		this.tickActive++;
 	}
 }

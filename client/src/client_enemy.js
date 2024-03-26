@@ -15,19 +15,21 @@ export default class Client_Enemy extends Client_Entity {
 	}
 
 	rebuild(){
-		this.image.src = './public/res/images/enemy.png';
 		switch (this.type) {
 			case 'red':
 				this.width=Client_Enemy.width;
 				this.height=Client_Enemy.height
+				this.image.src = './public/res/images/enemy.png';
 				break;
 			case 'purple':
 				this.width=Client_Enemy.width;
 				this.height=Client_Enemy.height;
+				this.image.src = './public/res/images/enemy.png';
 				break;
 			case 'orange':
 				this.height = Client_Enemy.height * 1.5 | 0;
 				this.width = Client_Enemy.width * 1.5 | 0;
+				this.image.src = './public/res/images/enemy2.png';
 				break;
 			case 'darkred':
 				this.height = (Client_Enemy.height * (this.lifes / 1.3)) | 0;
