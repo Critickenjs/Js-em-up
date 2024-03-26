@@ -1,7 +1,7 @@
 {
 	"[javascript]": {
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "vscode.typescript-language-features",
 		"javascript.preferences.importModuleSpecifierEnding": "js"
 	}
 }
