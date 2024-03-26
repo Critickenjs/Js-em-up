@@ -6,6 +6,7 @@ import { Server as IOServer } from 'socket.io';
 import Entity from './entity.js';
 import Player from './player.js';
 import Game from './game.js';
+import DataCSV from './dataCSV.js';
 
 const app = express();
 addWebpackMiddleware(app);
@@ -22,6 +23,7 @@ httpServer.listen(port, () => {
 });
 
 const io = new IOServer(httpServer);
+const csvdata = new DataCSV();
 let game = new Game(io, 4);
 game.init();
 let pseudo = '';
@@ -47,6 +49,8 @@ io.on('connection', socket => {
 		game.isInGame = true;
 	});
 	socket.on('restart', () => {
+		let data = csvdata.loadFromURL('server/data/data.csv');
+		socket.emit('score', data);
 		let players = game.players;
 		game.destroy();
 		game.players = players;
