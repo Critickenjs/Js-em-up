@@ -86,11 +86,16 @@ export default class WavesManager {
 					this.enemys[a].EnemyShotsCollideWithPlayer(game,entry.value[1]);
 					if (!this.enemys[a].isDead) {
 						entry.value[1].playerShotsCollideWithEnemy(this, this.enemys[a]);
-						if (entry.value[1].alive && !entry.value[1].invincible) {
-							if (this.enemys[a].isCollidingWith(entry.value[1])) {
-								entry.value[1].die(game);
-								this.enemys[a].fate(this);
+						if (!this.enemys[a].isDead) {
+							if (entry.value[1].alive && !entry.value[1].invincible) {
+								if (this.enemys[a].isCollidingWith(entry.value[1])) {
+									entry.value[1].die(game);
+									this.enemys[a].fate(this);
+									game.io.emit('playSound','enemyDeath');
+								}
 							}
+						}else{
+							game.io.emit('playSound','enemyDeath');
 						}
 					}
 				}

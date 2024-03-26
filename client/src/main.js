@@ -39,6 +39,7 @@ const sounds = [
 	'./res/sounds/shot.mp3',
 	'./res/sounds/shotEnemy.mp3',
 	'./res/sounds/dead.mp3',
+	'./res/sounds/power.mp3',
 ];
 
 //Chargement des assets
@@ -171,6 +172,7 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	gameView.show();
 	socket.emit('pseudo', homePage.username);
 	socket.emit('difficulty', getDifficultyValue());
+	soundboard.playSoundPowerUp();
 });
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
@@ -180,6 +182,10 @@ document.querySelector('#checkmouse').addEventListener('click', () => {
 		keys.keysPressed.MouseMode = true;
 	}
 });
+
+socket.on('playSound', keySound => {
+	soundboard.playSoundWithKey(keySound);
+})
 
 socket.on('game', gameData => {
 	//Update players
@@ -226,9 +232,17 @@ socket.on('game', gameData => {
 				gameData.shots[i].posY,
 				gameData.shots[i].isFromAPlayer,
 				gameData.shots[i].perforation,
-				gameData.shots[i].laser
+				gameData.shots[i].laser,
+				gameData.shots[i].tick
 			)
 		);
+		if(gameData.shots[i].tick==0){
+			if(gameData.shots[i].isFromAPlayer){
+				soundboard.playSoundPlayerShooting();
+			}else{
+				soundboard.playSoundEnemyShooting();
+			}
+		}
 	}
 
 	// New Update enemys

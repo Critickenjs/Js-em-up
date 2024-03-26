@@ -1,5 +1,6 @@
 import Entity from './entity.js';
 import Shot from './shot.js';
+import { getRandomInt } from './utils.js';
 
 export default class Player extends Entity {
 	//Declarations
@@ -350,14 +351,9 @@ export default class Player extends Entity {
 
 	
 	mouseMovement(keysPressed) {
-		console.log("mouse Movement : ("+keysPressed.MouseX+"-"+keysPressed.MouseY+")");
 		const vaguely = 10;
-		console.log("Pos X : "+this.posX);
-		console.log("Pos Y : "+this.posY);
 		const distanceX = Math.round(Math.abs(keysPressed.MouseX - this.posX)) / 2000;
 		const distanceY = Math.round(Math.abs(keysPressed.MouseY - this.posY)) / 2000;
-		console.log("Distance X : "+distanceX);
-		console.log("Distance Y : "+distanceY);
 		if (
 			!(
 				this.posX + this.width / 2 > keysPressed.MouseX - vaguely &&
@@ -400,10 +396,7 @@ export default class Player extends Entity {
 
 
 	//Duration en tick (60 ticks par seconde)
-	obtainScoreMultiplierBonus(
-		duration,
-		multiplier = getRandomInt(WavesManager.difficulty) + 2
-	) {
+	obtainScoreMultiplierBonus(duration, multiplier = 2) {
 		this.timerBeforeLosingScoreMultiplierBonus = duration;
 		this.scoreMultiplierBonus = multiplier;
 	}

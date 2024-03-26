@@ -1,12 +1,12 @@
 import Entity from './entity.js';
 import { getRandomInt } from './utils.js';
 import Player from './player.js';
-import WavesManager from './wavesManager.js';
+
 export default class Power extends Entity {
 	static width=40;
     static height=40;
 	static speed = 6;
-	static types = ['laser','perforation']//,'ice','invincible'];//,'scoreMultiplierBonus','life'
+	static types = ['perforation','ice','invincible','scoreMultiplierBonus','life'];
 	constructor( posX, posY, type = Power.types[getRandomInt(Power.types.length)]
 	) {
 		super(posX, posY, Power.width, Power.height);
@@ -21,9 +21,7 @@ export default class Power extends Entity {
 	}
 
 	powerActivation(game,player) {
-		if (this.isCollidingWith(player)) {
-			this.active = false;
-			switch (this.type) {
+		switch (this.type) {
 				case 'invincible':
 					player.becomeInvincible(
 						Player.maxTimeForInvincibility +
@@ -35,7 +33,7 @@ export default class Power extends Entity {
 				break;
 				case 'scoreMultiplierBonus':
 					player.obtainScoreMultiplierBonus(
-						Player.maxTimeForScoreMultiplierBonus
+						Player.maxTimeForScoreMultiplierBonus,getRandomInt(game.difficulty)+2
 					);
 				break;
 				case 'ice':
@@ -58,5 +56,4 @@ export default class Power extends Entity {
 				break;
 			}
 		}
-	}
 }

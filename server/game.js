@@ -127,7 +127,6 @@ export default class Game {
 		this.refreshPowers();
 		this.refreshLifes();
 		this.refreshIsInGame();
-		console.log(" Vies :"+this.teamLifes);
 		if (this.teamLifes <= 0 && !this.atLeast1PlayerAlive()) {
 			this.isInGame = false;
 		}
@@ -145,7 +144,7 @@ export default class Game {
 		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0,"invincible":4} //Invincible est le timer avant la fin de l'invinciblité
 		this.gameData.enemys = []; //{"id":'',"posX":x,"posY:y","type":'red',"lifes":1}
 		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
-		this.gameData.shots = [];
+		this.gameData.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false,"tick":0}
 		this.gameData.wavesNumber = 1;
 		this.gameData.teamLifes = 1;
 		this.gameData.entitySpeedMultiplier = 1;
@@ -178,6 +177,7 @@ export default class Game {
 							isFromAPlayer: true,
 							perforation: shot.perforation,
 							laser: shot.laser,
+							tick: shot.tickActive
 						});
 				}
 			}
@@ -195,7 +195,11 @@ export default class Game {
 				for (let p = 0; p < this.players.size; p++) {
 					entry = iterator.next();
 					if (entry.value != null && entry.value[1].alive) {
-						this.powers[i].powerActivation(this, entry.value[1]);
+						if (this.powers[i].isCollidingWith(entry.value[1])) {
+							this.powers[i].active = false;
+							this.powers[i].powerActivation(this, entry.value[1]);
+							this.io.emit('playSound','power');
+						}				
 					}
 				}
 			}
@@ -233,6 +237,8 @@ export default class Game {
 						posY: enemys[i].shots[s].posY,
 						isFromAPlayer: false,
 						perforation: enemys[i].shots[s].perforation,
+						laser: false, //enemys[i].shots[s].laser
+						tick: enemys[i].shots[s].tickActive
 					});
 			}
 		}
