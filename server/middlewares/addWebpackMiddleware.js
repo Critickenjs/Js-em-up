@@ -16,7 +16,7 @@ export default function addWebpackMiddleware(app) {
 		];
 	}
 	const compiler = webpack(webpackConfigForMiddleware);
-	// activation des 2 middlewares nécessaires au live-reload :
+
 	app.use(
 		webpackDevMiddleware(compiler, {
 			publicPath: webpackConfig.output?.publicPath,

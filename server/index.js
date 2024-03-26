@@ -8,13 +8,20 @@ import Player from './player.js';
 import Game from './game.js';
 import DataCSV from './dataCSV.js';
 
+import expressStatusMonitor from 'express-status-monitor';
+
 const app = express();
+
 addWebpackMiddleware(app);
 const httpServer = http.createServer(app);
 
 app.use(express.static('client'));
-app.get('*', (req, res) => {
-	res.send('' + fs.readFileSync('client/public/index.html', 'utf8'));
+app.get('*', (req, res, next) => {
+	if (req.originalUrl === '/status') {
+		return next();
+	} else {
+		res.send('' + fs.readFileSync('client/public/index.html', 'utf8'));
+	}
 });
 
 const port = process.env.PORT || 8000;
@@ -22,11 +29,16 @@ httpServer.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}/`);
 });
 
-const io = new IOServer(httpServer);
+const io = new IOServer(httpServer, {
+	allowEIO3: true,
+});
 const csvdata = new DataCSV();
 let game = new Game(io, 4);
 game.init();
 let pseudo = '';
+
+// permet d'avoir une page http://localhost/status pour suivre la consommation mémoire/cpu/etc.
+app.use(expressStatusMonitor({ websocket: io }));
 
 io.on('connection', socket => {
 	console.log(`New connexion from client :${socket.id}/`);
