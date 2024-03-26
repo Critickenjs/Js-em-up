@@ -70,25 +70,25 @@ export default class WavesManager {
 	}
 
 	//Gêre le mise à jour des vagues
-	wavesUpdates(players, entitySpeedMultiplier) {
-		this.updateEnnemiesToPlayersInteractions(players);
+	wavesUpdates(game, entitySpeedMultiplier) {
+		this.updateEnnemiesToPlayersInteractions(game);
 		//Renvoie un boolean en fonction de si la vague est finie (tous les ennemis ont disparues).
 		return this.updateAllEnemy(entitySpeedMultiplier);
 	}
 
-	updateEnnemiesToPlayersInteractions(playerMap) {
-		const iterator = playerMap.entries();
+	updateEnnemiesToPlayersInteractions(game) {
+		const iterator = game.players.entries();
 		let entry;
-		for (let i = 0; i < playerMap.size; i++) {
+		for (let i = 0; i < game.players.size; i++) {
 			entry = iterator.next();
 			if (entry.value != null) {
 				for (let a = 0; a < this.enemys.length; a++) {
-					this.enemys[a].EnemyShotsCollideWithPlayer(entry.value[1]);
+					this.enemys[a].EnemyShotsCollideWithPlayer(game,entry.value[1]);
 					if (!this.enemys[a].isDead) {
 						entry.value[1].playerShotsCollideWithEnemy(this, this.enemys[a]);
 						if (entry.value[1].alive && !entry.value[1].invincible) {
 							if (this.enemys[a].isCollidingWith(entry.value[1])) {
-								entry.value[1].die();
+								entry.value[1].die(game);
 								this.enemys[a].fate(this);
 							}
 						}

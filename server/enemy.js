@@ -170,13 +170,13 @@ export default class Enemy extends Entity {
 	}
 
 	//Collisions du joueur contre les tirs ennemis
-	EnemyShotsCollideWithPlayer(player) {
+	EnemyShotsCollideWithPlayer(game, player) {
 		if (!player.invincible) {
 			for (let s = 0; s < this.shots.length; s++) {
 				if (this.shots[s].active) {
 					if (this.shots[s].isCollidingWith(player)) {
 						this.shots[s].active = false;
-						if (player.alive) player.die();
+						if (player.alive) player.die(game);
 					}
 				}
 			}

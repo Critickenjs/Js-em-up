@@ -91,15 +91,14 @@ export default class Game {
 	update() {
 		this.resetData();
 		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
-		this.refreshPowers();
+		
 		this.checkPlayerRespawn();
-		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
-
+		
 		this.updateAllPowers();
 
 		//WaveUpdate smet à jour tous ce qui est en rapport avec les ennmies, notamment les collisions, la mort du jouer, etc...
 		this.allDead = this.wavesManager.wavesUpdates(
-			this.players,
+			this,
 			this.gameData.entitySpeedMultiplier
 		);
 		if (this.allDead) {
@@ -123,6 +122,9 @@ export default class Game {
 		} else {
 			this.refreshEnnemiesAndEnemyShots();
 		}
+		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
+		this.refreshPowers();
+		console.log(" Vies :"+this.teamLifes);
 		this.io.emit('game', this.gameData);
 	}
 
@@ -232,7 +234,6 @@ export default class Game {
 				if (!entry.value[1].alive) {
 					if (entry.value[1].timerBeforeRespawn <= 0) {
 						entry.value[1].respawn(this.difficulty);
-						this.teamLifes--;
 					} else {
 						entry.value[1].timerBeforeRespawn--;
 					}

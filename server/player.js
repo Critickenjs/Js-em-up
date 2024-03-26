@@ -178,8 +178,9 @@ export default class Player extends Entity {
 	}
 
 	//Tue le joueur, augmente le timer avant sa réapparition
-	die() {
+	die(game) {
 		this.alive = false;
+		game.teamLifes--;
 		if (this.gotLaserBonus) {
 			this.shots = [];
 		}
