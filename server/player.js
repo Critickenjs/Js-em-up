@@ -185,7 +185,7 @@ export default class Player extends Entity {
 	die(game) {
 		this.alive = false;
 		game.teamLifes--;
-		if (this.gotLaserBonus) {
+		if (this.gotLaserBonus()) {
 			this.shots = [];
 		}
 	}
