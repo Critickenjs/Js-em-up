@@ -42,7 +42,7 @@ canvas {
     background-color: #000;
 }
 
-@media screen and (orientation: portrait) {
+@media screen and (orientation: landscape) {
     canvas {
         width: 100%;
         height: min-content;
@@ -53,12 +53,18 @@ canvas {
     }
 }
 
-@media screen and (orientation: landscape) {
+@media screen and (orientation: portrait) {
     canvas {
         height: 80%;
         width: min-content;
         margin: auto;
     }
+    .landscape{
+        display: none;
+    }
+}
+
+@media screen and (min-width:450px) {
     .landscape{
         display: none;
     }

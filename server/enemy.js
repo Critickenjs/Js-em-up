@@ -170,7 +170,7 @@ export default class Enemy extends Entity {
 				this.value = 25;
 				break;
 			case 'boss':
-				this.lifes = 50;
+				this.lifes = 20 * this.difficulty;
 				this.height = Enemy.height * 5;
 				this.width = Enemy.width * 5;
 				this.speedX = -0.9;

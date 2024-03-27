@@ -50,7 +50,7 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
-let canvasServerWidth = 800;
+let canvasServerWidth = 1600;
 let canvasServerHeight = 800;
 let isingame = false;
 
@@ -104,33 +104,6 @@ socket.on('playerKeys', () => {
 	ids = [];
 	socket.emit('keys', keys.keysPressed);
 });
-canvas.addEventListener('touchstart', function (e) {
-	e.preventDefault();
-	if (keys.keysPressed.MouseDown) {
-		keys.keysPressed.MouseDown = false;
-	} else {
-		keys.keysPressed.MouseDown = true;
-	}
-});
-window.addEventListener('deviceorientation', handleOrientation);
-function handleOrientation(event) {
-	if (isingame) {
-		keys.keysPressed.alpha = event.alpha;
-		keys.keysPressed.beta = event.beta;
-		keys.keysPressed.gamma = event.gamma;
-	}
-}
-
-canvas.addEventListener('mousemove', function (event) {
-	if (isingame) {
-		keys.keysPressed.MouseX =
-			Math.round((event.clientX) * 10) / // - canvas.getBoundingClientRect().left
-			10;
-		keys.keysPressed.MouseY =
-			Math.round((event.clientY) * 10) / //- canvas.getBoundingClientRect().top
-			10;
-	}
-});
 
 const screen = window.screen;
 
@@ -141,9 +114,43 @@ if (
 ) {
 	// true for mobile device
 	keys.keysPressed.onPhone = true;
+
+	canvas.addEventListener('touchstart', function (e) {
+		e.preventDefault();
+		const touch = e.touches[0];
+		keys.keysPressed.MouseX = (touch.clientX | 0);
+		keys.keysPressed.MouseY = (touch.clientY | 0);
+
+		if (keys.keysPressed.MouseDown) {
+			keys.keysPressed.MouseDown = false;
+		} else {
+			keys.keysPressed.MouseDown = true;
+		}
+	});
+	window.addEventListener('deviceorientation', event => {
+		console.log('Alpha: ' + event.alpha);
+		console.log('Beta: ' + event.beta);
+		console.log('Gamma: ' + event.gamma);
+		keys.keysPressed.alpha = event.alpha;
+		keys.keysPressed.beta = event.beta;
+		keys.keysPressed.gamma = event.gamma;
+	});
+
 } else {
 	// false for not mobile device
 	keys.keysPressed.onPhone = false;
+
+
+	canvas.addEventListener('mousemove', function (event) {
+		if (isingame) {
+			keys.keysPressed.MouseX =
+				Math.round((event.clientX) * 10) / // - canvas.getBoundingClientRect().left
+				10;
+			keys.keysPressed.MouseY =
+				Math.round((event.clientY) * 10) / //- canvas.getBoundingClientRect().top
+				10;
+		}
+	});
 }
 
 socket.on('time', newTime => {
@@ -183,7 +190,7 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
 	if (keys.keysPressed.MouseMode) {
-		keys.keysPressed.MouseDown = false;
+		keys.keysPressed.MouseMode = false;
 	} else {
 		keys.keysPressed.MouseMode = true;
 	}
@@ -418,14 +425,33 @@ function render() {
 	}
 
 	if (keys.keysPressed.onPhone) {
-		//Mettre ici les modifications dues aux téléphones
-
-		if (keys.keysPressed.isOnLandscape) {
-			gameView.hideMsgLandscape();
-		} else {
-			gameView.showMsgLandscape();
-		}
+		Client_Player.showMessage(
+			context,
+			"alpha:" + keys.keysPressed.alpha,
+			'16px',
+			'white',
+			0,
+			canvas.height - 100
+		);
+		Client_Player.showMessage(
+			context,
+			"beta:" + keys.keysPressed.beta,
+			'16px',
+			'white',
+			0,
+			canvas.height - 70
+		);
+		Client_Player.showMessage(
+			context,
+			"gamma:" + keys.keysPressed.gamma,
+			'16px',
+			'white',
+			0,
+			canvas.height - 40
+		);
 	}
+
+
 
 	//Looping
 	requestAnimationFrame(render);

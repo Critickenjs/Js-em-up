@@ -283,6 +283,7 @@ export default class Player extends Entity {
 
 	acceleration(keysPressed) {
 		if (keysPressed.onPhone) {
+			this.gyroscopeMovement(keysPressed);
 			this.checkMaxAcceleration(2);
 		} else if (keysPressed.MouseMode) {
 			this.mouseMovement(keysPressed);
@@ -356,6 +357,18 @@ export default class Player extends Entity {
 
 
 	mouseMovement(keysPressed) {
+		if (keysPressed.MouseY < 400) {
+			keysPressed.MouseY -= 100;
+		} else if (keysPressed.MouseY > Entity.canvasHeight / 2) {
+			keysPressed.MouseY += 100;
+		}
+		if (keysPressed.MouseX < 400) {
+			keysPressed.MouseX -= 200;
+		} else if (keysPressed.MouseX > Entity.canvasWidth / 2) {
+			keysPressed.MouseX += 200;
+		}
+
+
 		const distanceX = Math.round(Math.abs(keysPressed.MouseX - this.posX)) / 2000;
 		const distanceY = Math.round(Math.abs(keysPressed.MouseY - this.posY)) / 2000;
 		if (
@@ -392,9 +405,32 @@ export default class Player extends Entity {
 	}
 
 	gyroscopeMovement(keysPressed) {
-		if (keysPressed.beta != null && keysPressed.gamma != null) {
+		/*if (keysPressed.beta != null && keysPressed.gamma != null) {
 			this.accelerationY = keysPressed.beta;
 			this.accelerationX = keysPressed.gamma + 15;//Pour que le controle soit plus fluide
+		}*/
+		if (keysPressed.MouseY < 400) {
+			keysPressed.MouseY = 0;
+		} else if (keysPressed.MouseY > 500) {
+			keysPressed.MouseY = Entity.canvasHeight;
+		}
+
+		if (keysPressed.MouseX > 250) {
+			keysPressed.MouseX = Entity.canvasWidth;
+		}
+		if (this.posX < keysPressed.MouseX) {
+			this.speedX = Player.defaultSpeed;
+			this.accelerationX = this.accelerateRight(this.accelerationX);
+		} else {
+			this.speedX = -Player.defaultSpeed;
+			this.accelerationX = this.accelerateLeft(this.accelerationX);
+		}
+		if (this.posY < keysPressed.MouseY) {
+			this.speedY = Player.defaultSpeed;
+			this.accelerationY = this.accelerateDown(this.accelerationY);
+		} else {
+			this.speedY = -Player.defaultSpeed;
+			this.accelerationY = this.accelerateUp(this.accelerationY);
 		}
 	}
 
