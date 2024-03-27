@@ -1,5 +1,5 @@
 export default class Entity {
-	static canvasWidth = 800; //1600
+	static canvasWidth = 1600; //1600
 	static canvasHeight = 800; //800
 
 	static speedMultiplierDefault = 0.8;
@@ -61,7 +61,7 @@ export default class Entity {
 	isThisEntityInsideThisOther(entity) {
 		for (const collisionProperty in this.collision) {
 			if (entity.isThisEntityContainThis(this.collision[collisionProperty])) {
-				
+
 				return true;
 			}
 		}
