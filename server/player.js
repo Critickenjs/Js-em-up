@@ -13,6 +13,9 @@ export default class Player extends Entity {
 	static maxAcceleration = 8;
 	static defaultSpeed = 3;
 
+	//Mouse
+	static vaguely = 3;
+
 	//Lifes
 	static defaultNumberOfLife = 4;
 
@@ -240,7 +243,7 @@ export default class Player extends Entity {
 		for (let s = 0; s < this.shots.length; s++) {
 			if (this.shots[s].active) {
 				if (this.shots[s].isCollidingWith(enemy)) {
-					if(!(this.shots[s].laser && enemy.type=='boss')){
+					if (!(this.shots[s].laser && enemy.type == 'boss')) {
 						this.shots[s].active = this.shots[s].perforation; //Si non perforation, le tir se désactive, si perforation, le tir continue sa trajectoire;
 						if (enemy.getHurt(waveManager)) {
 							this.addScorePointOnEnemyKill(enemy);
@@ -279,12 +282,12 @@ export default class Player extends Entity {
 	}
 
 	acceleration(keysPressed) {
-		if (keysPressed.onPhone){
+		if (keysPressed.onPhone) {
 			this.checkMaxAcceleration(2);
-		}else if(keysPressed.MouseMode){
+		} else if (keysPressed.MouseMode) {
 			this.mouseMovement(keysPressed);
 			this.checkMaxAcceleration(1);
-		}else{
+		} else {
 			this.keyBoardMovement(keysPressed);
 			this.checkMaxAcceleration(1);
 		}
@@ -292,18 +295,18 @@ export default class Player extends Entity {
 		this.speedY += this.accelerationY;
 	}
 
-	checkMaxAcceleration(multiplier=1) {
-		if (this.accelerationX > Player.maxAcceleration*multiplier) {
-			this.accelerationX = Player.maxAcceleration*multiplier;
+	checkMaxAcceleration(multiplier = 1) {
+		if (this.accelerationX > Player.maxAcceleration * multiplier) {
+			this.accelerationX = Player.maxAcceleration * multiplier;
 		}
-		else if (this.accelerationX < -Player.maxAcceleration*multiplier) {
-			this.accelerationX = -Player.maxAcceleration*multiplier;
+		else if (this.accelerationX < -Player.maxAcceleration * multiplier) {
+			this.accelerationX = -Player.maxAcceleration * multiplier;
 		}
-		if (this.accelerationY > Player.maxAcceleration*multiplier) {
-			this.accelerationY = Player.maxAcceleration*multiplier;
+		if (this.accelerationY > Player.maxAcceleration * multiplier) {
+			this.accelerationY = Player.maxAcceleration * multiplier;
 		}
-		else if (this.accelerationY < -Player.maxAcceleration*multiplier) {
-			this.accelerationY = -Player.maxAcceleration*multiplier;
+		else if (this.accelerationY < -Player.maxAcceleration * multiplier) {
+			this.accelerationY = -Player.maxAcceleration * multiplier;
 		}
 	}
 	deceleration() {
@@ -317,7 +320,7 @@ export default class Player extends Entity {
 				Math.round(
 					(acceleration +
 						1 / (10 * Player.inertiaMultiplier * this.iceMultiplierMalus)) *
-						1000
+					1000
 				) / 1000;
 			if (acceleration > -0.05) acceleration = 0;
 		} else if (acceleration > 0) {
@@ -325,7 +328,7 @@ export default class Player extends Entity {
 				Math.round(
 					(acceleration -
 						1 / (10 * Player.inertiaMultiplier * this.iceMultiplierMalus)) *
-						1000
+					1000
 				) / 1000;
 			if (acceleration < 0.05) acceleration = 0;
 		}
@@ -351,18 +354,17 @@ export default class Player extends Entity {
 		}
 	}
 
-	
+
 	mouseMovement(keysPressed) {
-		const vaguely = 10;
 		const distanceX = Math.round(Math.abs(keysPressed.MouseX - this.posX)) / 2000;
 		const distanceY = Math.round(Math.abs(keysPressed.MouseY - this.posY)) / 2000;
 		if (
 			!(
-				this.posX + this.width / 2 > keysPressed.MouseX - vaguely &&
-				this.posX + this.width / 2 < keysPressed.MouseX + vaguely
+				this.posX + this.width / 2 > keysPressed.MouseX - Player.vaguely &&
+				this.posX + this.width / 2 < keysPressed.MouseX + Player.vaguely
 			)
 		) {
-			if (this.posX + this.width / 2 > keysPressed.MouseX) {
+			if (this.posX + this.width / 2 > keysPressed.MouseX - Player.vaguely) {
 				this.speedX = -Player.defaultSpeed;
 				this.accelerationX = this.accelerateLeft(this.accelerationX, distanceX);
 			} else {
@@ -375,11 +377,11 @@ export default class Player extends Entity {
 		}
 		if (
 			!(
-				this.posY + this.height / 2 < keysPressed.MouseY + vaguely &&
-				this.posY + this.height / 2 > keysPressed.MouseY - vaguely
+				this.posY + this.height / 2 < keysPressed.MouseY + Player.vaguely &&
+				this.posY + this.height / 2 > keysPressed.MouseY - Player.vaguely
 			)
 		) {
-			if (this.posY + this.height / 2 > keysPressed.MouseY) {
+			if (this.posY + this.height / 2 > keysPressed.MouseY - Player.vaguely) {
 				this.speedY = -Player.defaultSpeed;
 				this.accelerationY = this.accelerateUp(this.accelerationY, distanceY);
 			} else {
@@ -390,9 +392,9 @@ export default class Player extends Entity {
 	}
 
 	gyroscopeMovement(keysPressed) {
-		if(keysPressed.beta != null && keysPressed.gamma != null){
-			this.accelerationY=keysPressed.beta;
-			this.accelerationX=keysPressed.gamma+15;//Pour que le controle soit plus fluide
+		if (keysPressed.beta != null && keysPressed.gamma != null) {
+			this.accelerationY = keysPressed.beta;
+			this.accelerationX = keysPressed.gamma + 15;//Pour que le controle soit plus fluide
 		}
 	}
 

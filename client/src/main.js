@@ -124,10 +124,10 @@ function handleOrientation(event) {
 canvas.addEventListener('mousemove', function (event) {
 	if (isingame) {
 		keys.keysPressed.MouseX =
-			Math.round((event.clientX - canvas.getBoundingClientRect().left) * 10) /
+			Math.round((event.clientX) * 10) / // - canvas.getBoundingClientRect().left
 			10;
 		keys.keysPressed.MouseY =
-			Math.round((event.clientY - canvas.getBoundingClientRect().top) * 10) /
+			Math.round((event.clientY) * 10) / //- canvas.getBoundingClientRect().top
 			10;
 	}
 });
