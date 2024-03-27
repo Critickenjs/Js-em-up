@@ -48,6 +48,9 @@ canvas {
         height: min-content;
         margin: auto;
     }
+    .landscape{
+        display: flex;
+    }
 }
 
 @media screen and (orientation: landscape) {
@@ -55,6 +58,9 @@ canvas {
         height: 80%;
         width: min-content;
         margin: auto;
+    }
+    .landscape{
+        display: none;
     }
 }
 
@@ -173,10 +179,6 @@ div{
     background: rgba(44, 62, 80, 0.585);
     align-items: center;
     justify-content: center;
-}
-
-.landscape{
-    display: none;
 }
 
 
