@@ -34,7 +34,7 @@ export default class Game {
 
 	resetTeamLives() {
 		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
-		if (this.teamLifes < 0) this.teamLifes = 0;
+		if (this.teamLifes < 1) this.teamLifes = 1;
 	}
 
 	resetPlayers() {
@@ -162,7 +162,7 @@ export default class Game {
 		this.refreshPowers();
 		this.refreshLifes();
 		this.refreshIsInGame();
-		if (this.teamLifes < 0 && !this.atLeast1PlayerAlive()) {
+		if (this.teamLifes < 1 && !this.atLeast1PlayerAlive()) {
 			this.stopUpdating();
 			if (this.isInGame) {
 				const data = [];
@@ -311,7 +311,7 @@ export default class Game {
 				if (!entry.value[1].alive) {
 					if (entry.value[1].timerBeforeRespawn <= 0) {
 						entry.value[1].timerBeforeRespawn = 0;
-						if (this.teamLifes >= 0) entry.value[1].respawn(this.difficulty);
+						if (this.teamLifes >= 1) entry.value[1].respawn(this.difficulty);
 					} else {
 						entry.value[1].timerBeforeRespawn--;
 					}
