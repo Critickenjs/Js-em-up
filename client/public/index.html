@@ -33,7 +33,11 @@
 						Contrôles à la souris
 						<input type="checkbox" id="checkmouse" name="checkmouse">
 					</label>
-					<button type="submit">Jouer</button>
+					<div>
+						<input type="text" id="joinRoomInput" placeholder="Enter Room Name">
+						<button type="button" id="joinRoomButton">Join Room</button>
+					</div>
+					<button type="submit">Jouer seul </button>
 				</form>
 			</div>
 		</div>
@@ -56,16 +60,17 @@
 	<div id="root">
 		<div class="box game">
 			<div class="hudInfo">
-			<p class="hud lifes">Lifes: <span class="lifesValue">1</span></p>
-			<p class="hud waves">Waves: <span class="wavesValue">1</span></p>
-			<p class="hud time">Time: <span class ="timeValue">0</span></p>
-			<p class="hud score">Score: <span class ="scoreValue"> 0 </span> (x<span id="scoreBonusValue"> 1 </span>)</p>
-			<p class="hud landscape"> For a better experience, please do not use landscape mode.</p>
+				<p class="hud lifes">Lifes: <span class="lifesValue">1</span></p>
+				<p class="hud waves">Waves: <span class="wavesValue">1</span></p>
+				<p class="hud time">Time: <span class="timeValue">0</span></p>
+				<p class="hud score">Score: <span class="scoreValue"> 0 </span> (x<span id="scoreBonusValue"> 1 </span>)
+				</p>
+				<p class="hud landscape"> For a better experience, please do not use landscape mode.</p>
 			</div>
 			<canvas class="gameCanvas"> </canvas>
-			
+
 		</div>
-		
+
 	</div>
 	<!--
 	<div class="box credit">
