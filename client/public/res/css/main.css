@@ -52,45 +52,27 @@ canvas {
 
 @media screen and (orientation: landscape) {
     canvas {
-        height: 90%;
+        height: 80%;
         width: min-content;
         margin: auto;
     }
 }
 
+.hudInfo {
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de se mettre en ligne */
+}
+
 .hud{
-    position: absolute;
+    position:relative;
     padding: 10px;
+    margin: 10px;
     color: #fff;
     font-size: 1em;
     z-index: 2;
     user-select: none;
+    flex: 1; /* Ajuste la taille des éléments pour qu'ils occupent la même largeur */
 }
-
-
-
-
-
-.lifes {
-    top: 0;
-    left: 0;
-}
-
-.waves {
-    top: 0;
-    left: 30%;
-}
-
-.time {
-    top: 0;
-    right: 30%;
-} 
-
-.score { 
-    top: 0;
-    right: 0;
-}
-
 
 
 h1 {
