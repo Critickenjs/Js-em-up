@@ -51,6 +51,11 @@ export default class SoundBoard {
     playMusic() {
         this.playSound(this.sounds.get("music"));
     }
+
+    stopMusic() {
+        this.sounds.get("music").pause();
+        this.sounds.get("music").currentTime = 0;
+    }
 }
 
 

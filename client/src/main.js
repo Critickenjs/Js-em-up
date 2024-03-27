@@ -317,6 +317,7 @@ socket.on('game', gameData => {
 });
 
 socket.on('gameOver', gameOverData => {
+	soundboard.stopMusic();
 	gameView.hide();
 	for (let i = 0; i < gameOverData.length; i++) {
 		if (gameOverData[i].id == socket.id) {
