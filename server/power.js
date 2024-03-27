@@ -5,6 +5,7 @@ import Player from './player.js';
 export default class Power extends Entity {
 	static width = 40;
 	static height = 40;
+	static frequencyPowerSpawn = 20;
 	static speed = 6;
 	static types = [
 		'laser',
@@ -35,7 +36,7 @@ export default class Power extends Entity {
 			case 'invincible':
 				player.becomeInvincible(
 					Player.maxTimeForInvincibility +
-						Player.maxTimeForInvincibility / game.difficulty
+					Player.maxTimeForInvincibility / game.difficulty
 				);
 				break;
 			case 'life':
@@ -50,13 +51,13 @@ export default class Power extends Entity {
 			case 'ice':
 				player.obtainIceMalus(
 					Player.maxTimeIceMalus +
-						((Player.maxTimeIceMalus / 10) | 0) * game.difficulty
+					((Player.maxTimeIceMalus / 10) | 0) * game.difficulty
 				);
 				break;
 			case 'perforation':
 				player.obtainPerforationBonus(
 					Player.maxTimePerforationBonus +
-						Player.maxTimePerforationBonus / game.difficulty
+					Player.maxTimePerforationBonus / game.difficulty
 				);
 				break;
 			case 'laser':

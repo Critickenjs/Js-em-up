@@ -11,7 +11,6 @@ export default class DataCSV {
 			.pipe(csv())
 			.on('data', row => {
 				this.data.push(row);
-				console.log(row);
 			})
 			.on('end', () => { });
 		return this.data;

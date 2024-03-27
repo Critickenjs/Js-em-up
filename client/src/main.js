@@ -147,6 +147,7 @@ if (
 
 socket.on('time', newTime => {
 	time = newTime;
+	gameView.setTime(time);
 });
 
 const gameView = new GameView(document.querySelector('.game'));
@@ -170,8 +171,9 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	homePage.hide();
 	homePage.Play();
 	gameView.show();
-	socket.emit('pseudo', homePage.username);
-	socket.emit('difficulty', getDifficultyValue());
+	socket.emit('submit', { "pseudo": homePage.username, "difficulty": getDifficultyValue() });
+	//socket.emit('pseudo', homePage.username);
+	//socket.emit('difficulty', getDifficultyValue());
 	soundboard.playSoundPowerUp();
 });
 
@@ -186,8 +188,6 @@ document.querySelector('#checkmouse').addEventListener('click', () => {
 socket.on('playSound', keySound => {
 	soundboard.playSoundWithKey(keySound);
 });
-
-let score = 0;
 
 socket.on('game', gameData => {
 	//Update players
@@ -297,52 +297,33 @@ socket.on('game', gameData => {
 			}
 		}
 	}
-	let idCurrentClient = -1;
 	for (let i = 0; i < gameData.players.length; i++) {
 		if (gameData.players[i].id == socket.id) {
 			gameView.setScore(gameData.players[i].score);
-			idCurrentClient = i;
-			score = gameData.players[i].score;
 			break;
 		}
 	}
-<<<<<<< HEAD
-	if (gameData.isInGame == false && gameData.teamLifes < 0) {
+	isingame = gameData.isInGame;
+	if (!isingame) {
 		homePage.hide();
 		gameView.hide();
-		if(idCurrentClient==-1){
-			gameOver.show('chargement...');
-		}else{
-			gameOver.show(gameData.players[idCurrentClient].score);
-		}
-		
-=======
-	if (idCurrentClient === -1) {
-		console.error("Current client's data not found in gameData.players");
-	} else {
-		// Proceed with accessing the current client's data
-		if (gameData.isInGame == false && gameData.teamLifes < 0) {
-			isingame = false;
-			homePage.hide();
-			gameView.hide();
-			socket.emit('gameOver');
-
-		}
->>>>>>> 7e87b7ea4a9677a6a5b1408ea850884a5d01041d
 	}
-
 	gameView.setLifes(gameData.teamLifes);
 	gameView.setWaves(gameData.wavesNumber);
-	gameView.setTime(time);
 });
 
-socket.on('gameOver', () => {
+socket.on('gameOver', gameOverData => {
 	gameView.hide();
-	gameOver.show(score);
-	socket.emit('getScore');
-	socket.on('score', data => {
-		scoreboard.update(data);
-	});
+	for (let i = 0; i < gameOverData.length; i++) {
+		if (gameOverData[i].id == socket.id) {
+			gameOver.show(gameOverData[i].score);
+			socket.emit('getScore');
+			socket.on('score', data => {
+				scoreboard.update(data);
+			});
+		}
+	}
+
 });
 
 function removeDeconnectedPlayers() {

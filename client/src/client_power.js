@@ -81,7 +81,6 @@ export default class Client_Power extends Client_Entity {
 				);
 				break;
 			default:
-				console.log('POWER UNKNOWN TYPE' + this.type);
 				context.strokeStyle = 'yellow';
 				context.rect(this.posX, this.posY, this.width, this.height);
 				context.stroke();

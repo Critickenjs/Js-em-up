@@ -33,9 +33,7 @@ const io = new IOServer(httpServer, {
 	allowEIO3: true,
 });
 const csvdata = new DataCSV();
-let game = new Game(io, 4);
-game.init();
-let pseudo = '';
+let game = null;
 
 // permet d'avoir une page http://localhost/status pour suivre la consommation mémoire/cpu/etc.
 app.use(expressStatusMonitor({ websocket: io }));
@@ -43,44 +41,52 @@ app.use(expressStatusMonitor({ websocket: io }));
 io.on('connection', socket => {
 	console.log(`New connexion from client :${socket.id}/`);
 	let player = new Player(100, Entity.canvasHeight / 2);
-	game.players.set(socket.id, player);
-	socket.emit('initClientEnnemys', game.wavesManager.enemys.length);
-	socket.on('pseudo', pseudo => {
-		pseudo = pseudo;
-		player.pseudo = pseudo;
-		console.log(`Client ${socket.id} pseudo : ${pseudo}`);
+	socket.on('submit', formData => {
+		if (game == null) {
+			game = new Game(io, formData.difficulty);
+			game.init();
+		}
+		player.pseudo = formData.pseudo;
+		game.players.set(socket.id, player);
+		console.log(`Client ${socket.id} pseudo : ${player.pseudo}`);
 	});
 
 	socket.emit('canvas', [Entity.canvasWidth, Entity.canvasHeight]);
 	socket.on('keys', keysPressed => {
 		//On met à jour le joueur avec les nouvelles keys.
-		player.update(keysPressed, game.gameData.entitySpeedMultiplier);
-	});
-	socket.on('difficulty', difficulty => {
-		game.difficulty = difficulty;
-		game.isInGame = true;
-	});
-	socket.on('restart', () => {
-		let players = game.players;
-		game.destroy();
-		game.players = players;
-		game.players.set(socket.id, player);
+		if (game != null) player.update(keysPressed, game.gameData.entitySpeedMultiplier);
 
 	});
-	socket.on('gameOver', () => {
-		game.gameOver = true;
-		socket.emit('gameOver');
+	socket.on('restart', () => {
+		if (game != null) {
+			if (!game.isInGame) {
+				let players = game.players;
+				game.restartGame();
+				game.players = players; //On redonne la liste des joueurs précédemment connectés.
+				game.players.set(socket.id, player);
+			}
+
+		} else {
+			game = new Game(io, 1);
+			game.init();
+			game.isInGame = true;
+			game.players.set(socket.id, player);
+		}
 	});
 
 	socket.on('getScore', () => {
-		game.players.forEach(player => {
-			csvdata.writeCSV({ [player.pseudo]: player.score });
-		});
 		socket.emit('score', csvdata.loadFromURL('server/data/data.csv'));
 	});
 
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);
-		game.players.delete(socket.id);
+		if (game != null) {
+			game.players.delete(socket.id);
+			if (!game.atLeast1PlayerAlive()) {
+				game.stopUpdating();
+				game = null;
+				console.log("PLUS PERSONNE CO : SUPRESSION DE LA GAME");
+			}
+		}
 	});
 });

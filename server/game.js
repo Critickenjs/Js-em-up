@@ -18,24 +18,50 @@ export default class Game {
 		this.gameData = new GameData();
 		this.players = new Map();
 		this.powers = [];
-		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
-		if (this.teamLifes < 0) this.teamLifes = 0;
+		this.resetTeamLives();
 		this.isInGame = false;
 		this.time = 0;
 		this.allDead = false;
 		this.idIntervalUpdate;
 		this.idIntervalUpdateHUD;
-		this.gameOver = false;
 	}
 
 	init() {
 		this.wavesManager.firstWave(this.difficulty);
 		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
 		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
+		this.isInGame = true;
 	}
 
 	resetTeamLives() {
-		this.teamLifes = Player.defaultNumberOfLife;
+		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
+		if (this.teamLifes < 0) this.teamLifes = 0;
+	}
+
+	resetPlayers() {
+		const iterator = this.players.entries();
+		let entry;
+		for (let i = 0; i < this.players.size; i++) {
+			entry = iterator.next();
+			if (entry.value != null) {
+				entry.value[1].score = 0;
+
+				entry.value[1].shots = [];
+				entry.value[1].timerBeforeShots = 0;
+
+				entry.value[1].maxTimeBeforeRespawn = 100;
+				entry.value[1].timerBeforeRespawn = 0;
+
+				entry.value[1].timerBeforeLosingIceMalus = 0;
+				entry.value[1].iceMultiplierMalus = 1;
+
+				entry.value[1].timerBeforeLosingScoreMultiplierBonus = 0;
+				entry.value[1].scoreMultiplierBonus = 1;
+
+				entry.value[1].timerBeforeLosingPerforationBonus = 0;
+				entry.value[1].timerBeforeLosingLaserBonus = 0;
+			}
+		}
 	}
 
 	addToTeamLives(n) {
@@ -70,7 +96,7 @@ export default class Game {
 				}
 			}
 			this.time++;
-			if (this.time % 8 == 0) {
+			if (this.time % Power.frequencyPowerSpawn == 0) {
 				this.powers.push(
 					new Power(
 						Entity.canvasWidth,
@@ -119,9 +145,7 @@ export default class Game {
 			this.wavesManager.nextWave(this.difficulty);
 			this.addToSpeed(0.01 * this.difficulty);
 
-			if (
-				this.wavesManager.waveNumber %
-				(Game.difficultyMax + 1 - this.difficulty) ==
+			/*if (this.wavesManager.waveNumber %(Game.difficultyMax + 1 - this.difficulty) ==
 				0
 			) {
 				this.powers.push(
@@ -130,7 +154,7 @@ export default class Game {
 						getRandomInt(Entity.canvasHeight - Power.height)
 					)
 				);
-			}
+			}*/
 			this.refreshWaves();
 		} else {
 			this.refreshEnnemiesAndEnemyShots();
@@ -139,30 +163,34 @@ export default class Game {
 		this.refreshPowers();
 		this.refreshLifes();
 		this.refreshIsInGame();
-		if (this.teamLifes <= 0 && !this.atLeast1PlayerAlive()) {
+		if (this.teamLifes < 0 && !this.atLeast1PlayerAlive()) {
+			this.stopUpdating();
+			console.log("GAME OVER : " + this.isInGame);
+			if (this.isInGame) {
+				const data = [];
+				const iterator = this.players.entries();
+				let entry;
+
+				for (let i = 0; i < this.players.size; i++) {
+					entry = iterator.next();
+					if (entry.value != null) {
+						data.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score });
+						csvdata.writeCSV({ [entry.value[1].pseudo]: entry.value[1].score });
+					}
+				}
+				this.io.emit('gameOver', data);
+			}
 			this.isInGame = false;
 		}
-		if (!this.gameOver) {
-			this.io.emit('game', this.gameData);
-		}
+		this.io.emit('game', this.gameData);
 	}
 
 	resetData() {
-		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0,"invincible":4} //Invincible est le timer avant la fin de l'invinciblité
-		this.gameData.enemys = []; //{"id":'',"posX":x,"posY:y","type":'red',"lifes":1}
-		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
-		this.gameData.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false}
+		this.gameData.resetData();
 	}
 
-	restartGame() {
-		this.gameData.players = []; //{"id":'',"posX":x,"posY:y","score":0,"invincible":4} //Invincible est le timer avant la fin de l'invinciblité
-		this.gameData.enemys = []; //{"id":'',"posX":x,"posY:y","type":'red',"lifes":1}
-		this.gameData.powers = []; //{"posX":x,"posY:y","type":'life'}
-		this.gameData.shots = []; //{"posX":x,"posY:y","isFromAPlayer":true,"perforation":false,"tick":0}
-		this.gameData.wavesNumber = 1;
-		this.gameData.teamLifes = 1;
-		this.gameData.entitySpeedMultiplier = 1;
-		this.gameData.isInGame = true;
+	resetAllData() {
+		this.gameData.resetAllData();
 	}
 
 	refreshPlayersAndPlayerShots() {
@@ -278,7 +306,8 @@ export default class Game {
 			if (entry.value != null) {
 				if (!entry.value[1].alive) {
 					if (entry.value[1].timerBeforeRespawn <= 0) {
-						entry.value[1].respawn(this.difficulty);
+						entry.value[1].timerBeforeRespawn = 0;
+						if (this.teamLifes >= 0) entry.value[1].respawn(this.difficulty);
 					} else {
 						entry.value[1].timerBeforeRespawn--;
 					}
@@ -286,21 +315,25 @@ export default class Game {
 			}
 		}
 	}
-	destroy() {
+
+	// Ces deux fonctions étaient précédemment destroy()
+	stopUpdating() {
 		clearInterval(this.idIntervalUpdate);
 		clearInterval(this.idIntervalUpdateHUD);
-		this.powers = [];
-		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
-		if (this.teamLifes < 0) this.teamLifes = 0;
-		this.time = 0;
-		this.allDead = false;
-		this.wavesManager = new WavesManager();
-		this.wavesManager.firstWave(this.difficulty);
-		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
-		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
-		this.restartGame();
+	}
+	restartGame() {
+		this.resetAllData();
+		this.resetTeamLives(); //!\\ Important : doit être appelé après resetAllData()
 		this.isInGame = true;
-		this.gameOver = false;
+		this.allDead = false;
+		this.powers = [];
+		this.time = 0;
+		this.wavesManager = new WavesManager();
+		this.init();
+		this.resetPlayers();
 		this.io.emit('game', this.gameData);
 	}
+	//
+
+
 }
