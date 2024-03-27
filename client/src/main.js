@@ -317,13 +317,12 @@ socket.on('gameOver', gameOverData => {
 	for (let i = 0; i < gameOverData.length; i++) {
 		if (gameOverData[i].id == socket.id) {
 			gameOver.show(gameOverData[i].score);
-			socket.emit('getScore');
-			socket.on('score', data => {
-				scoreboard.update(data);
-			});
 		}
 	}
+});
 
+socket.on('score', data => {
+	scoreboard.update(data);
 });
 
 function removeDeconnectedPlayers() {

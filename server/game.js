@@ -6,13 +6,12 @@ import Power from './power.js';
 import { getRandomInt } from './utils.js';
 import DataCSV from './dataCSV.js';
 
-const csvdata = new DataCSV();
-
 export default class Game {
 	static difficultyMax = 4;
 
 	constructor(io, difficulty) {
 		this.io = io;
+		this.csvdata = new DataCSV();
 		this.difficulty = difficulty;
 		this.wavesManager = new WavesManager();
 		this.gameData = new GameData();
@@ -165,20 +164,25 @@ export default class Game {
 		this.refreshIsInGame();
 		if (this.teamLifes < 0 && !this.atLeast1PlayerAlive()) {
 			this.stopUpdating();
-			console.log("GAME OVER : " + this.isInGame);
 			if (this.isInGame) {
 				const data = [];
 				const iterator = this.players.entries();
 				let entry;
-
 				for (let i = 0; i < this.players.size; i++) {
 					entry = iterator.next();
 					if (entry.value != null) {
 						data.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score });
-						csvdata.writeCSV({ [entry.value[1].pseudo]: entry.value[1].score });
+						this.csvdata.writeCSV({ [entry.value[1].pseudo]: entry.value[1].score }); //Ajoute 1 ligne au CSV pour chaque joueur dans la partie.
 					}
 				}
 				this.io.emit('gameOver', data);
+				this.csvdata.loadFromURL('server/data/data.csv')
+					.then(updatedData => {
+						this.io.emit('score', updatedData); // On envoie le score mis à jour aux clients
+					})
+					.catch(error => {
+						console.error("Erreur lors de la lecture du fichier CSV :", error);
+					});
 			}
 			this.isInGame = false;
 		}
@@ -329,6 +333,7 @@ export default class Game {
 		this.powers = [];
 		this.time = 0;
 		this.wavesManager = new WavesManager();
+		this.csvdata = new DataCSV();
 		this.init();
 		this.resetPlayers();
 		this.io.emit('game', this.gameData);

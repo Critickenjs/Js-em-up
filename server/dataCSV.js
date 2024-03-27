@@ -7,13 +7,20 @@ export default class DataCSV {
 	}
 
 	loadFromURL(url) {
-		fs.createReadStream(url)
-			.pipe(csv())
-			.on('data', row => {
-				this.data.push(row);
-			})
-			.on('end', () => { });
-		return this.data;
+		return new Promise((resolve, reject) => {
+			const dataArray = [];
+			fs.createReadStream(url)
+				.pipe(csv())
+				.on('data', row => {
+					dataArray.push(row);
+				})
+				.on('end', () => {
+					resolve(dataArray);
+				})
+				.on('error', error => {
+					reject(error);
+				});
+		});
 	}
 
 	writeCSV(data) {

@@ -6,7 +6,6 @@ import { Server as IOServer } from 'socket.io';
 import Entity from './entity.js';
 import Player from './player.js';
 import Game from './game.js';
-import DataCSV from './dataCSV.js';
 
 import expressStatusMonitor from 'express-status-monitor';
 
@@ -32,7 +31,6 @@ httpServer.listen(port, () => {
 const io = new IOServer(httpServer, {
 	allowEIO3: true,
 });
-const csvdata = new DataCSV();
 let game = null;
 
 // permet d'avoir une page http://localhost/status pour suivre la consommation mémoire/cpu/etc.
@@ -72,10 +70,6 @@ io.on('connection', socket => {
 			game.isInGame = true;
 			game.players.set(socket.id, player);
 		}
-	});
-
-	socket.on('getScore', () => {
-		socket.emit('score', csvdata.loadFromURL('server/data/data.csv'));
 	});
 
 	socket.on('disconnect', () => {
