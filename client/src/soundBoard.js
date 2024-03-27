@@ -7,42 +7,49 @@ export default class SoundBoard {
     static enemyShotPath = './public/res/sounds/shotEnemy.mp3';
     static enemyDeathPath = './public/res/sounds/enemyDeath.mp3';
     static powerPath = './public/res/sounds/power.mp3';
+    static musicPath = './public/res/music/music.mp3';
 
-	constructor() {
+    constructor() {
         this.sounds = new Map();
-        this.sounds.set("playerShot",new Audio(SoundBoard.playerShotPath));
-        this.sounds.set("playerDeath",new Audio(SoundBoard.playerDeathPath));
-        this.sounds.set("enemyShot",new Audio(SoundBoard.enemyShotPath));
-        this.sounds.set("enemyDeath",new Audio(SoundBoard.enemyDeathPath));
-        this.sounds.set("power",new Audio(SoundBoard.powerPath));
+        this.sounds.set("playerShot", new Audio(SoundBoard.playerShotPath));
+        this.sounds.set("playerDeath", new Audio(SoundBoard.playerDeathPath));
+        this.sounds.set("enemyShot", new Audio(SoundBoard.enemyShotPath));
+        this.sounds.set("enemyDeath", new Audio(SoundBoard.enemyDeathPath));
+        this.sounds.set("power", new Audio(SoundBoard.powerPath));
+        this.sounds.set("music", new Audio(SoundBoard.musicPath));
+        this.sounds.get("music").loop = true;
     }
 
-    playSound(sound){
+    playSound(sound) {
         sound.cloneNode(true).play();
     }
 
-    playSoundWithKey(key){
+    playSoundWithKey(key) {
         this.playSound(this.sounds.get(key));
     }
 
-    playSoundPlayerDeath(){
+    playSoundPlayerDeath() {
         this.playSound(this.sounds.get("playerDeath"));
     }
 
-    playSoundPlayerShooting(){
+    playSoundPlayerShooting() {
         this.playSound(this.sounds.get("playerShot"));
     }
 
-    playSoundEnemyShooting(){
+    playSoundEnemyShooting() {
         this.playSound(this.sounds.get("enemyShot"));
     }
 
-    playSoundEnemyDeath(){
+    playSoundEnemyDeath() {
         this.playSound(this.sounds.get("enemyDeath"));
     }
 
-    playSoundPowerUp(){
+    playSoundPowerUp() {
         this.playSound(this.sounds.get("power"));
+    }
+
+    playMusic() {
+        this.playSound(this.sounds.get("music"));
     }
 }
 

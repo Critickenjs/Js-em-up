@@ -42,6 +42,7 @@ const sounds = [
 	'./res/sounds/shotEnemy.mp3',
 	'./res/sounds/dead.mp3',
 	'./res/sounds/power.mp3',
+	'./res/music/music.mp3',
 ];
 
 //Chargement des assets
@@ -175,7 +176,10 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	//socket.emit('pseudo', homePage.username);
 	//socket.emit('difficulty', getDifficultyValue());
 	soundboard.playSoundPowerUp();
+	soundboard.playMusic();
 });
+
+
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
 	if (keys.keysPressed.MouseMode) {
