@@ -32,7 +32,7 @@ body {
 
 canvas {
     height: 100%;
-    top:0;
+    top: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,7 +48,8 @@ canvas {
         height: min-content;
         margin: auto;
     }
-    .landscape{
+
+    .landscape {
         display: flex;
     }
 }
@@ -59,31 +60,34 @@ canvas {
         width: min-content;
         margin: auto;
     }
-    .landscape{
+
+    .landscape {
         display: none;
     }
 }
 
 @media screen and (min-width:450px) {
-    .landscape{
+    .landscape {
         display: none;
     }
 }
 
 .hudInfo {
     display: flex;
-    flex-wrap: wrap; /* Permet aux éléments de se mettre en ligne */
+    flex-wrap: wrap;
+    /* Permet aux éléments de se mettre en ligne */
 }
 
-.hud{
-    position:relative;
+.hud {
+    position: relative;
     padding: 10px;
     margin: 10px;
     color: #fff;
     font-size: 1em;
     z-index: 2;
     user-select: none;
-    flex: 1; /* Ajuste la taille des éléments pour qu'ils occupent la même largeur */
+    flex: 1;
+    /* Ajuste la taille des éléments pour qu'ils occupent la même largeur */
 }
 
 
@@ -109,12 +113,13 @@ h1 em {
     justify-content: center;
     background-color: #ffffffb3;
     border-radius: 5px;
-    border-style:dashed;
+    border-style: dashed;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .container {
     display: flex;
     align-items: center;
@@ -136,7 +141,7 @@ input[type="password"] {
     border-radius: 3px;
 }
 
-button{
+button {
     cursor: pointer;
     height: 30px;
     width: 250px;
@@ -147,12 +152,12 @@ button{
     margin: 5px;
 }
 
-button:hover{
+button:hover {
     background: url(../images/btn2.png) no-repeat;
     background-size: contain;
 }
 
-div{
+div {
     text-align: center;
 }
 
@@ -175,7 +180,7 @@ div{
 }
 
 
-.gameOver{
+.gameOver {
     background: rgba(250, 0, 0, 0.585);
     align-items: center;
     justify-content: center;
@@ -195,6 +200,23 @@ div{
 .difficulty label {
     display: block;
     font-weight: bold;
+}
+
+.room {
+    margin: 20px;
+}
+
+.room label {
+    display: block;
+    font-weight: bold;
+}
+
+.room input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
 
 .difficulty select {
