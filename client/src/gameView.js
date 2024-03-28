@@ -47,4 +47,7 @@ export default class GameView extends View {
 	setTime(time) {
 		this.element.querySelector('.timeValue').textContent = time;
 	}
+	setCode(code) {
+		this.element.querySelector('.codeValue').textContent = code;
+	}
 }
