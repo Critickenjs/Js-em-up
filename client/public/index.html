@@ -16,12 +16,17 @@
 <body>
 	<div class="HomePage">
 		<div class="login-container">
-			<h2>CONNECTION</h2>
+			<h2>CONNEXION</h2>
 			<div class="container">
 				<form>
-					<input type="text" maxlength="9" placeholder="Username" />
+					<input type="text" maxlength="9" placeholder="Pseudo" />
+					<label class="switch">
+						Controles à la souris
+						<input type="checkbox" id="checkmouse" name="checkmouse">
+					</label>
+					<button type="button" class="toggleCreateJoinGame">Rejoindre une partie existante</button>
 					<div class="difficulty">
-						<label for="difficulty">Difficulté:</label>
+						<label for="difficulty">Difficulte:</label>
 						<select id="difficulty" name="difficulty">
 							<option value=1>Facile</option>
 							<option value=2>Moyen</option>
@@ -29,15 +34,12 @@
 							<option value=4>Impossible</option>
 						</select>
 					</div>
-					<label class="switch">
-						Contrôles à la souris
-						<input type="checkbox" id="checkmouse" name="checkmouse">
-					</label>
-					<div>
-						<label for="Room">Partie en ligne</label>
-						<input type="code" id="codeRoom" placeholder="Code">
+					
+					<div class="codeRoom">
+						<label for="codeRoom">Code de la partie</label>
+						<input type="text" minlength="4" maxlength="4" class="codeRoomInput" id="codeRoomcodeRoomInput" placeholder="Code">
 					</div>
-					<button type="submit">Jouer en solo</button>
+					<button class="submit" type="submit">Creer la partie</button>
 				</form>
 			</div>
 		</div>
@@ -45,17 +47,18 @@
 	<div class="box gameOver">
 		<h1>Game Over</h1>
 		<p>Score: <span class="scoreValue">0</span></p>
-		<div><button id="restartButton" class="restartButton">Rejouer</button>
-			<button class="scoreboardButton">Voir le tableau des scores</button>
+		<div>
+		<button id="restartButton" class="restartButton">Rejouer</button>
+		<button class="scoreboardButton">Voir le tableau des scores</button>
+		<button class="creditButton">Credits</button>
+		<button class="menuButton">Retourner à l'accueil</button>
 		</div>
-
-
 	</div>
 	<div class="box scoreboard">
 		<h1>Tableau des scores</h1>
 		<ul id="scoreList">
 		</ul>
-		<div><button class="restartButton" id="restartButton2">Rejouer</button></div>
+		<div><button class="scoreboardBack" id="scoreboardBack">Retour</button></div>
 	</div>
 	<div id="root">
 		<div class="box game">
@@ -70,7 +73,6 @@
 			<canvas class="gameCanvas"> </canvas>
 
 		</div>
-
 	</div>
 	<!--
 	<div class="box credit">

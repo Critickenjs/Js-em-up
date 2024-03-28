@@ -6,6 +6,9 @@ export default class HomePage extends View {
 		this.username = '';
 		this.show();
 		this.onPhone = onPhone;
+		this.joinGame = false;
+		this.toggleMenu();
+		this.code = '';
 	}
 
 	show() {
@@ -18,11 +21,29 @@ export default class HomePage extends View {
 
 	Play() {
 		this.username = this.element.querySelector('input[type="text"]').value;
-		this.code = this.element.querySelector('input[type="code"]').value;
+		this.code = this.element.querySelector('.codeRoomInput').value;
 		this.hide();
 	}
 
 	hide() {
-		this.element.style.display = 'none';
+		super.hide();
+	}
+
+	toggleMenu() {
+		if (this.joinGame) {
+			this.joinGame = false;
+			this.element.querySelector('.difficulty').style.display = '';
+			this.element.querySelector('.codeRoom').style.display = 'none';
+			this.element.querySelector('.toggleCreateJoinGame').innerHTML = 'Rejoindre une partie existante';
+			this.element.querySelector('.submit').innerHTML = 'Creer la partie';
+
+		} else {
+			this.joinGame = true;
+			this.element.querySelector('.difficulty').style.display = 'none';
+			this.element.querySelector('.codeRoom').style.display = '';
+			this.element.querySelector('.toggleCreateJoinGame').innerHTML = 'Creer une nouvelle partie';
+			this.element.querySelector('.submit').innerHTML = 'Rejoindre cette partie';
+
+		}
 	}
 }

@@ -5,10 +5,10 @@ export default class Scoreboard extends View {
 		super(element);
 	}
 	show() {
-		this.element.style.display = 'flex';
+		super.show('flex');
 	}
 	hide() {
-		this.element.style.display = 'none';
+		super.hide();
 	}
 	update(data) {
 		this.element.querySelector('#scoreList').innerHTML = '';

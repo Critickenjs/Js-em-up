@@ -10,14 +10,15 @@ export default class View {
 	/**
 	 * Affiche la vue en lui ajoutant la classe CSS `active`
 	 */
-	show() {
-		this.element.classList.add('active');
+	show(displayStyle = '') {
+		//this.element.classList.add('active');
+		this.element.style.display = displayStyle;
 	}
 	/**
 	 * Masque la vue en enlevant la classe CSS `active`
 	 */
 	hide() {
-		this.element.classList.remove('active');
+		//this.element.classList.remove('active');
 		this.element.style.display = 'none';
 	}
 }

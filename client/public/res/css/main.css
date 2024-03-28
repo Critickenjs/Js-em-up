@@ -96,10 +96,13 @@ h1 em {
 }
 
 
-
 .login-container {
-    width: 100%;
     max-width: 400px;
+    min-width: 300px;
+    min-height: 300px;
+    max-height: 400px;
+    height: 80%;
+    width: 80%;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -192,6 +195,15 @@ div {
 }
 
 .difficulty label {
+    display: block;
+    font-weight: bold;
+}
+
+.codeRoom {
+    margin: 20px;
+}
+
+.codeRoom label {
     display: block;
     font-weight: bold;
 }

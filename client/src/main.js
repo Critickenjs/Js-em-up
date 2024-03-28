@@ -9,7 +9,7 @@ import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
-import Scoreboard from './scoreboard.js';
+import Scoreboard from './scoreboardView.js';
 import GameView from './gameView.js';
 import Client_Power from './client_power.js';
 import GameOver from './gameOverView.js';
@@ -122,8 +122,7 @@ if (
 		const scaleX = canvas.width / rect.width;
 		const scaleY = canvas.height / rect.height;
 		keys.keysPressed.MouseX = (touch.clientX - rect.left) * scaleX | 0;
-		keys.keysPressed.MouseY = (touch.clientY - rect.top) * scaleY | 0; //(touch.clientY * scaleY | 0);
-		console.log(`Touch : (${keys.keysPressed.MouseX}:${keys.keysPressed.MouseY})`);
+		keys.keysPressed.MouseY = (touch.clientY - rect.top) * scaleY | 0;
 
 		if (keys.keysPressed.MouseDown) {
 			keys.keysPressed.MouseDown = false;
@@ -163,39 +162,55 @@ socket.on('time', newTime => {
 	gameView.setTime(time);
 });
 
-const gameView = new GameView(document.querySelector('.game'));
-const homePage = new HomePage(
+const homePageView = new HomePage(
 	document.querySelector('.HomePage'),
 	keys.keysPressed.onPhone
 );
-const gameOver = new GameOver(document.querySelector('.gameOver'));
-const scoreboard = new Scoreboard(document.querySelector('.scoreboard'));
+const gameView = new GameView(document.querySelector('.game'));
+const gameOverView = new GameOver(document.querySelector('.gameOver'));
+const scoreboardView = new Scoreboard(document.querySelector('.scoreboard'));
 
 if (isingame == false) {
 	gameView.hide();
-	homePage.show();
-	scoreboard.hide();
-	gameOver.hide();
+	homePageView.show();
+	scoreboardView.hide();
+	gameOverView.hide();
 }
 
-document.querySelector('.HomePage').addEventListener('submit', event => {
+homePageView.element.addEventListener('submit', event => {
 	event.preventDefault();
-	isingame = true;
-	homePage.hide();
-	homePage.Play();
-	gameView.show();
-	socket.emit('submit', { "pseudo": homePage.username, "difficulty": getDifficultyValue(), "roomName": homePage.code });
-	//socket.emit('pseudo', homePage.username);
-	//socket.emit('difficulty', getDifficultyValue());
-	soundboard.playSoundPowerUp();
-	soundboard.playMusic();
-	socket.on('roomJoined', roomName => {
-		gameView.setCode(roomName);
-	});
-
+	if (homePageView.joinGame) {
+		socket.emit('verifRoomExit', homePageView.code);
+		socket.on('roomExisted', roomExisted => {
+			if (roomExisted) {
+				startingAGame();
+			} else {
+				alert("Ce code ne correspond à aucune partie en cours !");
+			}
+		})
+	} else {
+		startingAGame();
+	}
 });
 
 
+function startingAGame() {
+	isingame = true;
+	homePageView.hide();
+	homePageView.Play();
+	gameView.show();
+	socket.emit('submit', { "joinGame": homePageView.joinGame, "pseudo": homePageView.username, "difficulty": getDifficultyValue(), "roomName": homePageView.code });
+	soundboard.playSoundPowerUp();
+	soundboard.playMusic();
+}
+
+socket.on('roomJoined', roomName => {
+	gameView.setCode(roomName);
+});
+
+homePageView.element.querySelector('.toggleCreateJoinGame').addEventListener('click', () => {
+	homePageView.toggleMenu();
+});
 
 document.querySelector('#checkmouse').addEventListener('click', () => {
 	if (keys.keysPressed.MouseMode) {
@@ -240,13 +255,15 @@ socket.on('game', gameData => {
 
 	Client_Power.powers = [];
 	for (let i = 0; i < gameData.powers.length; i++) {
-		Client_Power.powers.push(
-			new Client_Power(
-				gameData.powers[i].posX,
-				gameData.powers[i].posY,
-				gameData.powers[i].type
-			)
-		);
+		if (gameData.powers[i] != null) {
+			Client_Power.powers.push(
+				new Client_Power(
+					gameData.powers[i].posX,
+					gameData.powers[i].posY,
+					gameData.powers[i].type
+				)
+			);
+		}
 	}
 
 	//Update Shots
@@ -330,7 +347,7 @@ socket.on('game', gameData => {
 	}
 	isingame = gameData.isInGame;
 	if (!isingame) {
-		homePage.hide();
+		homePageView.hide();
 		gameView.hide();
 	}
 	gameView.setLifes(gameData.teamLifes);
@@ -342,13 +359,13 @@ socket.on('gameOver', gameOverData => {
 	gameView.hide();
 	for (let i = 0; i < gameOverData.length; i++) {
 		if (gameOverData[i].id == socket.id) {
-			gameOver.show(gameOverData[i].score);
+			gameOverView.show(gameOverData[i].score);
 		}
 	}
 });
 
 socket.on('score', data => {
-	scoreboard.update(data);
+	scoreboardView.update(data);
 });
 
 function removeDeconnectedPlayers() {
@@ -480,24 +497,22 @@ function updateStars() {
 	Particules.updateAll();
 }
 
-document.querySelector('#restartButton2').addEventListener('click', () => {
-	scoreboard.hide();
-	gameOver.hide();
+scoreboardView.element.querySelector('#scoreboardBack').addEventListener('click', () => {
+	scoreboardView.hide();
+	gameOverView.show();
+});
+
+gameOverView.element.querySelector('#restartButton').addEventListener('click', () => {
+	scoreboardView.hide();
+	gameOverView.hide();
 	restartGame();
 	gameView.show();
 });
 
-document.querySelector('#restartButton').addEventListener('click', () => {
-	scoreboard.hide();
-	gameOver.hide();
-	restartGame();
-	gameView.show();
-});
-
-document.querySelector('.scoreboardButton').addEventListener('click', () => {
+gameOverView.element.querySelector('.scoreboardButton').addEventListener('click', () => {
 	gameView.hide();
-	gameOver.hide();
-	scoreboard.show();
+	gameOverView.hide();
+	scoreboardView.show();
 });
 
 function getDifficultyValue() {

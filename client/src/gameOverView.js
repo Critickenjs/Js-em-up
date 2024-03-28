@@ -1,15 +1,15 @@
-import View from './gameView.js';
+import View from './view.js';
 
-export default class GameView extends View {
+export default class GameOverView extends View {
 	constructor(element) {
 		super(element);
 	}
 	show(score) {
-		this.element.style.display = 'flex';
+		super.show('flex');
 		this.setScore(score);
 	}
 	hide() {
-		this.element.style.display = 'none';
+		super.hide();
 	}
 	setScore(score) {
 		this.element.querySelector('.scoreValue').textContent = score;

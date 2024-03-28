@@ -5,7 +5,7 @@ export default class GameView extends View {
 		super(element);
 	}
 	show() {
-		this.element.style.display = 'flex';
+		super.show('flex');
 		this.element
 			.querySelector('.score')
 			.setAttribute('style', 'display : block;');
@@ -20,7 +20,7 @@ export default class GameView extends View {
 			.setAttribute('style', 'display : block;');
 	}
 	hide() {
-		this.element.style.display = 'none';
+		super.hide();
 		this.element
 			.querySelector('.score')
 			.setAttribute('style', 'display : none;');
