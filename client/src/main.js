@@ -179,15 +179,21 @@ if (isingame == false) {
 
 homePageView.element.addEventListener('submit', event => {
 	event.preventDefault();
+	homePageView.setValues();
 	if (homePageView.joinGame) {
-		socket.emit('verifRoomExit', homePageView.code);
-		socket.on('roomExisted', roomExisted => {
-			if (roomExisted) {
-				startingAGame();
-			} else {
-				alert("Ce code ne correspond à aucune partie en cours !");
-			}
-		})
+		if (homePageView.code == null || homePageView.code == '') {
+			alert("Veuillez renseigner un code !");
+		} else {
+			socket.emit('verifRoomExit', homePageView.code);
+			socket.on('roomExisted', roomExisted => {
+				if (roomExisted) {
+					startingAGame();
+				} else {
+					alert("Ce code ne correspond à aucune partie en cours !");
+				}
+			})
+		}
+
 	} else {
 		startingAGame();
 	}
@@ -197,7 +203,6 @@ homePageView.element.addEventListener('submit', event => {
 function startingAGame() {
 	isingame = true;
 	homePageView.hide();
-	homePageView.Play();
 	gameView.show();
 	socket.emit('submit', { "joinGame": homePageView.joinGame, "pseudo": homePageView.username, "difficulty": getDifficultyValue(), "roomName": homePageView.code });
 	soundboard.playSoundPowerUp();

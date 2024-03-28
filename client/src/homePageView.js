@@ -19,10 +19,9 @@ export default class HomePage extends View {
 		}
 	}
 
-	Play() {
+	setValues() {
 		this.username = this.element.querySelector('input[type="text"]').value;
 		this.code = this.element.querySelector('.codeRoomInput').value;
-		this.hide();
 	}
 
 	hide() {
