@@ -6,7 +6,6 @@ import { Server as IOServer } from 'socket.io';
 import Entity from './entity.js';
 import Player from './player.js';
 import Game from './game.js';
-
 import expressStatusMonitor from 'express-status-monitor';
 
 const app = express();
@@ -31,7 +30,7 @@ httpServer.listen(port, '0.0.0.0', () => {
 const io = new IOServer(httpServer, {
 	allowEIO3: true,
 });
-let game = null;
+const games = new Map(); // Utilisez une Map pour stocker les jeux actifs
 
 // permet d'avoir une page http://localhost/status pour suivre la consommation mémoire/cpu/etc.
 app.use(expressStatusMonitor({ websocket: io }));
@@ -50,30 +49,27 @@ io.on('connection', socket => {
 			data.roomName = randomPin;
 			rooms.set(data.roomName, newGame, socket.id);
 			newGame.init();
+			games.set(data.roomName, newGame); // Ajoutez le nouveau jeu à la liste des jeux actifs
 		}
 		socket.join(data.roomName);
 		console.log(`Client ${socket.id} joined room: ${data.roomName}`);
 		socket.emit('roomJoined', data.roomName);
 
-		game = rooms.get(data.roomName);
+		const game = games.get(data.roomName); // Récupérez le jeu correspondant à la salle
 
 		const intervalIdHUD = setInterval(() => {
-			rooms.get(data.roomName).updateHUD();
+			game.updateHUD();
 			socket.emit('time', game.time);
 		}, 1000 / 10);
 
 		const intervalId = setInterval(() => {
-			if (rooms.get(data.roomName).isInGame) {
-				rooms.get(data.roomName).update();
+			if (game.isInGame) {
+				game.update();
 				socket.emit('game', game.gameData);
 			} else {
 				stopUpdating(intervalId, intervalIdHUD);
 			}
-
-
 		}, 1000 / 60);
-
-
 
 		const player = new Player(100, Entity.canvasHeight / 2);
 		player.pseudo = data.pseudo;
@@ -93,12 +89,11 @@ io.on('connection', socket => {
 				game.players = players;
 				game.players.set(socket.id, player);
 			} else {
-				game = new Game(io, 1);
-				game.init();
-				game.isInGame = true;
-				game.players.set(socket.id, player);
-
-
+				const newGame = new Game(io, 1);
+				newGame.init();
+				newGame.isInGame = true;
+				newGame.players.set(socket.id, player);
+				games.set(data.roomName, newGame); // Ajoutez le nouveau jeu à la liste des jeux actifs
 			}
 		});
 		socket.on('disconnect', () => {
@@ -107,6 +102,7 @@ io.on('connection', socket => {
 			if (!game.atLeast1PlayerAlive()) {
 				stopUpdating(intervalId, intervalIdHUD);
 				rooms.delete(data.roomName);
+				games.delete(data.roomName); // Supprimez le jeu de la liste des jeux actifs
 				console.log("No more players in the room: deleting the game");
 			}
 		});
@@ -117,4 +113,3 @@ function stopUpdating(idIntervalUpdate, idIntervalUpdateHUD) {
 	clearInterval(idIntervalUpdate);
 	clearInterval(idIntervalUpdateHUD);
 }
-
