@@ -18,6 +18,7 @@ export default class HomePage extends View {
 
 	Play() {
 		this.username = this.element.querySelector('input[type="text"]').value;
+		this.code = this.element.querySelector('input[type="code"]').value;
 		this.hide();
 	}
 
