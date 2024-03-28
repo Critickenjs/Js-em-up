@@ -21,8 +21,8 @@ export default class KeysListener {
 			beta: 0,
 			gamma: 0,
 
-			canvasTrueWidth: 0,
-			canvasTrueHeight: 0,
+			percentageX: 0,
+			percentageY: 0,
 		};
 	}
 

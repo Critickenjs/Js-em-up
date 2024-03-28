@@ -92,6 +92,7 @@ export default class Game {
 					if (entry.value[1].alive) {
 						entry.value[1].score += this.difficulty;
 					}
+					console.log("POS JOUEUR (" + entry.value[1].posX + ":" + entry.value[1].posY + ")");
 				}
 			}
 			this.time++;

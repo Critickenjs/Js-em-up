@@ -2,8 +2,8 @@ import Entity from '../../server/entity.js';
 
 export default class Client_Entity {
 	//Canvas
-	static canvasWidth = 1600; //1200
-	static canvasHeight = 800; //800
+	static canvasWidth = 1200; //1200
+	static canvasHeight = 600; //800
 
 	//Showing collisions
 	static showCollisions = false;

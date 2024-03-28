@@ -1,6 +1,6 @@
 export default class Entity {
-	static canvasWidth = 1600; //1600
-	static canvasHeight = 800; //800
+	static canvasWidth = 1200; //1600
+	static canvasHeight = 600; //800
 
 	static speedMultiplierDefault = 0.8;
 	static speedMultiplierMAX = 2;

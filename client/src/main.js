@@ -50,8 +50,8 @@ preloadAssets(assets, sounds, () => {
 	console.log('Assets loaded');
 });
 
-let canvasServerWidth = 1600;
-let canvasServerHeight = 800;
+let canvasServerWidth = 1200;
+let canvasServerHeight = 600;
 let isingame = false;
 
 const socket = io();
@@ -59,8 +59,8 @@ const socket = io();
 socket.on('canvas', tab => {
 	canvasServerWidth = tab[0];
 	canvasServerHeight = tab[1];
-	Client_Entity.canvasHeight = canvasServerWidth;
-	Client_Entity.canvasWidth = canvasServerHeight;
+	Client_Entity.canvasHeight = canvasServerHeight;
+	Client_Entity.canvasWidth = canvasServerWidth;
 });
 
 //Canvas
@@ -81,13 +81,13 @@ function resampleCanvas() {
 	if (canvas.height != canvasServerHeight) {
 		canvas.height = canvasServerHeight;
 	}
-	Client_Entity.canvasHeight = canvas.height;
-	Client_Entity.canvasWidth = canvas.width;
+	Client_Entity.updateCanvasSize(canvasServerWidth, canvasServerHeight);
 	if (window.innerWidth > window.innerHeight) {
 		keys.keysPressed.isOnLandscape = true;
 	} else {
 		keys.keysPressed.isOnLandscape = false;
 	}
+
 }
 
 Stars.init();
@@ -118,8 +118,12 @@ if (
 	canvas.addEventListener('touchstart', function (e) {
 		e.preventDefault();
 		const touch = e.touches[0];
-		keys.keysPressed.MouseX = (touch.clientX | 0);
-		keys.keysPressed.MouseY = (touch.clientY | 0);
+		const rect = canvas.getBoundingClientRect();
+		const scaleX = canvas.width / rect.width;
+		const scaleY = canvas.height / rect.height;
+		keys.keysPressed.MouseX = (touch.clientX - rect.left) * scaleX | 0;
+		keys.keysPressed.MouseY = (touch.clientY - rect.top) * scaleY | 0; //(touch.clientY * scaleY | 0);
+		console.log(`Touch : (${keys.keysPressed.MouseX}:${keys.keysPressed.MouseY})`);
 
 		if (keys.keysPressed.MouseDown) {
 			keys.keysPressed.MouseDown = false;
@@ -141,14 +145,15 @@ if (
 	keys.keysPressed.onPhone = false;
 
 
-	window.addEventListener('mousemove', function (event) {
+	canvas.addEventListener('mousemove', function (event) {
+
 		if (isingame) {
-			keys.keysPressed.MouseX =
-				Math.round((event.clientX) * 10) / // - canvas.getBoundingClientRect().left
-				10;
-			keys.keysPressed.MouseY =
-				Math.round((event.clientY) * 10) / //- canvas.getBoundingClientRect().top
-				10;
+			const rect = canvas.getBoundingClientRect();
+			const scaleX = canvas.width / rect.width;
+			const scaleY = canvas.height / rect.height;
+
+			keys.keysPressed.MouseX = (event.offsetX) * scaleX;
+			keys.keysPressed.MouseY = (event.offsetY) * scaleY;
 		}
 	});
 }
