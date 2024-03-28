@@ -160,7 +160,6 @@ export default class Game {
 		this.refreshLifes();
 		this.refreshIsInGame();
 		if (this.teamLifes < 1 && !this.atLeast1PlayerAlive()) {
-			this.stopUpdating();
 			if (this.isInGame) {
 				const data = [];
 				const iterator = this.players.entries();

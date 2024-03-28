@@ -68,6 +68,11 @@ io.on('connection', socket => {
 			socket.emit('time', game.time);
 		}, 1000 / 10);
 
+		if (game.isInGame == false) {
+			clearInterval(intervalId);
+			clearInterval(intervalIdHUD);
+		}
+
 		const player = new Player(100, Entity.canvasHeight / 2);
 		player.pseudo = data.pseudo;
 		game.players.set(socket.id, player);
