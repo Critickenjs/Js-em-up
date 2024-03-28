@@ -212,6 +212,7 @@ export default class Game {
 						score: player.score,
 						pseudo: player.pseudo,
 						invincible: player.timerBeforeLosingInvincibility,
+						scoreMultiplier: player.scoreMultiplierBonus
 					});
 				let shot;
 				for (let i = 0; i < player.shots.length; i++) {

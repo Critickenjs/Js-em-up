@@ -79,7 +79,7 @@ io.on('connection', socket => {
 			if (!game.atLeast1PlayerAlive()) {
 				game.stopUpdating();
 				game = null;
-				console.log("PLUS PERSONNE CO : SUPRESSION DE LA GAME");
+				console.log("Aucun joueurs connectés, suppression de la partie...");
 			}
 		}
 	});
