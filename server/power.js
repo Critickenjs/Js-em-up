@@ -8,12 +8,7 @@ export default class Power extends Entity {
 	static frequencyPowerSpawn = 20;
 	static speed = 6;
 	static types = [
-		'laser',
-		'perforation',
-		'ice',
-		'invincible',
 		'scoreMultiplierBonus',
-		'life',
 	];
 	constructor(
 		posX,

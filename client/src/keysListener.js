@@ -14,35 +14,45 @@ export default class KeysListener {
 			ArrowLeft: false,
 			ArrowRight: false,
 			Space: false,
-			
+
 			onPhone: false,
 			isOnLandscape: false,
 			alpha: 0,
-			beta:0,
-			gamma:0,
+			beta: 0,
+			gamma: 0,
+
+			canvasTrueWidth: 0,
+			canvasTrueHeight: 0,
 		};
 	}
 
 	init() {
 		this.element.addEventListener('keydown', event => {
 			if (this.down(event)) {
-					this.keysPressed.ArrowDown = true;
+				this.keysPressed.ArrowDown = true;
+			}
+			if (this.up(event)) {
+				this.keysPressed.ArrowUp = true;
+			}
+			if (this.left(event)) {
+				this.keysPressed.ArrowLeft = true;
+			}
+			if (this.right(event)) {
+				this.keysPressed.ArrowRight = true;
+			}
+			if (event.key == ' ') {
+				this.keysPressed.Space = true;
+			}
+			if (event.key == 'c' || event.key == 'C') {
+				Client_Entity.showCollisions = !Client_Entity.showCollisions;
+			}
+			if (event.key == 'm' || event.key == 'M') {
+				if (this.keysPressed.MouseMode) {
+					this.keysPressed.MouseMode = false;
+				} else {
+					this.keysPressed.MouseMode = true;
 				}
-				if (this.up(event)) {
-					this.keysPressed.ArrowUp = true;
-				}
-				if (this.left(event)) {
-					this.keysPressed.ArrowLeft = true;
-				}
-				if (this.right(event)) {
-					this.keysPressed.ArrowRight = true;
-				}
-				if (event.key == ' ') {
-					this.keysPressed.Space = true;
-				}
-				if (event.key == 'c' || event.key == 'C') {
-					Client_Entity.showCollisions=!Client_Entity.showCollisions;
-				}
+			}
 		});
 
 		this.element.addEventListener('keyup', event => {

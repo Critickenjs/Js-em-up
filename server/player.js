@@ -357,8 +357,8 @@ export default class Player extends Entity {
 
 
 	mouseMovement(keysPressed) {
-		if (keysPressed.MouseY < 400) {
-			keysPressed.MouseY -= 100;
+		/*if (keysPressed.MouseY < 400) {
+			keysPressed.MouseY += 100;
 		} else if (keysPressed.MouseY > Entity.canvasHeight / 2) {
 			keysPressed.MouseY += 100;
 		}
@@ -366,7 +366,7 @@ export default class Player extends Entity {
 			keysPressed.MouseX -= 200;
 		} else if (keysPressed.MouseX > Entity.canvasWidth / 2) {
 			keysPressed.MouseX += 200;
-		}
+		}*/
 
 
 		const distanceX = Math.round(Math.abs(keysPressed.MouseX - this.posX)) / 2000;

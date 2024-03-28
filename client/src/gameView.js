@@ -38,6 +38,9 @@ export default class GameView extends View {
 	setScore(score) {
 		this.element.querySelector('.scoreValue').textContent = score;
 	}
+	setScoreMultiplier(scoreMultiplier) {
+		this.element.querySelector('.scoreBonusValue').textContent = scoreMultiplier;
+	}
 	setWaves(waves) {
 		this.element.querySelector('.wavesValue').textContent = waves;
 	}

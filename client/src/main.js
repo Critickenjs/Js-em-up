@@ -141,7 +141,7 @@ if (
 	keys.keysPressed.onPhone = false;
 
 
-	canvas.addEventListener('mousemove', function (event) {
+	window.addEventListener('mousemove', function (event) {
 		if (isingame) {
 			keys.keysPressed.MouseX =
 				Math.round((event.clientX) * 10) / // - canvas.getBoundingClientRect().left
@@ -211,9 +211,11 @@ socket.on('game', gameData => {
 		if (player != null) {
 			player.isAlive = true;
 			player.posX = gameData.players[i].posX;
-			(player.posY = gameData.players[i].posY),
-				(player.pseudo = gameData.players[i].pseudo),
-				(player.invincible = gameData.players[i].invincible);
+			player.posY = gameData.players[i].posY;
+			player.pseudo = gameData.players[i].pseudo;
+			player.invincible = gameData.players[i].invincible;
+			player.score = gameData.players[i].score;
+			player.scoreMultiplier = gameData.players[i].scoreMultiplier;
 		} else {
 			players.set(
 				gameData.players[i].id,
@@ -221,7 +223,9 @@ socket.on('game', gameData => {
 					gameData.players[i].posX,
 					gameData.players[i].posY,
 					gameData.players[i].pseudo,
-					gameData.players[i].invincible
+					gameData.players[i].invincible,
+					gameData.players[i].score,
+					gameData.players[i].scoreMultiplierBonus,
 				)
 			);
 		}
@@ -315,6 +319,7 @@ socket.on('game', gameData => {
 	for (let i = 0; i < gameData.players.length; i++) {
 		if (gameData.players[i].id == socket.id) {
 			gameView.setScore(gameData.players[i].score);
+			gameView.setScoreMultiplier(gameData.players[i].scoreMultiplier);
 			break;
 		}
 	}
