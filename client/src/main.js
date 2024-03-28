@@ -184,11 +184,15 @@ document.querySelector('.HomePage').addEventListener('submit', event => {
 	homePage.hide();
 	homePage.Play();
 	gameView.show();
-	socket.emit('submit', { "pseudo": homePage.username, "difficulty": getDifficultyValue() });
+	socket.emit('submit', { "pseudo": homePage.username, "difficulty": getDifficultyValue(), "roomName": homePage.code });
 	//socket.emit('pseudo', homePage.username);
 	//socket.emit('difficulty', getDifficultyValue());
 	soundboard.playSoundPowerUp();
 	soundboard.playMusic();
+	socket.on('roomJoined', roomName => {
+		gameView.setCode(roomName);
+	});
+
 });
 
 
