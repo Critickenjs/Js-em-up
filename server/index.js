@@ -30,7 +30,6 @@ httpServer.listen(port, '0.0.0.0', () => {
 const io = new IOServer(httpServer, {
 	allowEIO3: true,
 });
-const games = new Map(); // Utilisez une Map pour stocker les jeux actifs
 
 // permet d'avoir une page http://localhost/status pour suivre la consommation mémoire/cpu/etc.
 app.use(expressStatusMonitor({ websocket: io }));
@@ -47,15 +46,14 @@ io.on('connection', socket => {
 			const newGame = new Game(io, data.difficulty);
 			const randomPin = Math.floor(Math.random() * 1000).toString().padStart(4, '0');
 			data.roomName = randomPin;
-			rooms.set(data.roomName, newGame, socket.id);
+			rooms.set(data.roomName, newGame);
 			newGame.init();
-			games.set(data.roomName, newGame); // Ajoutez le nouveau jeu à la liste des jeux actifs
 		}
 		socket.join(data.roomName);
 		console.log(`Client ${socket.id} joined room: ${data.roomName}`);
 		socket.emit('roomJoined', data.roomName);
 
-		const game = games.get(data.roomName); // Récupérez le jeu correspondant à la salle
+		const game = rooms.get(data.roomName); // Récupérez le jeu correspondant à la salle
 
 		const intervalIdHUD = setInterval(() => {
 			game.updateHUD();
