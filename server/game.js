@@ -21,14 +21,11 @@ export default class Game {
 		this.isInGame = false;
 		this.time = 0;
 		this.allDead = false;
-		this.idIntervalUpdate;
-		this.idIntervalUpdateHUD;
+
 	}
 
 	init() {
 		this.wavesManager.firstWave(this.difficulty);
-		this.idIntervalUpdate = setInterval(this.update.bind(this), 1000 / 60);
-		this.idIntervalUpdateHUD = setInterval(this.updateHUD.bind(this), 1000);
 		this.isInGame = true;
 	}
 
@@ -105,7 +102,6 @@ export default class Game {
 			}
 			//Vitesse du jeu augmente au fur et à mesure
 			this.addToSpeed(0.001 * this.difficulty);
-			this.io.emit('time', this.time);
 		}
 	}
 
@@ -186,7 +182,6 @@ export default class Game {
 			}
 			this.isInGame = false;
 		}
-		this.io.emit('game', this.gameData);
 	}
 
 	resetData() {
@@ -322,10 +317,7 @@ export default class Game {
 	}
 
 	// Ces deux fonctions étaient précédemment destroy()
-	stopUpdating() {
-		clearInterval(this.idIntervalUpdate);
-		clearInterval(this.idIntervalUpdateHUD);
-	}
+
 	restartGame() {
 		this.resetAllData();
 		this.resetTeamLives(); //!\\ Important : doit être appelé après resetAllData()

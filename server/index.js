@@ -48,6 +48,7 @@ io.on('connection', socket => {
 			rooms.set(data.roomName, newGame, socket.id);
 			newGame.init();
 
+
 		}
 
 		socket.join(data.roomName);
@@ -55,6 +56,17 @@ io.on('connection', socket => {
 		socket.emit('roomJoined', data.roomName);
 
 		game = rooms.get(data.roomName);
+
+		const intervalId = setInterval(() => {
+			rooms.get(data.roomName).update();
+			socket.emit('game', game.gameData);
+
+		}, 1000 / 60);
+
+		const intervalIdHUD = setInterval(() => {
+			rooms.get(data.roomName).updateHUD();
+			socket.emit('time', game.time);
+		}, 1000 / 10);
 
 		const player = new Player(100, Entity.canvasHeight / 2);
 		player.pseudo = data.pseudo;
@@ -78,8 +90,13 @@ io.on('connection', socket => {
 				game.init();
 				game.isInGame = true;
 				game.players.set(socket.id, player);
+
+
 			}
 		});
+
+
+
 
 		socket.on('disconnect', () => {
 			console.log(`Disconnect from client ${socket.id}`);
