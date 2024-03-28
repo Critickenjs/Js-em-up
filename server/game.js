@@ -89,7 +89,6 @@ export default class Game {
 					if (entry.value[1].alive) {
 						entry.value[1].score += this.difficulty;
 					}
-					console.log("POS JOUEUR (" + entry.value[1].posX + ":" + entry.value[1].posY + ")");
 				}
 			}
 			this.time++;
@@ -160,7 +159,6 @@ export default class Game {
 		this.refreshLifes();
 		this.refreshIsInGame();
 		if (this.teamLifes < 1 && !this.atLeast1PlayerAlive()) {
-			this.stopUpdating();
 			if (this.isInGame) {
 				const data = [];
 				const iterator = this.players.entries();

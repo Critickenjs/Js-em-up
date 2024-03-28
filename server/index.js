@@ -40,33 +40,40 @@ const rooms = new Map();
 
 io.on('connection', socket => {
 	console.log(`New connection from client: ${socket.id}`);
-
+	socket.on('verifRoomExit', codeRoom => {
+		socket.emit('roomExisted', rooms.get(codeRoom) != null);
+	});
 	socket.on('submit', data => {
-		if (!rooms.has(data.roomName)) {
-			data.roomName = Math.floor(Math.random() * 1000).toString();
+		if (!data.joinGame) {//!rooms.has(data.roomName)
 			const newGame = new Game(io, data.difficulty);
+			const randomPin = Math.floor(Math.random() * 1000).toString().padStart(4, '0');
+			data.roomName = randomPin;
 			rooms.set(data.roomName, newGame, socket.id);
 			newGame.init();
-
-
 		}
-
 		socket.join(data.roomName);
 		console.log(`Client ${socket.id} joined room: ${data.roomName}`);
 		socket.emit('roomJoined', data.roomName);
 
 		game = rooms.get(data.roomName);
 
-		const intervalId = setInterval(() => {
-			rooms.get(data.roomName).update();
-			socket.emit('game', game.gameData);
-
-		}, 1000 / 60);
-
 		const intervalIdHUD = setInterval(() => {
 			rooms.get(data.roomName).updateHUD();
 			socket.emit('time', game.time);
 		}, 1000 / 10);
+
+		const intervalId = setInterval(() => {
+			if (rooms.get(data.roomName).isInGame) {
+				rooms.get(data.roomName).update();
+				socket.emit('game', game.gameData);
+			} else {
+				stopUpdating(intervalId, intervalIdHUD);
+			}
+
+
+		}, 1000 / 60);
+
+
 
 		const player = new Player(100, Entity.canvasHeight / 2);
 		player.pseudo = data.pseudo;
@@ -94,19 +101,20 @@ io.on('connection', socket => {
 
 			}
 		});
-
-
-
-
 		socket.on('disconnect', () => {
 			console.log(`Disconnect from client ${socket.id}`);
 			game.players.delete(socket.id);
 			if (!game.atLeast1PlayerAlive()) {
-				game.stopUpdating();
+				stopUpdating(intervalId, intervalIdHUD);
 				rooms.delete(data.roomName);
 				console.log("No more players in the room: deleting the game");
 			}
 		});
 	});
 });
+
+function stopUpdating(idIntervalUpdate, idIntervalUpdateHUD) {
+	clearInterval(idIntervalUpdate);
+	clearInterval(idIntervalUpdateHUD);
+}
 
