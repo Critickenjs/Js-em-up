@@ -110,7 +110,7 @@ h1 em {
     justify-content: center;
     background-color: #ffffffb3;
     border-radius: 5px;
-    border-style: dashed;
+    border-style:double;
     position: fixed;
     top: 50%;
     left: 50%;
