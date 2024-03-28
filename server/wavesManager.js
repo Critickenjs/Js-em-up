@@ -29,10 +29,10 @@ export default class WavesManager {
 		for (let i = 0; i < WavesManager.EnemyBuffer * difficulty; i++) {
 			this.enemys[i] = new Enemy(
 				Entity.canvasWidth +
-					getRandomInt(WavesManager.maxRandomSpawnDistance) +
-					WavesManager.spawnDistance,
+				getRandomInt(WavesManager.maxRandomSpawnDistance) +
+				WavesManager.spawnDistance,
 				getRandomInt(Entity.canvasHeight - Enemy.height - Enemy.spawnOffset) +
-					Enemy.spawnOffset,
+				Enemy.spawnOffset,
 				difficulty
 			);
 			this.enemys[i].index = i;
@@ -43,10 +43,10 @@ export default class WavesManager {
 		}
 		console.log(
 			'Vague n°' +
-				this.waveNumber +
-				' : ' +
-				this.waveMaxNumberOfEnemys +
-				' ennemies.'
+			this.waveNumber +
+			' : ' +
+			this.waveMaxNumberOfEnemys +
+			' ennemies.'
 		);
 	}
 
@@ -58,10 +58,10 @@ export default class WavesManager {
 		//a vitesse du jeu augmente à chaque complétion d'une vague
 		console.log(
 			'Vague n°' +
-				this.waveNumber +
-				' : ' +
-				this.waveMaxNumberOfEnemys +
-				' ennemies.'
+			this.waveNumber +
+			' : ' +
+			this.waveMaxNumberOfEnemys +
+			' ennemies.'
 		);
 		this.waveMaxNumberOfEnemys =
 			((3 + difficulty + getRandomInt(difficulty) + this.waveNumber / 2) *
@@ -95,12 +95,12 @@ export default class WavesManager {
 									entry.value[1].die(game);
 									if (this.enemys[a].type != 'boss') {
 										this.enemys[a].fate(this);
-										game.io.emit('playSound', 'enemyDeath');
+										//game.io.emit('playSound', 'enemyDeath');
 									}
 								}
 							}
 						} else {
-							game.io.emit('playSound', 'enemyDeath');
+							//game.io.emit('playSound', 'enemyDeath');
 						}
 					}
 				}

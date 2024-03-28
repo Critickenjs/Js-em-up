@@ -100,9 +100,9 @@ let ids = [];
 
 const keys = new KeysListener(window);
 keys.init();
-socket.on('playerKeys', () => {
+socket.on('needPlayerKeys', () => {
 	ids = [];
-	socket.emit('keys', keys.keysPressed);
+	socket.emit('hereKeys', keys.keysPressed);
 });
 
 const screen = window.screen;
@@ -372,6 +372,8 @@ socket.on('gameOver', gameOverData => {
 socket.on('score', data => {
 	scoreboardView.update(data);
 });
+
+socket.on('alert', msg => alert(msg));
 
 function removeDeconnectedPlayers() {
 	const iterator = players.keys();
