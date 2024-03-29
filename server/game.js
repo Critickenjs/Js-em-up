@@ -167,7 +167,7 @@ export default class Game {
 					entry = iterator.next();
 					if (entry.value != null) {
 						this.gameOverData.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score });
-						this.csvdata.writeCSV({ [entry.value[1].pseudo]: entry.value[1].score }); //Ajoute 1 ligne au CSV pour chaque joueur dans la partie.
+						this.csvdata.writeCSV({ [entry.value[1].pseudo || 'Jonesy Smith']: entry.value[1].score }); //Ajoute 1 ligne au CSV pour chaque joueur dans la partie.
 					}
 				}
 				//this.io.emit('gameOver', data);

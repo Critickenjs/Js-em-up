@@ -79,9 +79,7 @@ io.on('connection', socket => {
 
 
 			if (intervalIds[data.roomName] == null) {
-
 				intervalIds[data.roomName] = setGameIntervals(data.roomName, game);
-
 			}
 			io.to(data.roomName).emit("game", game.gameData);
 		});

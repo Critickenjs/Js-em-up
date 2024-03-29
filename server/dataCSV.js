@@ -15,7 +15,10 @@ export default class DataCSV {
 					dataArray.push(row);
 				})
 				.on('end', () => {
-					resolve(dataArray);
+					this.data = dataArray;
+					this.data.sort((a, b) => b.score - a.score);
+					resolve(this.data.slice(0, 10));
+
 				})
 				.on('error', error => {
 					reject(error);
