@@ -38,7 +38,6 @@ const rooms = new Map();
 const intervalIds = {}; // Stocke les intervalles associés à chaque salle
 
 io.on('connection', socket => {
-	console.log(`New connection from client: ${socket.id}`);
 	socket.on('verifRoomExit', codeRoom => {
 		socket.emit('roomExisted', rooms.get(codeRoom) != null);
 	});
@@ -52,7 +51,6 @@ io.on('connection', socket => {
 			newGame.init();
 		}
 		socket.join(data.roomName);
-		console.log(`Client ${socket.id} joined room: ${data.roomName}`);
 		socket.emit('roomJoined', data.roomName);
 
 		const game = rooms.get(data.roomName);
@@ -93,7 +91,6 @@ io.on('connection', socket => {
 		const player = new Player(100, Entity.canvasHeight / 2);
 		player.pseudo = data.pseudo;
 		game.players.set(socket.id, player);
-		console.log(`Client ${socket.id} pseudo: ${player.pseudo}`);
 
 		socket.emit('canvas', [Entity.canvasWidth, Entity.canvasHeight]);
 
@@ -141,7 +138,6 @@ io.on('connection', socket => {
 		});
 
 		socket.on('disconnect', () => {
-			console.log(`Disconnect from client ${socket.id}`);
 			game.players.delete(socket.id);
 			if (!game.atLeast1PlayerAlive()) {
 				stopUpdating(data.roomName); // Arrêter les intervalles spécifiques à cette salle

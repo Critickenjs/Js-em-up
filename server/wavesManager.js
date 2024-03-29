@@ -41,13 +41,7 @@ export default class WavesManager {
 				this.enemys[i].die();
 			}
 		}
-		console.log(
-			'Vague n°' +
-			this.waveNumber +
-			' : ' +
-			this.waveMaxNumberOfEnemys +
-			' ennemies.'
-		);
+
 	}
 
 	//Appelle la vague suivante
@@ -56,13 +50,6 @@ export default class WavesManager {
 		this.waveNumber++;
 		this.waveNumberOfEnemysSpawned = 0;
 		//a vitesse du jeu augmente à chaque complétion d'une vague
-		console.log(
-			'Vague n°' +
-			this.waveNumber +
-			' : ' +
-			this.waveMaxNumberOfEnemys +
-			' ennemies.'
-		);
 		this.waveMaxNumberOfEnemys =
 			((3 + difficulty + getRandomInt(difficulty) + this.waveNumber / 2) *
 				WavesManager.waveMultiplier) |

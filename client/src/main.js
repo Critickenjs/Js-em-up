@@ -132,9 +132,6 @@ if (
 		}
 	});
 	window.addEventListener('deviceorientation', event => {
-		console.log('Alpha: ' + event.alpha);
-		console.log('Beta: ' + event.beta);
-		console.log('Gamma: ' + event.gamma);
 		keys.keysPressed.alpha = event.alpha;
 		keys.keysPressed.beta = event.beta;
 		keys.keysPressed.gamma = event.gamma;
