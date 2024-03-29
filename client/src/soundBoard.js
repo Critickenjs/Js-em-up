@@ -7,6 +7,7 @@ export default class SoundBoard {
     static enemyShotPath = './public/res/sounds/shotEnemy.mp3';
     static enemyDeathPath = './public/res/sounds/enemyDeath.mp3';
     static powerPath = './public/res/sounds/power.mp3';
+    static laserPath = './public/res/sounds/laser.mp3';
     static musicPath = './public/res/music/music.mp3';
 
     constructor() {
@@ -16,6 +17,7 @@ export default class SoundBoard {
         this.sounds.set("enemyShot", new Audio(SoundBoard.enemyShotPath));
         this.sounds.set("enemyDeath", new Audio(SoundBoard.enemyDeathPath));
         this.sounds.set("power", new Audio(SoundBoard.powerPath));
+        this.sounds.set("laser", new Audio(SoundBoard.laserPath));
         this.sounds.set("music", new Audio(SoundBoard.musicPath));
         this.sounds.get("music").loop = true;
     }
@@ -46,6 +48,10 @@ export default class SoundBoard {
 
     playSoundPowerUp() {
         this.playSound(this.sounds.get("power"));
+    }
+
+    playSoundLaser() {
+        this.sounds.get("laser").play();
     }
 
     playMusic() {

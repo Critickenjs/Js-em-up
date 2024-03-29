@@ -43,6 +43,7 @@ const sounds = [
 	'./res/sounds/shotEnemy.mp3',
 	'./res/sounds/dead.mp3',
 	'./res/sounds/power.mp3',
+	'./res/sounds/laser.mp3',
 	'./res/music/music.mp3',
 ];
 
@@ -205,7 +206,7 @@ function startingAGame() {
 	homePageView.hide();
 	gameView.show();
 	socket.emit('submit', { "joinGame": homePageView.joinGame, "pseudo": homePageView.username, "difficulty": getDifficultyValue(), "roomName": homePageView.code });
-	soundboard.playSoundPowerUp();
+	//soundboard.playSoundPowerUp();
 	soundboard.playMusic();
 }
 
@@ -284,7 +285,9 @@ socket.on('game', gameData => {
 				gameData.shots[i].tick
 			)
 		);
-		if (gameData.shots[i].tick == 0) {
+		if (gameData.shots[i].laser) {
+			soundboard.playSoundLaser();
+		} else if (gameData.shots[i].tick == 0) {
 			if (gameData.shots[i].isFromAPlayer) {
 				soundboard.playSoundPlayerShooting();
 			} else {
