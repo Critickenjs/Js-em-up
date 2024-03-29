@@ -92,7 +92,7 @@ export default class Game {
 				}
 			}
 			this.time++;
-			if (this.time % Power.frequencyPowerSpawn == 0) {
+			if (this.time % ((Power.frequencyPowerSpawn / this.gameData.difficulty | 0) + this.difficulty | 0) == 0) {
 				this.powers.push(
 					new Power(
 						Entity.canvasWidth,
