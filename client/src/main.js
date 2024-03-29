@@ -44,6 +44,7 @@ const sounds = [
 	'./res/sounds/dead.mp3',
 	'./res/sounds/power.mp3',
 	'./res/sounds/laser.mp3',
+	'./res/sounds/button.mp3',
 	'./res/music/music.mp3',
 ];
 
@@ -190,6 +191,7 @@ homePageView.element.addEventListener('submit', event => {
 			socket.emit('verifRoomExit', homePageView.code);
 			socket.on('roomExisted', roomExisted => {
 				if (roomExisted) {
+					soundboard.playSoundButton();
 					startingAGame();
 				} else {
 					alert("Ce code ne correspond à aucune partie en cours !");
@@ -198,6 +200,7 @@ homePageView.element.addEventListener('submit', event => {
 		}
 
 	} else {
+		soundboard.playSoundButton();
 		startingAGame();
 	}
 });
@@ -217,6 +220,7 @@ socket.on('roomJoined', roomName => {
 });
 
 homePageView.element.querySelector('.toggleCreateJoinGame').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	homePageView.toggleMenu();
 });
 
@@ -261,11 +265,10 @@ socket.on('game', gameData => {
 	}
 	removeDeconnectedPlayers();
 
-	if (oldNbEnemys > gameData.enemys.length) {
-		soundboard.playSoundEnemyDeath();
+	if (oldNbPowers > gameData.powers.length) {
+		soundboard.playSoundPowerUp();
 	}
 	oldNbPowers = gameData.powers.length;
-
 	Client_Power.powers = [];
 	for (let i = 0; i < gameData.powers.length; i++) {
 		if (gameData.powers[i] != null) {
@@ -514,12 +517,14 @@ function updateStars() {
 }
 
 scoreboardView.element.querySelector('#scoreboardBack').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	scoreboardView.hide();
 	gameOverView.show();
 });
 
 
 gameOverView.element.querySelector('#restartButton').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	scoreboardView.hide();
 	gameOverView.hide();
 	restartGame();
@@ -527,23 +532,27 @@ gameOverView.element.querySelector('#restartButton').addEventListener('click', (
 });
 
 gameOverView.element.querySelector('.scoreboardButton').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	gameView.hide();
 	gameOverView.hide();
 	scoreboardView.show();
 });
 
 gameOverView.element.querySelector('.menuButton').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	gameOverView.hide();
 	homePageView.show();
 });
 
 
 gameOverView.element.querySelector('.creditButton').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	gameOverView.hide();
 	creditView.show();
 });
 
 creditView.element.querySelector('.creditBack').addEventListener('click', () => {
+	soundboard.playSoundButton();
 	creditView.hide();
 	gameOverView.show();
 });
