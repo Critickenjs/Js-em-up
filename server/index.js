@@ -45,7 +45,7 @@ io.on('connection', socket => {
 
 	socket.on('submit', data => {
 		if (!data.joinGame) {//!rooms.has(data.roomName)
-			const newGame = new Game(io, data.difficulty);
+			const newGame = new Game(data.difficulty);
 			const randomPin = Math.floor(Math.random() * 1000).toString().padStart(4, '0');
 			data.roomName = randomPin;
 			rooms.set(data.roomName, newGame);
@@ -61,14 +61,28 @@ io.on('connection', socket => {
 			const intervalIdHUD = setInterval(() => {
 				game.updateHUD();
 				io.to(data.roomName).emit('time', game.time);
+				io.to(data.roomName).emit('playerKeys');
+				io.to(data.roomName).emit('playSound', 'power');
+
 			}, 1000);
 
 			const intervalId = setInterval(() => {
 				if (game.isInGame) {
 					game.update();
 					io.to(data.roomName).emit('game', game.gameData);
+					io.to(data.roomName).emit('playerKeys');
+					io.to(data.roomName).emit('playSound', 'power');
+
 				} else {
 					stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
+					io.to(data.roomName).emit('gameOver', game.gameOverData);
+					game.csvdata.loadFromURL('server/data/data.csv')
+						.then(updatedData => {
+							io.to(data.roomName).emit('score', updatedData); // On envoie le score mis à jour aux clients
+						})
+						.catch(error => {
+							console.error("Erreur lors de la lecture du fichier CSV :", error);
+						});
 				}
 			}, 1000 / 60);
 			intervalIds[data.roomName] = { intervalId, intervalIdHUD };
@@ -88,40 +102,42 @@ io.on('connection', socket => {
 		});
 
 		socket.on('restart', () => {
-			stopUpdating(data.roomName); // Arrêter les intervalles pour la salle actuelle
+			let players = game.players;
+			game.restartGame();
+			game.players = players;
+			game.players.set(socket.id, player);
 
-			if (!game.isInGame) {
-				let players = game.players;
-				game.restartGame();
-				game.players = players;
-				game.players.set(socket.id, player);
-			} else {
-				const newGame = new Game(io, 1);
-				newGame.init();
-				newGame.isInGame = true;
-				newGame.players.set(socket.id, player);
-				rooms.set(data.roomName, newGame);
-			}
 
 			if (intervalIds[data.roomName] == null) {
 
 				const intervalIdHUD = setInterval(() => {
 					game.updateHUD();
+					io.to(data.roomName).emit('playerKeys');
 					io.to(data.roomName).emit('time', game.time);
 				}, 1000);
 
 				const intervalId = setInterval(() => {
 					if (game.isInGame) {
 						game.update();
+						io.to(data.roomName).emit('playerKeys');
 						io.to(data.roomName).emit('game', game.gameData);
 					} else {
 						stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
+						io.to(data.roomName).emit('gameOver', game.gameOverData);
+						game.csvdata.loadFromURL('server/data/data.csv')
+							.then(updatedData => {
+								io.to(data.roomName).emit('score', updatedData); // On envoie le score mis à jour aux clients
+							})
+							.catch(error => {
+								console.error("Erreur lors de la lecture du fichier CSV :", error);
+							});
 					}
 				}, 1000 / 60);
+
 				intervalIds[data.roomName] = { intervalId, intervalIdHUD };
 
 			}
-
+			stopUpdating(data.roomName); // Arrêter les intervalles pour la salle actuelle
 			io.to(data.roomName).emit("game", game.gameData);
 		});
 
