@@ -21,7 +21,6 @@ export default class Game {
 		this.time = 0;
 		this.allDead = false;
 		this.gameOverData = [];
-
 	}
 
 	init() {
@@ -31,7 +30,7 @@ export default class Game {
 
 	resetTeamLives() {
 		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
-		if (this.teamLifes < 1) this.teamLifes = 1;
+		if (this.teamLifes < 0) this.teamLifes = 0;
 	}
 
 	resetPlayers() {
@@ -92,7 +91,7 @@ export default class Game {
 				}
 			}
 			this.time++;
-			if (this.time % ((Power.frequencyPowerSpawn / this.gameData.difficulty | 0) + this.difficulty | 0) == 0) {
+			if (this.time % (((Power.frequencyPowerSpawn / this.difficulty) + this.difficulty) | 0) == 0) {
 				this.powers.push(
 					new Power(
 						Entity.canvasWidth,
@@ -125,7 +124,6 @@ export default class Game {
 
 	update() {
 		this.resetData();
-		//this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
 		this.checkPlayerRespawn();
 
 		this.updateAllPowers();
@@ -135,6 +133,7 @@ export default class Game {
 			this,
 			this.gameData.entitySpeedMultiplier
 		);
+
 		if (this.allDead) {
 			//Si la vague est finie, on passe à la prochaine.
 			this.wavesManager.nextWave(this.difficulty);
@@ -170,7 +169,6 @@ export default class Game {
 						this.csvdata.writeCSV({ [entry.value[1].pseudo || 'Jonesy Smith']: entry.value[1].score }); //Ajoute 1 ligne au CSV pour chaque joueur dans la partie.
 					}
 				}
-				//this.io.emit('gameOver', data);
 
 			}
 			this.isInGame = false;
