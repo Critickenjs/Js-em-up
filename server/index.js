@@ -107,7 +107,6 @@ function setGameIntervals(roomName, game) {
 		game.updateHUD();
 		io.to(roomName).emit('time', game.time);
 		io.to(roomName).emit('playerKeys');
-		io.to(roomName).emit('playSound', 'power');
 
 	}, 1000);
 
@@ -116,7 +115,6 @@ function setGameIntervals(roomName, game) {
 			game.update();
 			io.to(roomName).emit('game', game.gameData);
 			io.to(roomName).emit('playerKeys');
-			io.to(roomName).emit('playSound', 'power');
 
 		} else {
 			stopUpdating(roomName); // Arrêtez les intervalles spécifiques à cette salle

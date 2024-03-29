@@ -255,7 +255,7 @@ export default class Player extends Entity {
 	}
 
 	addScorePointOnEnemyKill(enemy) {
-		this.score += enemy.value * enemy.difficulty * this.scoreMultiplierBonus;
+		this.score += (enemy.value + enemy.difficulty) * this.scoreMultiplierBonus;
 	}
 
 	accelerateLeft(acceleration, distance = 0.1) {
