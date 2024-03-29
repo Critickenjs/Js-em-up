@@ -19,10 +19,7 @@ export default class KeysListener {
 			isOnLandscape: false,
 			alpha: 0,
 			beta: 0,
-			gamma: 0,
-
-			percentageX: 0,
-			percentageY: 0,
+			gamma: 0
 		};
 	}
 

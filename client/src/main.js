@@ -486,9 +486,6 @@ function render() {
 			canvas.height - 40
 		);
 	}
-
-
-
 	//Looping
 	requestAnimationFrame(render);
 }
