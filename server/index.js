@@ -42,61 +42,65 @@ io.on('connection', socket => {
 		socket.emit('roomExisted', rooms.get(codeRoom) != null);
 	});
 	socket.on('submit', data => {
-		let intervalsId;
-		if (data.joinGame) {//Le joueur veut rejoindre une partie
-			//Normalement on vérifie si la room existe avant, donc pas besoin de vérifier ici, mais je le fais quand même au cas où.
-			const joingame = rooms.get(data.roomName);
-			if (joingame != null) {
-				socket.join(data.roomName);
-				joingame.addNewPlayer(socket.id, data.pseudo);
-				socket.emit('roomJoined', data.roomName);
-				console.log(`Joueur ${data.pseudo}(${socket.id}) à rejoint la room ${data.roomName}.`);
-			} else {
-				console.log(`ERROR : Joueur ${data.pseudo}(${socket.id}) essaye de rejoindre une room inexistante.`);
-			}
-
-			socket.on('restart', () => {
-				socket.emit('alert', "Seul l'hôte peut relancer la game.");
-			});
-
-		} else {//Le joueur veut créer une partie
-			const newGame = new Game(data.difficulty);
-			let randomPin;
-			do {
-				randomPin = Math.floor(Math.random() * 10000).toString().padStart(4, '0'); //10000 car math.random renvoie un double entre 0 et 1
-			} while (rooms.has(randomPin));
+		if (!data.joinGame) {//!rooms.has(data.roomName)
+			const newGame = new Game(io, data.difficulty);
+			const randomPin = Math.floor(Math.random() * 1000).toString().padStart(4, '0');
 			data.roomName = randomPin;
 			rooms.set(data.roomName, newGame);
-			newGame.addNewPlayer(socket.id, data.pseudo);
 			newGame.init();
-			socket.join(data.roomName);
-			socket.emit('roomJoined', data.roomName);
-
-			socket.on('hereKeys', keysPressed => {
-				newGame.players.get(socket.id).update(keysPressed, newGame.gameData.entitySpeedMultiplier);
-			});
-
-			intervalsId = createSetIntervalsForThisGame(data.roomName, newGame);
-
-			//Seul le créateur de la game peut la rejouer
-			socket.on('restart', () => {
-				let players = newGame.players;
-				newGame.restartGame();
-				socket.emit('game', this.gameData);
-				newGame.players = players;
-				intervalsId = createSetIntervalsForThisGame(data.roomName, newGame);
-			});
-			console.log(`Joueur ${data.pseudo}(${socket.id}) à créer la room ${data.roomName}.`);
 		}
+		socket.join(data.roomName);
+		console.log(`Client ${socket.id} joined room: ${data.roomName}`);
+		socket.emit('roomJoined', data.roomName);
+
+		const game = rooms.get(data.roomName); // Récupérez le jeu correspondant à la salle
+
+		const intervalIdHUD = setInterval(() => {
+			game.updateHUD();
+			socket.emit('time', game.time);
+		}, 1000 / 10);
+
+		const intervalId = setInterval(() => {
+			if (game.isInGame) {
+				game.update();
+				socket.emit('game', game.gameData);
+			} else {
+				stopUpdating(intervalId, intervalIdHUD);
+			}
+		}, 1000 / 60);
+
+		const player = new Player(100, Entity.canvasHeight / 2);
+		player.pseudo = data.pseudo;
+		game.players.set(socket.id, player);
+		console.log(`Client ${socket.id} pseudo: ${player.pseudo}`);
+
 		socket.emit('canvas', [Entity.canvasWidth, Entity.canvasHeight]);
 
+		socket.on('keys', keysPressed => {
+			player.update(keysPressed, game.gameData.entitySpeedMultiplier);
+		});
+
+		socket.on('restart', () => {
+			if (!game.isInGame) {
+				let players = game.players;
+				game.restartGame();
+				game.players = players;
+				game.players.set(socket.id, player);
+			} else {
+				const newGame = new Game(io, 1);
+				newGame.init();
+				newGame.isInGame = true;
+				newGame.players.set(socket.id, player);
+				games.set(data.roomName, newGame); // Ajoutez le nouveau jeu à la liste des jeux actifs
+			}
+		});
 		socket.on('disconnect', () => {
-			const game = rooms.get(data.roomName); // Récupérez le jeu correspondant à la salle
-			console.log(`Client '${socket.id}' has deconnected from room '${data.roomName}'.`);
+			console.log(`Disconnect from client ${socket.id}`);
 			game.players.delete(socket.id);
 			if (!game.atLeast1PlayerAlive()) {
-				stopUpdating(intervalsId.intervalId, intervalsId.intervalIdHUD);
+				stopUpdating(intervalId, intervalIdHUD);
 				rooms.delete(data.roomName);
+				games.delete(data.roomName); // Supprimez le jeu de la liste des jeux actifs
 				console.log("No more players in the room: deleting the game");
 			}
 		});
@@ -107,32 +111,3 @@ function stopUpdating(idIntervalUpdate, idIntervalUpdateHUD) {
 	clearInterval(idIntervalUpdate);
 	clearInterval(idIntervalUpdateHUD);
 }
-
-function createSetIntervalsForThisGame(roomName, game) {
-	const intervalIdHUD = setInterval(() => {
-		game.updateHUD();
-		io.to(roomName).emit('time', game.time);
-		console.log(`Timer in room ${roomName} : ${game.time}`);
-	}, 1000);
-
-	const intervalId = setInterval(() => {
-		if (game.isInGame) {
-			io.to(roomName).emit('needPlayerKeys'); //Permet d'update les joueurs et leurs tirs
-			game.update();
-			io.to(roomName).emit('game', game.gameData);
-		} else {
-			stopUpdating(intervalId, intervalIdHUD);
-			io.to(roomName).emit('gameOver', game.gameOverData);
-			this.csvdata.loadFromURL('server/data/data.csv')
-				.then(updatedData => {
-					io.to(roomName).emit('score', updatedData); // On envoie le score mis à jour aux clients
-				})
-				.catch(error => {
-					console.error("Erreur lors de la lecture du fichier CSV :", error);
-				});
-		}
-	}, 1000 / 60);
-
-	return { "intervalIdHUD": intervalIdHUD, "intervalId": intervalId };
-}
-
