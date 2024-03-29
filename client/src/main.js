@@ -15,6 +15,7 @@ import Client_Power from './client_power.js';
 import GameOver from './gameOverView.js';
 import { Particules } from './Particules.js';
 import SoundBoard from './soundBoard.js';
+import CreditView from './creditView.js';
 
 const soundboard = new SoundBoard();
 
@@ -169,8 +170,10 @@ const homePageView = new HomePage(
 const gameView = new GameView(document.querySelector('.game'));
 const gameOverView = new GameOver(document.querySelector('.gameOver'));
 const scoreboardView = new Scoreboard(document.querySelector('.scoreboard'));
+const creditView = new CreditView(document.querySelector('.credit'));
 
 if (isingame == false) {
+	creditView.hide();
 	gameView.hide();
 	homePageView.show();
 	scoreboardView.hide();
@@ -519,6 +522,18 @@ gameOverView.element.querySelector('.scoreboardButton').addEventListener('click'
 	gameOverView.hide();
 	scoreboardView.show();
 });
+
+gameOverView.element.querySelector('.creditButton').addEventListener('click', () => {
+	gameOverView.hide();
+	creditView.show();
+});
+
+creditView.element.querySelector('.creditBack').addEventListener('click', () => {
+	creditView.hide();
+	gameOverView.show();
+});
+
+
 
 function getDifficultyValue() {
 	let select = document.getElementById('difficulty');
