@@ -107,7 +107,6 @@ function setGameIntervals(roomName, game) {
 		game.updateHUD();
 		io.to(roomName).emit('time', game.time);
 		io.to(roomName).emit('playerKeys');
-
 	}, 1000);
 
 	const intervalId = setInterval(() => {

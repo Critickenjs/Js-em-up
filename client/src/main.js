@@ -55,6 +55,8 @@ preloadAssets(assets, sounds, () => {
 let canvasServerWidth = 1200;
 let canvasServerHeight = 600;
 let isingame = false;
+let oldNbEnemys = 0;
+let oldNbPowers = 0;
 
 const socket = io();
 
@@ -259,6 +261,11 @@ socket.on('game', gameData => {
 	}
 	removeDeconnectedPlayers();
 
+	if (oldNbEnemys > gameData.enemys.length) {
+		soundboard.playSoundEnemyDeath();
+	}
+	oldNbPowers = gameData.powers.length;
+
 	Client_Power.powers = [];
 	for (let i = 0; i < gameData.powers.length; i++) {
 		if (gameData.powers[i] != null) {
@@ -297,6 +304,10 @@ socket.on('game', gameData => {
 	}
 
 	// New Update enemys
+	if (oldNbEnemys > gameData.enemys.length) {
+		soundboard.playSoundEnemyDeath();
+	}
+	oldNbEnemys = gameData.enemys.length;
 	for (let i = 0; i < gameData.enemys.length; i++) {
 		let enemy = Client_Enemy.enemys.get(gameData.enemys[i].id);
 

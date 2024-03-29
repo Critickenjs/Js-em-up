@@ -82,12 +82,9 @@ export default class WavesManager {
 									entry.value[1].die(game);
 									if (this.enemys[a].type != 'boss') {
 										this.enemys[a].fate(this);
-										//game.io.emit('playSound', 'enemyDeath');
 									}
 								}
 							}
-						} else {
-							//game.io.emit('playSound', 'enemyDeath');
 						}
 					}
 				}
