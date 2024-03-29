@@ -57,21 +57,24 @@ io.on('connection', socket => {
 
 		const game = rooms.get(data.roomName);
 
-		const intervalIdHUD = setInterval(() => {
-			game.updateHUD();
-			io.to(data.roomName).emit('time', game.time);
-		}, 1000);
+		if (intervalIds[data.roomName] == null) {
+			const intervalIdHUD = setInterval(() => {
+				game.updateHUD();
+				io.to(data.roomName).emit('time', game.time);
+			}, 1000);
 
-		const intervalId = setInterval(() => {
-			if (game.isInGame) {
-				game.update();
-				io.to(data.roomName).emit('game', game.gameData);
-			} else {
-				stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
-			}
-		}, 1000 / 60);
+			const intervalId = setInterval(() => {
+				if (game.isInGame) {
+					game.update();
+					io.to(data.roomName).emit('game', game.gameData);
+				} else {
+					stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
+				}
+			}, 1000 / 60);
+			intervalIds[data.roomName] = { intervalId, intervalIdHUD };
 
-		intervalIds[data.roomName] = { intervalId, intervalIdHUD };
+		}
+
 
 		const player = new Player(100, Entity.canvasHeight / 2);
 		player.pseudo = data.pseudo;
@@ -100,21 +103,24 @@ io.on('connection', socket => {
 				rooms.set(data.roomName, newGame);
 			}
 
-			const intervalIdHUD = setInterval(() => {
-				game.updateHUD();
-				io.to(data.roomName).emit('time', game.time);
-			}, 1000);
+			if (intervalIds[data.roomName] == null) {
 
-			const intervalId = setInterval(() => {
-				if (game.isInGame) {
-					game.update();
-					io.to(data.roomName).emit('game', game.gameData);
-				} else {
-					stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
-				}
-			}, 1000 / 60);
+				const intervalIdHUD = setInterval(() => {
+					game.updateHUD();
+					io.to(data.roomName).emit('time', game.time);
+				}, 1000);
 
-			intervalIds[data.roomName] = { intervalId, intervalIdHUD };
+				const intervalId = setInterval(() => {
+					if (game.isInGame) {
+						game.update();
+						io.to(data.roomName).emit('game', game.gameData);
+					} else {
+						stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
+					}
+				}, 1000 / 60);
+				intervalIds[data.roomName] = { intervalId, intervalIdHUD };
+
+			}
 
 			io.to(data.roomName).emit("game", game.gameData);
 		});
