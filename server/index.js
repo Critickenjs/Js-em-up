@@ -60,7 +60,6 @@ io.on('connection', socket => {
 				game.updateHUD();
 				io.to(data.roomName).emit('time', game.time);
 				io.to(data.roomName).emit('playerKeys');
-				io.to(data.roomName).emit('playSound', 'power');
 
 			}, 1000);
 
@@ -69,7 +68,6 @@ io.on('connection', socket => {
 					game.update();
 					io.to(data.roomName).emit('game', game.gameData);
 					io.to(data.roomName).emit('playerKeys');
-					io.to(data.roomName).emit('playSound', 'power');
 
 				} else {
 					stopUpdating(data.roomName); // Arrêtez les intervalles spécifiques à cette salle
