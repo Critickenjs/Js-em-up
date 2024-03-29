@@ -61,7 +61,7 @@ export default class SoundBoard {
     }
 
     playMusic() {
-        this.playSound(this.sounds.get("music"));
+        this.sounds.get("music").play();
     }
 
     stopMusic() {
