@@ -9,7 +9,8 @@ import DataCSV from './dataCSV.js';
 export default class Game {
 	static difficultyMax = 4;
 
-	constructor(difficulty) {
+	constructor(io, difficulty) {
+		this.io = io;
 		this.csvdata = new DataCSV();
 		this.difficulty = difficulty;
 		this.wavesManager = new WavesManager();
@@ -20,17 +21,12 @@ export default class Game {
 		this.isInGame = false;
 		this.time = 0;
 		this.allDead = false;
-		this.gameOverData = [];
 
 	}
 
 	init() {
 		this.wavesManager.firstWave(this.difficulty);
 		this.isInGame = true;
-	}
-
-	addNewPlayer(socketId, pseudo) {
-		this.players.set(socketId, new Player(100, getRandomInt(Entity.canvasHeight - 200) + 100, pseudo));
 	}
 
 	resetTeamLives() {
@@ -129,6 +125,7 @@ export default class Game {
 
 	update() {
 		this.resetData();
+		this.io.emit('playerKeys'); //Permet d'update les joueurs et leurs tirs
 		this.checkPlayerRespawn();
 
 		this.updateAllPowers();
@@ -163,16 +160,24 @@ export default class Game {
 		this.refreshIsInGame();
 		if (this.teamLifes < 1 && !this.atLeast1PlayerAlive()) {
 			if (this.isInGame) {
-				this.gameOverData = [];
+				const data = [];
 				const iterator = this.players.entries();
 				let entry;
 				for (let i = 0; i < this.players.size; i++) {
 					entry = iterator.next();
 					if (entry.value != null) {
-						this.gameOverData.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score });
+						data.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score });
 						this.csvdata.writeCSV({ [entry.value[1].pseudo]: entry.value[1].score }); //Ajoute 1 ligne au CSV pour chaque joueur dans la partie.
 					}
 				}
+				this.io.emit('gameOver', data);
+				this.csvdata.loadFromURL('server/data/data.csv')
+					.then(updatedData => {
+						this.io.emit('score', updatedData); // On envoie le score mis à jour aux clients
+					})
+					.catch(error => {
+						console.error("Erreur lors de la lecture du fichier CSV :", error);
+					});
 			}
 			this.isInGame = false;
 		}
@@ -184,7 +189,6 @@ export default class Game {
 
 	resetAllData() {
 		this.gameData.resetAllData();
-		this.gameOverData = [];
 	}
 
 	refreshPlayersAndPlayerShots() {
@@ -221,9 +225,7 @@ export default class Game {
 		}
 	}
 
-	//si renvoie true : socket.emit('playSound', 'power');
 	updateAllPowers() {
-		let playPowerSound = false;
 		for (let i = 0; i < this.powers.length; i++) {
 			this.powers[i].update(this.gameData.entitySpeedMultiplier);
 			if (this.powers[i].posX < 0 - Power.width) {
@@ -237,13 +239,12 @@ export default class Game {
 						if (this.powers[i].isCollidingWith(entry.value[1])) {
 							this.powers[i].active = false;
 							this.powers[i].powerActivation(this, entry.value[1]);
-							playPowerSound = true;
+							this.io.emit('playSound', 'power');
 						}
 					}
 				}
 			}
 		}
-		return playPowerSound;
 	}
 
 	refreshWaves() {
@@ -327,6 +328,7 @@ export default class Game {
 		this.csvdata = new DataCSV();
 		this.init();
 		this.resetPlayers();
+		this.io.emit('game', this.gameData);
 	}
 	//
 

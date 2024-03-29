@@ -33,11 +33,11 @@ export default class Player extends Entity {
 	static maxTimePerforationBonus = 324;
 	static maxTimeLaserBonus = 180;
 
-	constructor(posX, posY, pseudo = '') {
+	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
 		this.width = Player.width;
 		this.height = Player.height;
-		this.pseudo = pseudo;
+		this.pseudo = 'player';
 		this.score = 0;
 		//Movement
 		this.posX = posX;
