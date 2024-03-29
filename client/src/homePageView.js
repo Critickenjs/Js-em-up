@@ -12,10 +12,11 @@ export default class HomePage extends View {
 	}
 
 	show() {
+		super.show('flex');
 		if (this.onPhone) {
 			this.element.querySelector('.switch').style.display = 'none';
 		} else {
-			this.element.querySelector('.switch').style.display = 'block';
+			this.element.querySelector('.switch').style.display = 'flex';
 		}
 	}
 

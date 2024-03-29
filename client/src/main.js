@@ -504,6 +504,7 @@ scoreboardView.element.querySelector('#scoreboardBack').addEventListener('click'
 	gameOverView.show();
 });
 
+
 gameOverView.element.querySelector('#restartButton').addEventListener('click', () => {
 	scoreboardView.hide();
 	gameOverView.hide();
@@ -516,6 +517,12 @@ gameOverView.element.querySelector('.scoreboardButton').addEventListener('click'
 	gameOverView.hide();
 	scoreboardView.show();
 });
+
+gameOverView.element.querySelector('.menuButton').addEventListener('click', () => {
+	gameOverView.hide();
+	homePageView.show();
+});
+
 
 gameOverView.element.querySelector('.creditButton').addEventListener('click', () => {
 	gameOverView.hide();
