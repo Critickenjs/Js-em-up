@@ -104,7 +104,7 @@ const players = new Map();
 let ids = [];
 
 const keys = new KeysListener(window);
-keys.init();
+
 socket.on('playerKeys', () => {
 	ids = [];
 	socket.emit('keys', keys.keysPressed);
@@ -208,6 +208,7 @@ homePageView.element.addEventListener('submit', event => {
 
 function startingAGame() {
 	isingame = true;
+	keys.init();
 	homePageView.hide();
 	gameView.show();
 	socket.emit('submit', { "joinGame": homePageView.joinGame, "pseudo": homePageView.username, "difficulty": getDifficultyValue(), "roomName": homePageView.code });

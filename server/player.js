@@ -83,14 +83,14 @@ export default class Player extends Entity {
 
 			if (this.gotScoreMultiplierBonus()) {
 				this.timerBeforeLosingScoreMultiplierBonus--;
-				if (this.timerBeforeLosingScoreMultiplierBonus < 0) {
+				if (this.timerBeforeLosingScoreMultiplierBonus <= 0) {
 					this.loseScoreMuliplierBonus();
 				}
 			}
 
 			if (this.gotIceMalus()) {
 				this.timerBeforeLosingIceMalus--;
-				if (this.timerBeforeLosingIceMalus < 0) {
+				if (this.timerBeforeLosingIceMalus <= 0) {
 					this.loseIceMalus();
 				}
 			}
@@ -101,7 +101,7 @@ export default class Player extends Entity {
 
 			if (this.gotLaserBonus()) {
 				this.timerBeforeLosingLaserBonus--;
-				if (this.timerBeforeLosingLaserBonus == 0) {
+				if (this.timerBeforeLosingLaserBonus <= 0) {
 					this.shots = [];
 				}
 			}
@@ -428,7 +428,7 @@ export default class Player extends Entity {
 
 	//Duration en tick (60 ticks par seconde)
 	obtainScoreMultiplierBonus(duration, multiplier = 2) {
-		this.timerBeforeLosingScoreMultiplierBonus = duration;
+		this.timerBeforeLosingScoreMultiplierBonus = duration | 0;
 		this.scoreMultiplierBonus = multiplier;
 	}
 
@@ -443,7 +443,7 @@ export default class Player extends Entity {
 	//Duration en tick (60 ticks par seconde)
 	obtainIceMalus(duration, multiplier = 5) {
 		this.iceMultiplierMalus = multiplier;
-		this.timerBeforeLosingIceMalus = duration;
+		this.timerBeforeLosingIceMalus = duration | 0;
 	}
 
 	loseIceMalus() {
@@ -456,7 +456,7 @@ export default class Player extends Entity {
 
 	//Duration en tick (60 ticks par seconde)
 	obtainPerforationBonus(duration) {
-		this.timerBeforeLosingPerforationBonus = duration;
+		this.timerBeforeLosingPerforationBonus = duration | 0;
 	}
 
 	gotPerforationBonus() {
@@ -465,7 +465,7 @@ export default class Player extends Entity {
 
 	//Duration en tick (60 ticks par seconde)
 	obtainLaserBonus(duration) {
-		this.timerBeforeLosingLaserBonus = duration;
+		this.timerBeforeLosingLaserBonus = duration | 0;
 	}
 
 	gotLaserBonus() {
