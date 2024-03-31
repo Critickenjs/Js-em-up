@@ -220,6 +220,12 @@ socket.on('roomJoined', roomName => {
 	gameView.setCode(roomName);
 });
 
+socket.on("playerQuantity", playerQuantity => {
+	homePageView.setPlayerQuantities(playerQuantity)
+});
+
+
+
 homePageView.element.querySelector('.toggleCreateJoinGame').addEventListener('click', () => {
 	soundboard.playSoundButton();
 	homePageView.toggleMenu();

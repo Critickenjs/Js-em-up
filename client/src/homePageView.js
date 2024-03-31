@@ -9,6 +9,7 @@ export default class HomePage extends View {
 		this.joinGame = false;
 		this.toggleMenu();
 		this.code = '';
+		this.playerQuantity = 0;
 	}
 
 	show() {
@@ -27,6 +28,11 @@ export default class HomePage extends View {
 
 	hide() {
 		super.hide();
+	}
+
+	setPlayerQuantities(newPlayerQuantities) {
+		this.playerQuantity = newPlayerQuantities;
+		this.element.querySelector('.playerQuantity').innerHTML = newPlayerQuantities;
 	}
 
 	toggleMenu() {

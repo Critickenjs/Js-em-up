@@ -34,10 +34,14 @@ const io = new IOServer(httpServer, {
 // permet d'avoir une page http://localhost/status pour suivre la consommation mémoire/cpu/etc.
 app.use(expressStatusMonitor({ websocket: io }));
 
+let playerQuantity = 0;
+
 const rooms = new Map();
 const intervalIds = {}; // Stocke les intervalles associés à chaque salle
 
 io.on('connection', socket => {
+	playerQuantity++;
+	socket.emit("playerQuantity", playerQuantity);
 	socket.on('verifRoomExit', codeRoom => {
 		socket.emit('roomExisted', rooms.get(codeRoom) != null);
 	});
@@ -83,12 +87,18 @@ io.on('connection', socket => {
 		});
 
 		socket.on('disconnect', () => {
+			playerQuantity--;
+			socket.emit("playerQuantity", playerQuantity);
 			game.players.delete(socket.id);
 			if (!game.atLeast1PlayerAlive()) {
 				stopUpdating(data.roomName); // Arrêter les intervalles spécifiques à cette salle
 				rooms.delete(data.roomName);
 			}
 		});
+	});
+	socket.on('disconnect', () => {
+		playerQuantity--;
+		socket.emit("playerQuantity", playerQuantity);
 	});
 });
 
