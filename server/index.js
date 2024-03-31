@@ -71,12 +71,10 @@ io.on('connection', socket => {
 		});
 
 		socket.on('restart', () => {
-			stopUpdating(data.roomName);
 			let players = game.players;
 			game.restartGame();
 			game.players = players;
 			game.players.set(socket.id, player);
-
 
 			if (intervalIds[data.roomName] == null) {
 				intervalIds[data.roomName] = setGameIntervals(data.roomName, game);
@@ -99,7 +97,9 @@ function stopUpdating(roomName) {
 		clearInterval(intervalIds[roomName].intervalId);
 		clearInterval(intervalIds[roomName].intervalIdHUD);
 		delete intervalIds[roomName];
+		return true;
 	}
+	return false;
 }
 
 function setGameIntervals(roomName, game) {
@@ -116,7 +116,6 @@ function setGameIntervals(roomName, game) {
 			io.to(roomName).emit('playerKeys');
 
 		} else {
-			stopUpdating(roomName); // Arrêtez les intervalles spécifiques à cette salle
 			io.to(roomName).emit('gameOver', game.gameOverData);
 			game.csvdata.loadFromURL('server/data/data.csv')
 				.then(updatedData => {

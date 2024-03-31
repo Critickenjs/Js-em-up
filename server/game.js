@@ -29,8 +29,8 @@ export default class Game {
 	}
 
 	resetTeamLives() {
-		this.teamLifes = Player.defaultNumberOfLife - this.difficulty;
-		if (this.teamLifes < 0) this.teamLifes = 0;
+		this.gameData.teamLifes = Player.defaultNumberOfLife - this.difficulty;
+		if (this.gameData.teamLifes < 1) this.gameData.teamLifes = 1; //Reset à 1; pas à 0, car même si 0 est le min, de toute manière la vie est déduite à la mort donc théoriquement ça change rien mais pratiquement si on met 0 ça crash le restart donc metre absolument à 1.
 	}
 
 	resetPlayers() {
@@ -60,7 +60,7 @@ export default class Game {
 	}
 
 	addToTeamLives(n) {
-		this.teamLifes += n;
+		this.gameData.teamLifes += n;
 	}
 
 	atLeast1PlayerAlive() {
@@ -155,9 +155,8 @@ export default class Game {
 		}
 		this.refreshPlayersAndPlayerShots(); //Rafraichis gameData avec les nouvelles données des joueurs et de leurs tirs pour pouvoir les envoyer aux clients
 		this.refreshPowers();
-		this.refreshLifes();
 		this.refreshIsInGame();
-		if (this.teamLifes < 1 && !this.atLeast1PlayerAlive()) {
+		if (this.gameData.teamLifes < 1 && !this.atLeast1PlayerAlive()) {
 			if (this.isInGame) {
 				this.gameOverData = [];
 				const iterator = this.players.entries();
@@ -242,10 +241,6 @@ export default class Game {
 		this.gameData.wavesNumber = this.wavesManager.waveNumber;
 	}
 
-	refreshLifes() {
-		this.gameData.teamLifes = this.teamLifes;
-	}
-
 	refreshIsInGame() {
 		this.gameData.isInGame = this.isInGame;
 	}
@@ -297,7 +292,7 @@ export default class Game {
 				if (!entry.value[1].alive) {
 					if (entry.value[1].timerBeforeRespawn <= 0) {
 						entry.value[1].timerBeforeRespawn = 0;
-						if (this.teamLifes >= 1) entry.value[1].respawn(this.difficulty);
+						if (this.gameData.teamLifes >= 1) entry.value[1].respawn(this.difficulty);
 					} else {
 						entry.value[1].timerBeforeRespawn--;
 					}

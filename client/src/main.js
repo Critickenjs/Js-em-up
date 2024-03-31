@@ -519,7 +519,7 @@ function updateStars() {
 scoreboardView.element.querySelector('#scoreboardBack').addEventListener('click', () => {
 	soundboard.playSoundButton();
 	scoreboardView.hide();
-	gameOverView.show();
+	gameOverView.show(gameOverView.score);
 });
 
 
@@ -554,7 +554,7 @@ gameOverView.element.querySelector('.creditButton').addEventListener('click', ()
 creditView.element.querySelector('.creditBack').addEventListener('click', () => {
 	soundboard.playSoundButton();
 	creditView.hide();
-	gameOverView.show();
+	gameOverView.show(gameOverView.score);
 });
 
 
@@ -570,4 +570,5 @@ function restartGame() {
 	isingame = false;
 	socket.emit('restart');
 	socket.emit('keysrestart', keys.keysPressed);
+	soundboard.playMusic();
 }
