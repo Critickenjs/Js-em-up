@@ -30,8 +30,9 @@ export default class Player extends Entity {
 	//Powers
 	static maxTimeForScoreMultiplierBonus = 456;
 	static maxTimeIceMalus = 300;
-	static maxTimePerforationBonus = 324;
-	static maxTimeLaserBonus = 180;
+	static maxTimePerforationBonus = 324
+	static maxTimeLaserBonus = 180;;
+	static maxTimeTriShotBonus = 180;
 
 	constructor(posX, posY) {
 		super(posX, posY, Player.width, Player.height);
@@ -69,6 +70,7 @@ export default class Player extends Entity {
 
 		this.timerBeforeLosingPerforationBonus = 0;
 		this.timerBeforeLosingLaserBonus = 0;
+		this.timerBeforeLosingTriShotBonus = 0;
 	}
 
 	update(keysPressed, entitySpeedMultiplier) {
@@ -104,6 +106,7 @@ export default class Player extends Entity {
 				if (this.timerBeforeLosingLaserBonus <= 0) {
 					this.shots = [];
 				}
+				this.shootLaser();
 			}
 
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
@@ -112,12 +115,11 @@ export default class Player extends Entity {
 				this.timerBeforeShots--;
 			}
 			//Shooting?
-			if (this.gotLaserBonus()) {
-				this.shootLaser();
-			} else {
-				if (keysPressed.Space || keysPressed.MouseDown) {
-					this.shootWithRecharge(this.gotPerforationBonus());
-				}
+			if (keysPressed.Space || keysPressed.MouseDown) {
+				this.shootWithRecharge(this.gotPerforationBonus());
+			}
+			if (this.gotTriShotBonus()) {
+				this.timerBeforeLosingTriShotBonus--;
 			}
 
 			if (this.invincible) {
@@ -156,9 +158,35 @@ export default class Player extends Entity {
 				this.posY + this.height / 2 - Shot.height / 2,
 				true,
 				Player.bulletSpeed,
-				perforationBonus
+				0,
+				perforationBonus,
+				false
 			)
 		);
+		if (this.gotTriShotBonus()) {
+			this.shots.push(
+				new Shot(
+					this.posX + this.width,
+					this.posY + this.height / 2 - Shot.height / 2,
+					true,
+					Player.bulletSpeed,
+					(Player.bulletSpeed / 4) | 0,
+					perforationBonus,
+					false
+				)
+			);
+			this.shots.push(
+				new Shot(
+					this.posX + this.width,
+					this.posY + this.height / 2 - Shot.height / 2,
+					true,
+					Player.bulletSpeed,
+					(-Player.bulletSpeed / 4) | 0,
+					perforationBonus,
+					false
+				)
+			);
+		}
 	}
 
 	shootLaser() {
@@ -172,10 +200,7 @@ export default class Player extends Entity {
 				new Shot(
 					this.posX + this.width,
 					this.posY + this.height / 2 - Shot.height / 2,
-					true,
-					0,
-					true,
-					true
+					true, 0, 0, true, true
 				)
 			);
 		}
@@ -211,6 +236,7 @@ export default class Player extends Entity {
 		this.timerBeforeLosingLaserBonus = 0;
 		this.timerBeforeLosingPerforationBonus = 0;
 		this.timerBeforeLosingScoreMultiplierBonus = 0;
+		this.timerBeforeLosingTriShotBonus = 0;
 	}
 
 	becomeInvincible(duration) {
@@ -470,5 +496,14 @@ export default class Player extends Entity {
 
 	gotLaserBonus() {
 		return this.timerBeforeLosingLaserBonus > 0;
+	}
+
+	//Duration en tick (60 ticks par seconde)
+	obtainTriShotBonus(duration) {
+		this.timerBeforeLosingTriShotBonus = duration | 0;
+	}
+
+	gotTriShotBonus() {
+		return this.timerBeforeLosingTriShotBonus > 0;
 	}
 }

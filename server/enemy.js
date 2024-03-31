@@ -187,7 +187,9 @@ export default class Enemy extends Entity {
 				this.posX,
 				this.posY + this.height / 2 - Shot.height / 2 - 5,
 				false,
-				-Enemy.bulletSpeed
+				-Enemy.bulletSpeed,
+				0, false,
+				false
 			)
 		);
 	}
