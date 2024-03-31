@@ -144,8 +144,6 @@ if (
 } else {
 	// false for not mobile device
 	keys.keysPressed.onPhone = false;
-
-
 	canvas.addEventListener('mousemove', function (event) {
 
 		if (isingame) {
@@ -158,11 +156,6 @@ if (
 		}
 	});
 }
-
-socket.on('time', newTime => {
-	time = newTime;
-	gameView.setTime(time);
-});
 
 const homePageView = new HomePage(
 	document.querySelector('.HomePage'),
@@ -180,6 +173,11 @@ if (isingame == false) {
 	scoreboardView.hide();
 	gameOverView.hide();
 }
+
+socket.on('time', newTime => {
+	time = newTime;
+	gameView.setTime(time);
+});
 
 homePageView.element.addEventListener('submit', event => {
 	event.preventDefault();
@@ -384,11 +382,12 @@ socket.on('game', gameData => {
 });
 
 socket.on('gameOver', gameOverData => {
+	console.log("GAME OVER SERVER MESSAGE");
 	soundboard.stopMusic();
 	gameView.hide();
 	for (let i = 0; i < gameOverData.length; i++) {
 		if (gameOverData[i].id == socket.id) {
-			gameOverView.show(gameOverData[i].score);
+			gameOverView.show(gameOverData[i].score, gameOverData[i].kills, gameOverData[i].time);
 		}
 	}
 });
@@ -526,7 +525,7 @@ function updateStars() {
 scoreboardView.element.querySelector('#scoreboardBack').addEventListener('click', () => {
 	soundboard.playSoundButton();
 	scoreboardView.hide();
-	gameOverView.show(gameOverView.score);
+	gameOverView.show(gameOverView.score, gameOverView.kills, gameOverView.time);
 });
 
 
@@ -561,7 +560,7 @@ gameOverView.element.querySelector('.creditButton').addEventListener('click', ()
 creditView.element.querySelector('.creditBack').addEventListener('click', () => {
 	soundboard.playSoundButton();
 	creditView.hide();
-	gameOverView.show(gameOverView.score);
+	gameOverView.show(gameOverView.score, gameOverView.kills, gameOverView.time);
 });
 
 

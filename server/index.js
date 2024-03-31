@@ -49,7 +49,7 @@ io.on('connection', socket => {
 	socket.on('submit', data => {
 		if (!data.joinGame) {//!rooms.has(data.roomName)
 			const newGame = new Game(data.difficulty);
-			const randomPin = Math.floor(Math.random() * 1000).toString().padStart(4, '0');
+			const randomPin = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 			data.roomName = randomPin;
 			rooms.set(data.roomName, newGame);
 			newGame.init();
@@ -88,6 +88,7 @@ io.on('connection', socket => {
 
 		socket.on('disconnect', () => {
 			playerQuantity--;
+			if (playerQuantity < 0) playerQuantity = 0;
 			socket.emit("playerQuantity", playerQuantity);
 			game.players.delete(socket.id);
 			if (!game.atLeast1PlayerAlive()) {
@@ -98,6 +99,7 @@ io.on('connection', socket => {
 	});
 	socket.on('disconnect', () => {
 		playerQuantity--;
+		if (playerQuantity < 0) playerQuantity = 0;
 		socket.emit("playerQuantity", playerQuantity);
 	});
 });
@@ -134,6 +136,7 @@ function setGameIntervals(roomName, game) {
 				.catch(error => {
 					console.error("Erreur lors de la lecture du fichier CSV :", error);
 				});
+			stopUpdating(roomName);
 		}
 	}, 1000 / 60);
 

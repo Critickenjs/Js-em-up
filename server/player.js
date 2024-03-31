@@ -34,12 +34,19 @@ export default class Player extends Entity {
 	static maxTimeLaserBonus = 180;;
 	static maxTimeTriShotBonus = 180;
 
-	constructor(posX, posY) {
+	constructor(posX, posY, pseudo = 'player') {
 		super(posX, posY, Player.width, Player.height);
 		this.width = Player.width;
 		this.height = Player.height;
-		this.pseudo = 'player';
+		this.pseudo = pseudo;
+
+		this.posX = posX;
+		this.posY = posY;
+
+
 		this.score = 0;
+		this.kills = 0;
+		this.time = 0;
 		//Movement
 		this.posX = posX;
 		this.posY = posY;
@@ -71,6 +78,7 @@ export default class Player extends Entity {
 		this.timerBeforeLosingPerforationBonus = 0;
 		this.timerBeforeLosingLaserBonus = 0;
 		this.timerBeforeLosingTriShotBonus = 0;
+
 	}
 
 	update(keysPressed, entitySpeedMultiplier) {
@@ -105,8 +113,9 @@ export default class Player extends Entity {
 				this.timerBeforeLosingLaserBonus--;
 				if (this.timerBeforeLosingLaserBonus <= 0) {
 					this.shots = [];
+				} else {
+					this.shootLaser();
 				}
-				this.shootLaser();
 			}
 
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
@@ -283,6 +292,7 @@ export default class Player extends Entity {
 
 	addScorePointOnEnemyKill(enemy) {
 		this.score += (enemy.value + enemy.difficulty) * this.scoreMultiplierBonus;
+		this.kills++;
 	}
 
 	accelerateLeft(acceleration, distance = 0.1) {
@@ -421,34 +431,6 @@ export default class Player extends Entity {
 
 	gyroscopeMovement(keysPressed) {
 		this.mouseMovement(keysPressed);
-		/*if (keysPressed.beta != null && keysPressed.gamma != null) {
-			this.accelerationY = keysPressed.beta;
-			this.accelerationX = keysPressed.gamma + 15;//Pour que le controle soit plus fluide
-		}*/
-		/*if (keysPressed.MouseY < 400) {
-			keysPressed.MouseY = 0;
-		} else if (keysPressed.MouseY > 500) {
-			keysPressed.MouseY = Entity.canvasHeight;
-		}
-
-		if (keysPressed.MouseX > 250) {
-			keysPressed.MouseX = Entity.canvasWidth;
-		}
-
-		if (this.posX < keysPressed.MouseX) {
-			this.speedX = Player.defaultSpeed;
-			this.accelerationX = this.accelerateRight(this.accelerationX);
-		} else {
-			this.speedX = -Player.defaultSpeed;
-			this.accelerationX = this.accelerateLeft(this.accelerationX);
-		}
-		if (this.posY < keysPressed.MouseY) {
-			this.speedY = Player.defaultSpeed;
-			this.accelerationY = this.accelerateDown(this.accelerationY);
-		} else {
-			this.speedY = -Player.defaultSpeed;
-			this.accelerationY = this.accelerateUp(this.accelerationY);
-		}*/
 	}
 
 

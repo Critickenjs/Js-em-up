@@ -40,6 +40,8 @@ export default class Game {
 			entry = iterator.next();
 			if (entry.value != null) {
 				entry.value[1].score = 0;
+				entry.value[1].kills = 0;
+				entry.value[1].time = 0;
 
 				entry.value[1].shots = [];
 				entry.value[1].timerBeforeShots = 0;
@@ -87,6 +89,7 @@ export default class Game {
 				if (entry.value != null) {
 					if (entry.value[1].alive) {
 						entry.value[1].score += this.difficulty;
+						entry.value[1].time++;
 					}
 				}
 			}
@@ -139,6 +142,7 @@ export default class Game {
 			this.wavesManager.nextWave(this.difficulty);
 			this.addToSpeed(0.01 * this.difficulty);
 
+			//Envoyer des pouvoirs en fonctions des vagues
 			/*if (this.wavesManager.waveNumber %(Game.difficultyMax + 1 - this.difficulty) ==
 				0
 			) {
@@ -164,7 +168,7 @@ export default class Game {
 				for (let i = 0; i < this.players.size; i++) {
 					entry = iterator.next();
 					if (entry.value != null) {
-						this.gameOverData.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score });
+						this.gameOverData.push({ "id": entry.value[0], "pseudo": entry.value[1].pseudo, "score": entry.value[1].score, "kills": entry.value[1].kills, "time": entry.value[1].time });
 						this.csvdata.writeCSV({ [entry.value[1].pseudo || 'Jonesy Smith']: entry.value[1].score }); //Ajoute 1 ligne au CSV pour chaque joueur dans la partie.
 					}
 				}
