@@ -121,9 +121,10 @@ export default class Player extends Entity {
 				if (keysPressed.Space || keysPressed.MouseDown) {
 					this.shootWithRecharge(this.gotPerforationBonus());
 				}
-				if (this.gotTriShotBonus()) {
-					this.timerBeforeLosingTriShotBonus--;
-				}
+			}
+
+			if (this.gotTriShotBonus()) {
+				this.timerBeforeLosingTriShotBonus--;
 			}
 
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
@@ -446,7 +447,7 @@ export default class Player extends Entity {
 	}
 
 	gotScoreMultiplierBonus() {
-		return this.scoreMultiplierBonus != 1;
+		return this.scoreMultiplierBonus != 1 || this.timerBeforeLosingScoreMultiplierBonus > 0;
 	}
 
 	//Duration en tick (60 ticks par seconde)
