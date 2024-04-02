@@ -71,7 +71,7 @@ describe('Enemy', () => {
 
         assert.strictEqual(enemy.height, Enemy.height * 5);
         assert.strictEqual(enemy.width, Enemy.width * 5);
-        assert.strictEqual(enemy.lifes, 20);
+        assert.strictEqual(enemy.lifes, 25);
         assert.strictEqual(enemy.shootTimer, 80);
         assert.strictEqual(enemy.speedX, -0.9);
         assert.ok(enemy.speedY <= 1 && enemy.speedY >= -1);

@@ -11,7 +11,7 @@ describe('Shot', () => {
         const perforationBonus = false;
         const laserBonus = false;
 
-        const shot = new Shot(posX, posY, isFromPlayer, speed, perforationBonus, laserBonus);
+        const shot = new Shot(posX, posY, isFromPlayer, speed, 0, perforationBonus, laserBonus);
 
         assert.strictEqual(shot.posX, posX);
         assert.strictEqual(shot.posY, posY);
@@ -35,7 +35,7 @@ describe('Shot', () => {
         const laserBonus = false;
         const entitySpeedMultiplier = 1;
 
-        const shot = new Shot(posX, posY, isFromPlayer, speed, perforationBonus, laserBonus);
+        const shot = new Shot(posX, posY, isFromPlayer, speed, 0, perforationBonus, laserBonus);
         shot.update(entitySpeedMultiplier);
 
         assert.strictEqual(shot.posX, posX + speed * entitySpeedMultiplier);

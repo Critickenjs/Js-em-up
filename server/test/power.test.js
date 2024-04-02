@@ -6,12 +6,7 @@ describe('Power', () => {
     describe('types', () => {
         it('should contain the correct types', () => {
             const expectedTypes = [
-                'laser',
-                'perforation',
-                'ice',
-                'invincible',
-                'scoreMultiplierBonus',
-                'life',
+                'trishot', 'invincible', 'life', 'ice', 'perforation', 'laser', 'scoreMultiplierBonus'
             ];
 
             assert.deepStrictEqual(Power.types, expectedTypes);
