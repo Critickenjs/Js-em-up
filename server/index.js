@@ -86,20 +86,27 @@ io.on('connection', socket => {
 			io.to(data.roomName).emit("game", game.gameData);
 		});
 
+		socket.on('mainmenu', () => {
+			game.player.delete(socket.id);
+			game.oldPlayers.delete(socket.id);
+			socket.leave(data.roomName);
+		})
+
 		socket.on('disconnect', () => {
 			playerQuantity--;
 			if (playerQuantity < 0) playerQuantity = 0;
 			socket.emit("playerQuantity", playerQuantity);
 			game.players.delete(socket.id);
 			if (!game.atLeast1PlayerAlive()) {
-				stopUpdating(data.roomName); // Arrêter les intervalles spécifiques à cette salle
+				stopUpdating(); // Arrêter les intervalles spécifiques à cette salle
 				rooms.delete(data.roomName);
 			}
+			socket.leave(data.roomName);
 		});
 	});
 	socket.on('disconnect', () => {
 		playerQuantity--;
-		if (playerQuantity < 0) playerQuantity = 0;
+		if (playerQuantity < 0) playerQuantity = 0``;
 		socket.emit("playerQuantity", playerQuantity);
 	});
 });
