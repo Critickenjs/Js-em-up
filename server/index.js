@@ -43,7 +43,7 @@ io.on('connection', socket => {
 	playerQuantity++;
 	socket.emit("playerQuantity", playerQuantity);
 	socket.on('verifRoomExit', codeRoom => {
-		socket.emit('roomExisted', rooms.get(codeRoom) != null);
+		socket.emit('roomExisted', rooms.get(codeRoom) != null && rooms.get(codeRoom).isInGame);
 	});
 
 	socket.on('submit', data => {
@@ -75,15 +75,21 @@ io.on('connection', socket => {
 		});
 
 		socket.on('restart', () => {
-			let players = game.players;
-			game.restartGame();
-			game.players = players;
-			game.players.set(socket.id, player);
-
 			if (intervalIds[data.roomName] == null) {
+				console.log("NEW RESTART");
+				console.log("PLAYEERS", game.players);
+				game.restartGame();
 				intervalIds[data.roomName] = setGameIntervals(data.roomName, game);
+				console.log("OLDPLAYEERS", game.oldPlayers);
+				game.players.set(socket.id, game.oldPlayers.get(socket.id));
+				console.log("NEWPLAYEERS", game.players);
+				game.init();
+				io.to(data.roomName).emit("game", game.gameData);
+			} else {
+				console.log("JOIN");
+				game.players.set(socket.id, game.oldPlayers.get(socket.id));
+				console.log("NEWPLAYEERS", game.players);
 			}
-			io.to(data.roomName).emit("game", game.gameData);
 		});
 
 		socket.on('mainmenu', () => {
