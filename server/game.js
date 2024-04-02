@@ -21,6 +21,7 @@ export default class Game {
 		this.time = 0;
 		this.allDead = false;
 		this.gameOverData = [];
+		this.oldPlayers = new Map();
 	}
 
 	init() {
@@ -316,8 +317,9 @@ export default class Game {
 		this.time = 0;
 		this.wavesManager = new WavesManager();
 		this.csvdata = new DataCSV();
-		this.init();
 		this.resetPlayers();
+		this.oldPlayers = new Map(this.players);
+		this.players.clear();
 	}
 	//
 
