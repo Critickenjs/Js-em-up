@@ -20,7 +20,7 @@ describe('Player', () => {
             assert.strictEqual(player.timerBeforeLosingIceMalus, 0);
             assert.strictEqual(player.timerBeforeLosingPerforationBonus, 0);
             assert.strictEqual(player.timerBeforeLosingLaserBonus, 0);
-            assert.strictEqual(player.timerBeforeShots, 10);
+            assert.strictEqual(player.timerBeforeShots, 9);
             assert.strictEqual(player.invincible, true);
         });
 
