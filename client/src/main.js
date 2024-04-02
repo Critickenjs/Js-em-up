@@ -210,7 +210,6 @@ function startingAGame() {
 	homePageView.hide();
 	gameView.show();
 	socket.emit('submit', { "joinGame": homePageView.joinGame, "pseudo": homePageView.username, "difficulty": getDifficultyValue(), "roomName": homePageView.code });
-	//soundboard.playSoundPowerUp();
 	soundboard.playMusic();
 }
 
@@ -382,9 +381,10 @@ socket.on('game', gameData => {
 });
 
 socket.on('gameOver', gameOverData => {
-	console.log("GAME OVER SERVER MESSAGE");
 	soundboard.stopMusic();
 	gameView.hide();
+	scoreboardView.hide();
+	creditView.hide();
 	for (let i = 0; i < gameOverData.length; i++) {
 		if (gameOverData[i].id == socket.id) {
 			gameOverView.show(gameOverData[i].score, gameOverData[i].kills, gameOverData[i].time);
@@ -546,6 +546,7 @@ gameOverView.element.querySelector('.scoreboardButton').addEventListener('click'
 
 gameOverView.element.querySelector('.menuButton').addEventListener('click', () => {
 	soundboard.playSoundButton();
+	socket.emit('mainmenu');
 	gameOverView.hide();
 	homePageView.show();
 });

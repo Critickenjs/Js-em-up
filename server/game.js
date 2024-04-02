@@ -294,13 +294,17 @@ export default class Game {
 		for (let i = 0; i < this.players.size; i++) {
 			entry = iterator.next();
 			if (entry.value != null) {
-				if (!entry.value[1].alive) {
-					if (entry.value[1].timerBeforeRespawn <= 0) {
-						entry.value[1].timerBeforeRespawn = 0;
-						if (this.gameData.teamLifes >= 1) entry.value[1].respawn(this.difficulty);
-					} else {
-						entry.value[1].timerBeforeRespawn--;
+				if (entry.value[1] != null) {
+					if (!entry.value[1].alive) { //Exception value[1] is undefined
+						if (entry.value[1].timerBeforeRespawn <= 0) {
+							entry.value[1].timerBeforeRespawn = 0;
+							if (this.gameData.teamLifes >= 1) entry.value[1].respawn(this.difficulty);
+						} else {
+							entry.value[1].timerBeforeRespawn--;
+						}
 					}
+				} else {
+					this.players.delete(entry.value[0]);
 				}
 			}
 		}

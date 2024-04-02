@@ -76,24 +76,18 @@ io.on('connection', socket => {
 
 		socket.on('restart', () => {
 			if (intervalIds[data.roomName] == null) {
-				console.log("NEW RESTART");
-				console.log("PLAYEERS", game.players);
 				game.restartGame();
 				intervalIds[data.roomName] = setGameIntervals(data.roomName, game);
-				console.log("OLDPLAYEERS", game.oldPlayers);
 				game.players.set(socket.id, game.oldPlayers.get(socket.id));
-				console.log("NEWPLAYEERS", game.players);
 				game.init();
 				io.to(data.roomName).emit("game", game.gameData);
 			} else {
-				console.log("JOIN");
 				game.players.set(socket.id, game.oldPlayers.get(socket.id));
-				console.log("NEWPLAYEERS", game.players);
 			}
 		});
 
 		socket.on('mainmenu', () => {
-			game.player.delete(socket.id);
+			game.players.delete(socket.id);
 			game.oldPlayers.delete(socket.id);
 			socket.leave(data.roomName);
 		})
