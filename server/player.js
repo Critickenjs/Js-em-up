@@ -116,19 +116,20 @@ export default class Player extends Entity {
 				} else {
 					this.shootLaser();
 				}
+			} else {
+				//Shooting?
+				if (keysPressed.Space || keysPressed.MouseDown) {
+					this.shootWithRecharge(this.gotPerforationBonus());
+				}
+				if (this.gotTriShotBonus()) {
+					this.timerBeforeLosingTriShotBonus--;
+				}
 			}
 
 			//On vérifie le timer avant que le joueur ne puisse tirer à nouveau
 
 			if (this.timerBeforeShots > 0) {
 				this.timerBeforeShots--;
-			}
-			//Shooting?
-			if (keysPressed.Space || keysPressed.MouseDown) {
-				this.shootWithRecharge(this.gotPerforationBonus());
-			}
-			if (this.gotTriShotBonus()) {
-				this.timerBeforeLosingTriShotBonus--;
 			}
 
 			if (this.invincible) {
