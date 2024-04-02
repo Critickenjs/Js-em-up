@@ -1,5 +1,5 @@
 import Entity from './entity.js';
-import { getRandomInt } from './utils.js';
+import { getRandomInt, getRandomIntWithMinPositive } from './utils.js';
 import Player from './player.js';
 
 export default class Power extends Entity {
@@ -40,7 +40,7 @@ export default class Power extends Entity {
 			case 'scoreMultiplierBonus':
 				player.obtainScoreMultiplierBonus(
 					Player.maxTimeForScoreMultiplierBonus,
-					getRandomInt(game.difficulty) + 2
+					getRandomIntWithMinPositive(2, game.difficulty)
 				);
 				break;
 			case 'ice':

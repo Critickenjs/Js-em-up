@@ -12,4 +12,18 @@ describe('Power', () => {
             assert.deepStrictEqual(Power.types, expectedTypes);
         });
     });
+
+    describe('update', () => {
+        it('should update properties correctly', () => {
+
+        });
+    });
+
+    describe('powerActivation', () => {
+        it('should activate correctly', () => {
+
+        });
+    });
+
+
 });
