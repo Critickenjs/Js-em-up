@@ -3,8 +3,14 @@ export function getRandomInt(max) {
 	return Math.floor(Math.random() * max);
 }
 
-//Attention elle ne marche peut etre pas ! A verifier... Il faut utiliser de préférences la fonction au dessus.
+//Attention ne fonctionne qu'avec des petis nombres et un min négatif
 export function getRandomIntWithMin(min, max) {
 	//Return random int between min included and max included
 	return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+//Attention ne fonctionne qu'avec des nombres posititifs
+export function getRandomIntWithMinPositive(min, max) {
+	//Return random int between min included and max included
+	return Math.floor(Math.random() * (max - min) + min);
 }
