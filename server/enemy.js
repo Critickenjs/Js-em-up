@@ -188,7 +188,7 @@ export default class Enemy extends Entity {
 				this.posY + this.height / 2 - Shot.height / 2 - 5,
 				false,
 				-Enemy.bulletSpeed,
-				0, false,
+				0, this.type == 'boss',
 				false
 			)
 		);
@@ -200,7 +200,9 @@ export default class Enemy extends Entity {
 			for (let s = 0; s < this.shots.length; s++) {
 				if (this.shots[s].active) {
 					if (this.shots[s].isCollidingWith(player)) {
-						this.shots[s].active = false;
+
+						this.shots[s].active = this.shots[s].perforation;
+
 						if (player.alive) player.die(game);
 					}
 				}

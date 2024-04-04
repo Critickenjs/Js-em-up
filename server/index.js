@@ -7,6 +7,7 @@ import Entity from './entity.js';
 import Player from './player.js';
 import Game from './game.js';
 import expressStatusMonitor from 'express-status-monitor';
+import { getRandomInt } from './utils.js';
 
 const app = express();
 
@@ -65,7 +66,7 @@ io.on('connection', socket => {
 
 
 		const player = new Player(100, Entity.canvasHeight / 2, data.pseudo);
-		player.skin = game.players.size % 7;
+		player.skin = getRandomInt(7);//game.players.size % 7;
 		game.players.set(socket.id, player);
 
 		socket.emit('canvas', [Entity.canvasWidth, Entity.canvasHeight]);
