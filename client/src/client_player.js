@@ -6,9 +6,10 @@ export default class Client_Player extends Client_Entity {
 
 
 
-	constructor(posX, posY, pseudo, invincible, score, scoreMultiplier) {
+	constructor(posX, posY, pseudo, skin, invincible, score, scoreMultiplier) {
 		super(posX, posY, Client_Player.width, Client_Player.height);
 		this.pseudo = pseudo;
+		this.skin = skin;
 		this.invincible = invincible;
 		this.isAlive = false;
 		this.score = score;
@@ -21,7 +22,7 @@ export default class Client_Player extends Client_Entity {
 
 		//Image
 		this.image = new Image();
-		this.image.src = './public/res/images/spaceship.png';
+		this.image.src = './public/res/images/player' + this.skin + '.png';
 		this.imageShield = new Image();
 		this.imageShield.src = './public/res/images/shield.png';
 		this.imageShield2 = new Image();

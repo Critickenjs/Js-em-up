@@ -20,6 +20,8 @@ export default class Client_Power extends Client_Entity {
 		this.imageBonusLaser.src = './public/res/images/bonusLaser.png';
 		this.imageBonusPerforation = new Image();
 		this.imageBonusPerforation.src = './public/res/images/bonusPerforation.png';
+		this.imageBonusTrishot = new Image();
+		this.imageBonusTrishot.src = './public/res/images/bonusTriShot.png';
 	}
 
 	render(context) {
@@ -74,6 +76,15 @@ export default class Client_Power extends Client_Entity {
 			case 'perforation':
 				context.drawImage(
 					this.imageBonusPerforation,
+					this.posX,
+					this.posY,
+					this.width,
+					this.height
+				);
+				break;
+			case 'trishot':
+				context.drawImage(
+					this.imageBonusTrishot,
 					this.posX,
 					this.posY,
 					this.width,

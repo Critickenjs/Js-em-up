@@ -38,7 +38,9 @@ export default class Player extends Entity {
 		super(posX, posY, Player.width, Player.height);
 		this.width = Player.width;
 		this.height = Player.height;
+
 		this.pseudo = pseudo;
+		this.skin = 0;
 
 		this.posX = posX;
 		this.posY = posY;

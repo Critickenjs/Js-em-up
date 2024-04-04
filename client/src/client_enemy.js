@@ -20,12 +20,12 @@ export default class Client_Enemy extends Client_Entity {
 			case 'red':
 				this.width = Client_Enemy.width;
 				this.height = Client_Enemy.height;
-				this.image.src = './public/res/images/enemy.png';
+				this.image.src = './public/res/images/enemy0.png';
 				break;
 			case 'purple':
 				this.width = Client_Enemy.width;
 				this.height = Client_Enemy.height;
-				this.image.src = './public/res/images/enemy.png';
+				this.image.src = './public/res/images/enemy1.png';
 				break;
 			case 'orange':
 				this.height = (Client_Enemy.height * 1.5) | 0;

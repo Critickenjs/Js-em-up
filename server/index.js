@@ -64,8 +64,8 @@ io.on('connection', socket => {
 		}
 
 
-		const player = new Player(100, Entity.canvasHeight / 2);
-		player.pseudo = data.pseudo;
+		const player = new Player(100, Entity.canvasHeight / 2, data.pseudo);
+		player.skin = game.players.size % 7;
 		game.players.set(socket.id, player);
 
 		socket.emit('canvas', [Entity.canvasWidth, Entity.canvasHeight]);
@@ -106,7 +106,7 @@ io.on('connection', socket => {
 	});
 	socket.on('disconnect', () => {
 		playerQuantity--;
-		if (playerQuantity < 0) playerQuantity = 0``;
+		if (playerQuantity < 0) playerQuantity = 0;
 		socket.emit("playerQuantity", playerQuantity);
 	});
 });

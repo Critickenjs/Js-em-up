@@ -201,6 +201,7 @@ export default class Game {
 						posY: player.posY,
 						score: player.score,
 						pseudo: player.pseudo,
+						skin: player.skin,
 						invincible: player.timerBeforeLosingInvincibility,
 						scoreMultiplier: player.scoreMultiplierBonus
 					});
