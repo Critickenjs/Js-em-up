@@ -13,7 +13,7 @@ Objectif : Réaliser un jeu en ligne multi-joueur de type "shoot them up" par é
 
 
 
-## Images
+## Les Vues
 
 L'accueil - Rejoindre une partie
 ![Rejoindre une partie](client/public/res/readme/images/ViewFormulaire1.png)
@@ -39,6 +39,9 @@ Les crédits
 
 ![Menu d'accueil](https://via.placeholder.com/468x300?text=Diagramme)
 
+### Explications
+texte
+
 
 
 ## Milestones
@@ -47,10 +50,10 @@ Les crédits
 ![Jeu basique](client/public/res/readme/videos/versionBasique.gif)
 
 #### Description
-texte
+L'objectif de ce prototype était de comprendre tout ce qui était nécessaire pour faire la base du jeu. C'est à dire comment dessiner avec le canvas, comment faire une boucle de jeu, comment récupérer les inputs du joueur, comment déclencher un tir, comment faire des déplacements fluides, commment détecter des collisions, etc...
 
 #### Difficultés techniques
-texte
+Ici la plus grande difficulté à été de faire le système de collision. Au final nous avons créer une classe Entity qui gère les collisions et que tous les autres classes étendent, de cette manière n'importe quel chose dans notre jeu peut détecter n'importe quel autre, selon ce qu'on veut.
 
 ### Version intermédiaire
 ![Jeu basique](client/public/res/readme/videos/versionInter.gif)
