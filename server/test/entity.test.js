@@ -60,4 +60,52 @@ describe('Entity', () => {
             });
         });
     });
+
+    describe('checkBorderCollision', () => {
+        it('should set posX and speedX to 0 when posX is less than 0', () => {
+            const entity = new Entity(100, 100, 10, 10);
+            entity.posX = -10;
+            entity.speedX = 2;
+
+            entity.checkBorderCollision();
+
+            assert.strictEqual(entity.posX, 0);
+            assert.strictEqual(entity.speedX, 0);
+        });
+
+        it('should set posX and speedX to canvasWidth - width when posX is greater than canvasWidth - width', () => {
+            const entity = new Entity(100, 100, 10, 10);
+            entity.posX = 200;
+            entity.speedX = 2;
+            Entity.canvasWidth = 300;
+
+            entity.checkBorderCollision();
+
+            assert.strictEqual(entity.posX, 200);
+            assert.strictEqual(entity.speedX, 2);
+        });
+
+        it('should set posY and speedY to 0 when posY is less than 0', () => {
+            const entity = new Entity(100, 100, 10, 10);
+            entity.posY = -10;
+            entity.speedY = 2;
+
+            entity.checkBorderCollision();
+
+            assert.strictEqual(entity.posY, 0);
+            assert.strictEqual(entity.speedY, 0);
+        });
+
+        it('should set posY and speedY to canvasHeight - height when posY is greater than canvasHeight - height', () => {
+            const entity = new Entity(100, 100, 10, 10);
+            entity.posY = 200;
+            entity.speedY = 2;
+            Entity.canvasHeight = 300;
+
+            entity.checkBorderCollision();
+
+            assert.strictEqual(entity.posY, 200);
+            assert.strictEqual(entity.speedY, 2);
+        });
+    });
 });
