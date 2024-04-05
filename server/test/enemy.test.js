@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it, beforeEach } from 'node:test';
 import Enemy from '../enemy.js';
+import WavesManager from '../wavesManager.js';
 
 describe('Enemy', () => {
     describe('applyTypes', () => {
@@ -100,4 +101,77 @@ describe('Enemy', () => {
             assert.strictEqual(enemy.posY, newPosY);
         });
     });
+    describe('getHurt', () => {
+        it('should return true if enemy dies', () => {
+            const enemy = new Enemy(100, 100, 1);
+            const waveManager = new WavesManager();
+
+            const result = enemy.getHurt(waveManager);
+
+            assert.strictEqual(result, true);
+        });
+
+        it('should return false if enemy survives', () => {
+            const enemy = new Enemy(100, 100, 1);
+            const waveManager = new WavesManager();
+            enemy.lifes = 2;
+
+            const result = enemy.getHurt(waveManager);
+
+            assert.strictEqual(result, false);
+        });
+
+        it('should decrease enemy lifes if hit', () => {
+            const enemy = new Enemy(100, 100, 1);
+            const waveManager = new WavesManager();
+            const initialLifes = enemy.lifes;
+
+            enemy.getHurt(waveManager);
+
+            assert.strictEqual(enemy.lifes, 1);
+        });
+
+
+    });
+
+    describe('fate', () => {
+        it('should respawn enemy if wave is not full', () => {
+            const enemy = new Enemy(100, 100, 1);
+            const waveManager = new WavesManager();
+            waveManager.waveNumberOfEnemysSpawned = 4;
+
+            enemy.fate(waveManager);
+
+            assert.strictEqual(waveManager.waveNumberOfEnemysSpawned, 5);
+            assert.strictEqual(enemy.isDead, false);
+        });
+
+        it('should kill enemy if wave is full', () => {
+            const enemy = new Enemy(100, 100, 1);
+            const waveManager = new WavesManager();
+            waveManager.waveNumberOfEnemysSpawned = 10;
+
+            enemy.fate(waveManager);
+
+            assert.strictEqual(enemy.isDead, true);
+        });
+    });
+
+    describe('respawn', () => {
+        it('should reset enemy properties', () => {
+            const enemy = new Enemy(100, 100, 1);
+            const waveManager = new WavesManager();
+            const initialPosX = enemy.posX;
+            const initialPosY = enemy.posY;
+            const initialType = enemy.type;
+
+            enemy.respawn(waveManager);
+
+            assert.strictEqual(enemy.isDead, false);
+
+        });
+    });
+
+
+
 });
