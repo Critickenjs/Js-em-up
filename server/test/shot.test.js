@@ -50,4 +50,23 @@ describe('Shot', () => {
         assert.strictEqual(shot.isFromPlayer, isFromPlayer);
         assert.strictEqual(shot.tickActive, 1);
     });
+
+
+    it('should return true if the laser is activated', () => {
+        const posX = 10;
+        const posY = 20;
+        const isFromPlayer = true;
+        const speed = 12;
+        const perforationBonus = false;
+        const laserBonus = true;
+
+        const shot = new Shot(posX, posY, isFromPlayer, speed, 0, perforationBonus, laserBonus);
+
+        assert.strictEqual(shot.laser, true);
+        assert.strictEqual(shot.width, Shot.canvasWidth);
+        assert.strictEqual(shot.height, Shot.height + 15);
+
+
+    });
+
 });
