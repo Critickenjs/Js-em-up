@@ -5,7 +5,6 @@ import Client_Entity from './client_entity.js';
 import Client_Player from './client_player.js';
 import preloadAssets from './preLoadAssets.js';
 import { Stars } from './stars.js';
-import Entity from '../../server/entity.js';
 import Client_Shot from './client_shot.js';
 import Client_Enemy from './client_enemy.js';
 import HomePage from './homePageView.js';
@@ -270,7 +269,7 @@ socket.on('game', gameData => {
 					gameData.players[i].skin,
 					gameData.players[i].invincible,
 					gameData.players[i].score,
-					gameData.players[i].scoreMultiplierBonus,
+					gameData.players[i].scoreMultiplier,
 				)
 			);
 		}

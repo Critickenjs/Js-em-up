@@ -15,16 +15,22 @@ Objectif : Réaliser un jeu en ligne multi-joueur de type "shoot them up" par é
 
 ## Images
 
-![L'accueil - Rejoindre une partie](client/public/res/readme/images/ViewFormulaire1.png)
+L'accueil - Rejoindre une partie
+![Rejoindre une partie](client/public/res/readme/images/ViewFormulaire1.png)
 
-![L'accueil - Créer une partie](client/public/res/readme/images/ViewFormulaire2.png)
+L'accueil - Créer une partie
+![Créer une partie](client/public/res/readme/images/ViewFormulaire2.png)
 
+Lorsque l'on est en jeu
 ![En jeu](client/public/res/readme/images/ViewInGame.png)
 
+L'écran de Game Over
 ![Game Over](client/public/res/readme/images/ViewGameOver.png)
 
+Le tableau des scores
 ![Tableau des scores](client/public/res/readme/images/ViewScoreBoard.png)
 
+Les crédits
 ![Crédits](client/public/res/readme/images/ViewCredits.png)
 
 
