@@ -11,11 +11,9 @@ describe('Game', () => {
     describe('checkPlayerRespawn', () => {
         it('should delete player if player entry is null', () => {
             const game = new Game();
-            game.players.set('player1', null);
-
+            game.players.set('1', null);
             game.checkPlayerRespawn();
-
-            assert.strictEqual(game.players.has('player1'), false);
+            assert.strictEqual(game.players.size, 0);
         });
 
     });
@@ -23,7 +21,8 @@ describe('Game', () => {
     describe('init', () => {
         it('should initialize Game correctly', () => {
             const game = new Game();
-            assert.strictEqual(false, false);
+            game.init();
+            assert.strictEqual(game.isInGame, true);
         });
     });
 
@@ -184,6 +183,7 @@ describe('Game', () => {
             assert.strictEqual(game.gameData.powers[0].type, 'ice');
         });
     });
+
 
 
 });
