@@ -1,20 +1,20 @@
 {
     "version": 2,
     "builds": [
-      {
-        "src": "server/index.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "client/**",
-        "use": "@vercel/static"
-      },
-      {
-        "src": "package.json", 
-        "use": "@vercel/static-build",
-        "config": { "buildCommand": "npm run build:webpack" } 
-      }
-    ],
+        {
+          "src": "server/index.js",
+          "use": "@vercel/node"
+        },
+        {
+          "src": "client/**",
+          "use": "@vercel/static"
+        },
+        {
+          "src": "package.json", 
+          "use": "@vercel/static-build"
+        }
+      ],
+      
     "routes": [
       {
         "src": "/(.*)",
