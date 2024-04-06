@@ -50,7 +50,13 @@ texte
 ![Jeu basique](client/public/res/readme/videos/versionBasique.gif)
 
 #### Description
-L'objectif de ce prototype était de comprendre tout ce qui était nécessaire pour faire la base du jeu. C'est à dire comment dessiner avec le canvas, comment faire une boucle de jeu, comment récupérer les inputs du joueur, comment déclencher un tir, comment faire des déplacements fluides, commment détecter des collisions, etc...
+L'objectif de ce prototype était de comprendre tout ce qui était nécessaire pour faire la base du jeu. C'est à dire comment :
+- dessiner avec le canvas
+- faire une boucle de jeu
+- récupérer les inputs du joueur
+- comment déclencher un tir
+- faire des déplacements fluides
+- détecter des collisions
 
 #### Difficultés techniques
 Ici la plus grande difficulté à été de faire le système de collision. Au final nous avons créer une classe Entity qui gère les collisions et que tous les autres classes étendent, de cette manière n'importe quel chose dans notre jeu peut détecter n'importe quel autre, selon ce qu'on veut.
@@ -59,28 +65,40 @@ Ici la plus grande difficulté à été de faire le système de collision. Au fi
 ![Jeu basique](client/public/res/readme/videos/versionInter.gif)
 
 #### Description
-texte
+Dans la 2ème Milestone, nous avons voulu tester d'ajouter plus de fonctionnalités, encore une fois sans nous soucier de l'apparence du jeu, uniquement la jouabilité. Dans cette version, nous avons ajouté :
+- les premiers élements de ATH (les vies, les vagues, le score)
+- différents types d'ennemis
+- la possibilité aux ennemis de tirer et de blesser le joueur
+- Premiers ajouts d'images
+- Ajouts d'un formulaire de 'connexion' demandant le pseudo pour l'afficher au dessus du joueur en jeu.
 
 #### Difficultés techniques
-texte
+La plus grande difficulté que nous avons rencontré dans cette version à été de chargé les images afin qu'elles s'affichent correctement dans le jeu. Il a fallu créer un ImageLoader, qui doit chargé les images dans le jeu dès le début, afin qu'elles soient disponible dès qu'on en a besoin après une fois dans le jeu.
 
 ### Version avancée
 ![Jeu basique](client/public/res/readme/videos/versionAvance.gif)
 
 #### Description
-texte
+Cette version améliore l'écran de connexion ainsi que les déplacements en ajoutant l'accélération et l'inertie.
+De plus, cette version ajoute aussi :
+- Un écran de GameOver quand le joueur n'a plus de vie
+- Un fond d'écran qui défile
+- Les premiers effets sonores
+- Plus d'images, amélioration des effets visuels
+- Introduction au multijoueur
 
 #### Difficultés techniques
-texte
+C'est à cette version que nous avons introduis le multijoueur.
+La transition du jeu complet solo en un jeu complet multijoueur était trop compliqué, nous avons donc dû repartir de zéro, et tout recoder jusqu'ici en incluant cette fois-ci le multijoueur afin que le projet puisse fonctionner.
 
 ### Version achevé
 ![vidéo version achevé placeholder](https://via.placeholder.com/468x300?text=Insérer+la+vidéo+du+jeu+final)
 
 #### Description
-texte
+Dans cette version finale du jeu, nous avons ajouté les salles(room) afin que plusieurs parties puissent être jouées en même temps indépendamment les unes des autres.
 
 #### Difficultés techniques
-texte
+Améliorer les performances et ajouter les rooms ont étés les plus gros défis de cette dernière versions.
 
 
 
