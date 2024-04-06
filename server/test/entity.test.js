@@ -122,4 +122,56 @@ describe('Entity', () => {
             assert.strictEqual(entity.isCollidingWith(entity2), true);
         });
     });
+
+    describe('isCollidingWith', () => {
+        it('should return true when entity is inside other entity', () => {
+            const entity1 = new Entity(100, 100, 10, 10);
+            const entity2 = new Entity(105, 105, 5, 5);
+
+            const isColliding = entity1.isCollidingWith(entity2);
+
+            assert.ok(isColliding);
+        });
+
+        it('should return false when entity is not inside other entity', () => {
+            const entity1 = new Entity(100, 100, 10, 10);
+            const entity2 = new Entity(120, 120, 5, 5);
+
+            const isColliding = entity1.isCollidingWith(entity2);
+
+            assert.ok(!isColliding);
+        });
+    });
+
+    describe('isThisEntityInsideThisOther', () => {
+
+        it('should return false when entity is not inside other entity', () => {
+            const entity1 = new Entity(100, 100, 10, 10);
+            const entity2 = new Entity(120, 120, 5, 5);
+
+            const isInside = entity1.isThisEntityInsideThisOther(entity2);
+
+            assert.ok(!isInside);
+        });
+    });
+
+    describe('isThisEntityContainThis', () => {
+        it('should return true when entity contains the point', () => {
+            const entity = new Entity(100, 100, 10, 10);
+            const point = [105, 105];
+
+            const isContain = entity.isThisEntityContainThis(point);
+
+            assert.ok(isContain);
+        });
+
+        it('should return false when entity does not contain the point', () => {
+            const entity = new Entity(100, 100, 10, 10);
+            const point = [120, 120];
+
+            const isContain = entity.isThisEntityContainThis(point);
+
+            assert.ok(!isContain);
+        });
+    });
 });
