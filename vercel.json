@@ -1,0 +1,20 @@
+{
+    "name": "jsae",
+    "version": 2,
+    "builds": [
+      {
+        "src": "server/index.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "client/src/main.js",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "client/public" }
+      }
+    ],
+    "routes": [
+      { "src": "/build/(.*)", "dest": "/client/public/build/$1" },
+      { "src": "/(.*)", "dest": "/server/index.js" }
+    ]
+  }
+  
