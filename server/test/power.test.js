@@ -89,5 +89,21 @@ describe('Power', () => {
         });
     });
 
+    describe('isCollidingWith', () => {
+        it('should return true if power is colliding with player', () => {
+            const power = new Power(100, 100, '');
+            const player = new Player(100, 100, 'testeur');
+            assert.strictEqual(power.isCollidingWith(player), true);
+        });
+
+        it('should return false if power is not colliding with player', () => {
+            const power = new Power(100, 100, '');
+            const player = new Player(200, 200, 'testeur');
+            assert.strictEqual(power.isCollidingWith(player), false);
+        });
+    });
+
+
+
 
 });
