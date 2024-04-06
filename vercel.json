@@ -10,8 +10,9 @@
         "use": "@vercel/static"
       },
       {
-        "src": "webpack.config.js",
-        "use": "@vercel/static-build"
+        "src": "package.json", 
+        "use": "@vercel/static-build",
+        "config": { "buildCommand": "npm run build:webpack" } 
       }
     ],
     "routes": [
