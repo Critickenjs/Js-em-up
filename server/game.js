@@ -117,15 +117,6 @@ export default class Game {
 		}
 	}
 
-	addToSpeed(modifyer) {
-		this.gameData.entitySpeedMultiplier =
-			Math.round((this.gameData.entitySpeedMultiplier + modifyer) * 1000) /
-			1000;
-		if (this.gameData.entitySpeedMultiplier > Entity.speedMultiplierMAX) {
-			this.gameData.entitySpeedMultiplier = Entity.speedMultiplierMAX;
-		}
-	}
-
 	update() {
 		this.resetData();
 		this.checkPlayerRespawn();
@@ -311,8 +302,6 @@ export default class Game {
 		}
 	}
 
-	// Ces deux fonctions étaient précédemment destroy()
-
 	restartGame() {
 		this.resetAllData();
 		this.resetTeamLives(); //!\\ Important : doit être appelé après resetAllData()
@@ -326,7 +315,6 @@ export default class Game {
 		this.oldPlayers = new Map(this.players);
 		this.players.clear();
 	}
-	//
 
 
 }

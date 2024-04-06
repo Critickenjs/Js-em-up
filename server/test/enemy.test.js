@@ -126,12 +126,16 @@ describe('Enemy', () => {
             const enemy = new Enemy(100, 100, 1);
             const waveManager = new WavesManager();
 
+            waveManager.waveMaxNumberOfEnemys = 5;
+            waveManager.waveNumberOfEnemysSpawned = 5;
+            enemy.lifes = 2;
+            assert.strictEqual(enemy.lifes, 2);
             enemy.getHurt(waveManager);
-            if (enemy.lifes > 1) {
-                assert.strictEqual(enemy.getHurt(waveManager), false);
-            } else {
-                assert.strictEqual(enemy.getHurt(waveManager), true);
-            }
+            assert.strictEqual(enemy.lifes, 1);
+            assert.strictEqual(enemy.isDead, false);
+            enemy.getHurt(waveManager);
+            assert.strictEqual(enemy.lifes, 0);
+            assert.strictEqual(enemy.isDead, true);
         });
 
 
