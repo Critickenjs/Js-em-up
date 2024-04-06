@@ -1,22 +1,27 @@
 {
     "version": 2,
     "builds": [
-        {
-            "src": "server/index.js",
-            "use": "@vercel/node"
-        },
-        {
-            "src": "client/**",
-            "use": "@vercel/static"
-        }
+      {
+        "src": "server/index.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "client/**",
+        "use": "@vercel/static"
+      },
+      {
+        "src": "webpack.config.js",
+        "use": "@vercel/static-build"
+      }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "server/index.js"
-        }
+      {
+        "src": "/(.*)",
+        "dest": "server/index.js"
+      }
     ],
     "env": {
-        "NODE_ENV": "production"
+      "NODE_ENV": "production"
     }
-}
+  }
+  
