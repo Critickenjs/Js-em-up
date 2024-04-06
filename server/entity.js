@@ -61,7 +61,6 @@ export default class Entity {
 	isThisEntityInsideThisOther(entity) {
 		for (const collisionProperty in this.collision) {
 			if (entity.isThisEntityContainThis(this.collision[collisionProperty])) {
-
 				return true;
 			}
 		}
