@@ -124,11 +124,16 @@ describe('Enemy', () => {
         it('should decrease enemy lifes if hit', () => {
             const enemy = new Enemy(100, 100, 1);
             const waveManager = new WavesManager();
-            const initialLifes = enemy.lifes;
-
+            waveManager.waveMaxNumberOfEnemys = 5;
+            waveManager.waveNumberOfEnemysSpawned = 5;
+            enemy.lifes = 2;
+            assert.strictEqual(enemy.lifes, 2);
             enemy.getHurt(waveManager);
-
             assert.strictEqual(enemy.lifes, 1);
+            assert.strictEqual(enemy.isDead, false);
+            enemy.getHurt(waveManager);
+            assert.strictEqual(enemy.lifes, 0);
+            assert.strictEqual(enemy.isDead, true);
         });
 
 
