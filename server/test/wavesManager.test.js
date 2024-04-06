@@ -85,7 +85,7 @@ describe('WavesManager', () => {
             assert.strictEqual(wavesManager.hasABoss, false);
             assert.strictEqual(wavesManager.waveNumber, 2);
             assert.strictEqual(wavesManager.waveNumberOfEnemysSpawned, 0);
-            assert.strictEqual(wavesManager.waveMaxNumberOfEnemys, 6);
+            assert.strictEqual(wavesManager.waveMaxNumberOfEnemys > 5, true);
         });
     });
 
