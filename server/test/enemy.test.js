@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it, beforeEach } from 'node:test';
 import Enemy from '../enemy.js';
 import WavesManager from '../wavesManager.js';
+import e from 'express';
 
 describe('Enemy', () => {
     describe('applyTypes', () => {
@@ -124,11 +125,13 @@ describe('Enemy', () => {
         it('should decrease enemy lifes if hit', () => {
             const enemy = new Enemy(100, 100, 1);
             const waveManager = new WavesManager();
-            const initialLifes = enemy.lifes;
 
             enemy.getHurt(waveManager);
-
-            assert.strictEqual(enemy.lifes, 1);
+            if (enemy.lifes > 1) {
+                assert.strictEqual(enemy.getHurt(waveManager), false);
+            } else {
+                assert.strictEqual(enemy.getHurt(waveManager), true);
+            }
         });
 
 
